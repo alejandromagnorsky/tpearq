@@ -5,8 +5,7 @@
   romimage: file=$BXSHARE/BIOS-bochs-latest
   vgaromimage: file=$BXSHARE/VGABIOS-elpin-2.40
 # what disk images will be used
-  #floppya: 1_44=/home/srv/622C.IMG, status=inserted
-  floppya: 1_44="/home/amatasua/Desktop/Informática/ITBA/[ITBA] 2do Cuatrimestre 2do año/Arquitecturas de Computadoras/TPE/grubTest.img", status=inserted
+  floppya: 1_44=/home/alejandro/Desktop/tpearq/grubTest.img, status=inserted
   #floppyb: 1_44=floppyb.img, status=inserted
 # hard disk
   #ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
@@ -28,4 +27,3 @@ keyboard_mapping: enabled=1, map=$BXSHARE/keymaps/x11-pc-us.map
 #keyboard_mapping: enabled=1, map=$BXSHARE/keymaps/x11-pc-fr.map
 #keyboard_mapping: enabled=1, map=$BXSHARE/keymaps/x11-pc-de.map
 #keyboard_mapping: enabled=1, map=$BXSHARE/keymaps/x11-pc-es.map
-
