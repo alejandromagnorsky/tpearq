@@ -48,6 +48,7 @@ kmain()
 	printf("Me gusta la barra n \n ");
 	printf("lala");
 
+
 //	for(i=0;i<79*25;i++)
 //		putc('A');
 
@@ -81,6 +82,7 @@ kmain()
 
         while(1)
         {
+		printTime();
         }
 	
 }
