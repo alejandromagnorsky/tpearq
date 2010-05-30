@@ -41,7 +41,18 @@ kmain()
 
 	k_clear_screen();
 	printSystemSymbol();
-	_print_time();
+	printf("ImpactTrueno hizo %d de danio! \n ");
+	printf("Pikachu se cayo!! \n ");
+	printf("Nooooo! \n ");
+	printf("Esto es un %s \n ");
+	printf("Me gusta la barra n \n ");
+	printf("lala");
+
+//	for(i=0;i<79*25;i++)
+//		putc('A');
+
+//	printf("HOLA");
+//	_print_time()
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 
@@ -49,9 +60,9 @@ kmain()
 //	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
 
 //Rutina de atención del teclado
-	setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
+//	setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
 	
-/* Carga de IDTR    */
+/* Carga de IDTR    /
 
 	idtr.base = 0;  
 	idtr.base +=(dword) &idt;
@@ -60,12 +71,13 @@ kmain()
 	_lidt (&idtr);	
 
 	_Cli();
-/* Habilito interrupcion del teclado*/
+/* Habilito interrupcion del teclado/
 
 	_mascaraPIC1(0xFD);
 	_mascaraPIC2(0xFF);
         
 	_Sti();
+*/
 
         while(1)
         {

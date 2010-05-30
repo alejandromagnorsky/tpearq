@@ -8,8 +8,16 @@
 
 #define WHITE_TXT 0x07 // Atributo de video. Letras blancas, fondo negro
 
+int __CONSOLE_PTR_ = 0;
+
 /* Muestra la imagen de inicio */
 void showSplashScreen();
+
+/* Imprime un caracter en pantalla */
+int putc( int character );
+
+/* Imprime un string en pantalla */
+int printf(const char * str);
 
 /* Tiempo de espera */
 void wait(int time);
