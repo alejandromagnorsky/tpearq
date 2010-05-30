@@ -73,6 +73,7 @@ _print_time:
 	in	al, 71h
 	push 	ax
 	call	printTime
+	add	esp, 12
 	leave
 	ret
 
