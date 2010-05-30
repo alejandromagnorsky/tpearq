@@ -4,13 +4,27 @@
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
 
-int tickpos=640;
+int tickpos=30;
+int scanCodes[8][2] = {{'a', 0x1E61}, {'A', 0x1E41}, {'A', 0x1E01}, {'A', 0x1E00}, {'b', 0x3062}, {'B', 0x3042}, {'B', 0x3002}, {'B', 0x3000}};
+
+
+
 
 void int_08() {
 
-    char *video = (char *) 0xb8000;
-    video[tickpos+=2]='H';
+	char *video = (char *) 0xb8000;
+	video[tickpos+=2]='H';
 
+}
+
+void int_09(dword scanCode) {
+
+	char *video = (char *) 0xb8000;
+	int i;
+	for(i = 0; i < 8; i++){
+		if(scanCodes[i][1] != scanCode)
+			video[tickpos+=2] = scanCodes[i][0];
+	};
 }
 
 /**********************************************
@@ -27,13 +41,15 @@ kmain()
 
 	k_clear_screen();
 	printSystemSymbol();
+	_print_time();
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 
-//Timmer tick rutina de atención
-//        setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
+//Rutina de atención del timer tick
+//	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
 
-    //    setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
+//Rutina de atención del teclado
+	setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
 	
 /* Carga de IDTR    */
 
@@ -44,9 +60,9 @@ kmain()
 	_lidt (&idtr);	
 
 	_Cli();
-/* Habilito interrupcion de timer tick*/
+/* Habilito interrupcion del teclado*/
 
-	_mascaraPIC1(0xFF);
+	_mascaraPIC1(0xFD);
 	_mascaraPIC2(0xFF);
         
 	_Sti();
