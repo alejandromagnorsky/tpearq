@@ -38,6 +38,33 @@ void printSystemSymbol()
 
 }
 
+
+/* Imprime la hora */
+// Los argumentos están en BCD 
+void printTime(dword hours, dword minutes, dword seconds)
+{
+	char *vidmem = (char *) 0xb8000;
+	unsigned int i=12;
+	vidmem[i++]= (hours & 0x000000F0) + 48;
+	vidmem[i++]=WHITE_TXT;
+	vidmem[i++]= (hours & 0x0000000F) + 48;
+	vidmem[i++]=WHITE_TXT;
+	vidmem[i++]= ':';
+	vidmem[i++]=WHITE_TXT;
+	vidmem[i++]= (minutes & 0x000000F0) + 48;
+	vidmem[i++]=WHITE_TXT;
+	vidmem[i++]= (minutes & 0x0000000F) + 48;
+	vidmem[i++]=WHITE_TXT;
+	vidmem[i++]= ':';
+	vidmem[i++]=WHITE_TXT;
+	vidmem[i++]= (seconds & 0x000000F0) + 48;
+	vidmem[i++]=WHITE_TXT;
+	vidmem[i++]= (seconds & 0x0000000F) + 48;
+	vidmem[i++]=WHITE_TXT;
+}
+
+	
+
 /***************************************************************
 *setup_IDT_entry
 * Inicializa un descriptor de la IDT

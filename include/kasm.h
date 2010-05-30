@@ -16,7 +16,10 @@ void		_mascaraPIC2 (byte mascara);  /* Escribe mascara de PIC2 */
 void		_Cli(void);        /* Deshabilita interrupciones  */
 void		_Sti(void);	 /* Habilita interrupciones  */
 
+void		_print_time();
+
 void		_int_08_hand();      /* Timer tick */
+void		_int_09_hand();	     /* Teclado */
 
 void		_debug (void);
 
