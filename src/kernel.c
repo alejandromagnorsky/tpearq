@@ -41,12 +41,14 @@ kmain()
 
 	k_clear_screen();
 	printSystemSymbol();
-	printf("ImpactTrueno hizo %d de danio! \n ");
-	printf("Pikachu se cayo!! \n ");
-	printf("Nooooo! \n ");
-	printf("Esto es un %s \n ");
-	printf("Me gusta la barra n \n ");
-	printf("lala");
+	printf("ImpactTrueno hizo %d de danio! \n");
+	printf("Pikachu se cayo!! \n");
+	printf("Nooooo! \n");
+	printf("Esto es un %s \n");
+	printf("Me gusta la barra n \n");
+	printf("lala \n");
+	printf("La hora es: ");
+	printTime();
 
 
 //	for(i=0;i<79*25;i++)
@@ -82,7 +84,7 @@ kmain()
 
         while(1)
         {
-		printTime();
+
         }
 	
 }

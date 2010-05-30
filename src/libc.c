@@ -32,7 +32,7 @@ int putc( int character ){
 
 	if(character == '\n'){
 		int row = (__CONSOLE_PTR_/160) % 25;
-		__CONSOLE_PTR_ = (80*(row+1)*2)-2;
+		__CONSOLE_PTR_ = (80*(row+1)*2);
 		return character;
 	}
 
