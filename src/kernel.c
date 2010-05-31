@@ -51,18 +51,22 @@ kmain()
 
 	__clear_screen();
 	printSystemSymbol();
-	printf("ImpactTrueno hizo %d de danio!!! \n", 4);
-	printf("Pikachu se cayo!! \n");
-	printf("Nooooo! \n");
+	printf("ImpactTrueno hizo %d de danio!!! \n", 1234693);
 	printf("Esto es un %s \n", "pija");
-	printf("Me gusta la barra n \n");
-	printf("lala \n");
 	printf("La hora es: ");
-	printf("esto es un %c \n", 'B');
 	_print_time();
 
-//	printf("HOLA");
-//	_print_time()
+	printf("\n Ok. me voy, hice que la pantalla este buffereada, y a medida");
+	printf(" que se agrega texto se appendea al buffer. PERO se puede elegir flushear todo el buffer de una.");
+	printf(" Esto hace que ande MUY LENTO, pero la idea no es usarlo para escribir, sino para cuando tengamos");
+	printf(" varias consolas, o cuando quieras mandar un buffer de una, etc etc., tiene muchas utilidades.");
+	printf(" Write() ya esta escrito, falta checkear que si es stdin se puede simular teclas(lo vemos dps).");
+	printf(" Otra: hice flags para el seteo de la consola para que se pueda poner el color que quieras.\n\n");
+	printf(" INTENTEN HACER LO MISMO CON EL TECLADO, es clave el tema del buffer. Manana sigo.");
+	printf(" Nota: para que el driver de video ande tuve que modificar el script ./compilar.");
+	
+	
+
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 //Rutina de atención del timer tick
