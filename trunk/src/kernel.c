@@ -46,6 +46,7 @@ kmain()
 	printf("Me gusta la barra n \n");
 	printf("lala \n");
 	printf("La hora es: ");
+	printf("esto es un %c", 'B');
 	printTime();
 
 

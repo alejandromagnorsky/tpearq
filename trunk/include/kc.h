@@ -6,9 +6,10 @@
 #ifndef _kc_
 #define _kc_
 
+#define NULL 0
 #define WHITE_TXT 0x07 // Atributo de video. Letras blancas, fondo negro
 
-int __CONSOLE_PTR_ = 0;
+int __CONSOLE_PTR_ = 0;	// Posicion del ultimo caracter en pantalla
 int __KBUFFER_PTR_ = 0x1E;	//Puntero al buffer del teclado
 
 /* Muestra la imagen de inicio */
@@ -18,7 +19,7 @@ void showSplashScreen();
 int putc( int character );
 
 /* Imprime un string en pantalla */
-int printf(const char * str);
+int printf(const char * str,...);
 
 /* Tiempo de espera */
 void wait(int time);
