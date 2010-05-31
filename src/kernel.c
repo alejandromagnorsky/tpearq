@@ -41,7 +41,7 @@ kmain()
 
 	k_clear_screen();
 	printSystemSymbol();
-	printf("ImpactTrueno hizo %d de danio!! \n");
+	printf("ImpactTrueno hizo %d de danio!!! \n");
 	printf("Pikachu se cayo!! \n");
 	printf("Nooooo! \n");
 	printf("Esto es un %s \n");
