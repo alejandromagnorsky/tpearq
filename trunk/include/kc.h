@@ -7,9 +7,7 @@
 #define _kc_
 
 #define NULL 0
-#define WHITE_TXT 0x07 // Atributo de video. Letras blancas, fondo negro
 
-int __CONSOLE_PTR_ = 0;	// Posicion del ultimo caracter en pantalla
 int __KBUFFER_PTR_ = 0x1E;	//Puntero al buffer del teclado
 
 /* Muestra la imagen de inicio */
