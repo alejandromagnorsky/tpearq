@@ -63,14 +63,14 @@ _print_time:
 	in	al, 71h
 	push 	ax
 
-	mov	al, 2			; Lee los minutos
-	out	70h, al
-	in	al, 71h
+;	mov	al, 2			; Lee los minutos
+;	out	70h, al
+;	in	al, 71h
 	push 	ax
 
-	mov	al, 4			; Lee las horas
-	out	70h, al
-	in	al, 71h
+;	mov	al, 4			; Lee las horas
+;	out	70h, al
+;	in	al, 71h
 	push 	ax
 	call	printTime
 	add	esp, 12
