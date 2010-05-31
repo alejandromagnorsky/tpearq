@@ -85,17 +85,18 @@ void printSystemSymbol()
 // Los argumentos están en BCD 
 void printTime(dword hours, dword minutes, dword seconds)
 {
-	putc((hours & 0x000000F0) + 48);
-	putc((hours & 0x0000000F) + 48);
+	putc(((hours & 0x000000F0)>>4) + '0');
+	putc((hours & 0x0000000F) + '0');
 	putc(':');
 
-	putc((minutes & 0x000000F0) + 48);
-	putc((minutes & 0x0000000F) + 48);
+	putc(((minutes & 0x000000F0)>>4) + '0');
+	putc((minutes & 0x0000000F) + '0');
 	putc(':');
 
-	putc((seconds & 0x000000F0) + 48);
-	putc((seconds & 0x0000000F) + 48);
+	putc(((seconds & 0x000000F0)>>4) + '0');
+	putc((seconds & 0x0000000F) + '0');
 }
+
 
 
 
