@@ -19,6 +19,22 @@ void k_clear_screen()
 	__CONSOLE_PTR_ = 0;
 }
 
+int getc(void)
+{
+	int c;
+	char * buffer = (char *) 0x40;
+	
+	if(__KBUFFER_PTR_ % 2 != 0)
+		return -1;
+
+	c = buffer[__KBUFFER_PTR+=2] & 0xFF;
+
+	if (__KBUFFER_PTR > 0x3D)
+		__KBUFFER_PTR = 0x1E;
+	
+	return c;
+}
+
 int putc( int character ){
 	char * vidmem = (char*) 0xb8000;
 
