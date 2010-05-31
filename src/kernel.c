@@ -5,8 +5,6 @@ DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
 
 int tickpos=30;
-int scanCodes[8][2] = {{'a', 'a'}, {'A', 0x1E41}, {'A', 0x1E01}, {'A', 0x1E00}, {'b', 0x3062}, {'B', 0x3042}, {'B', 0x3002}, {'B', 0x3000}};
-
 
 void int_08() {
 
@@ -23,7 +21,7 @@ void int_09(){
 
 /**********************************************
 kmain() 
-Punto de entrada de cóo C.
+Punto de entrada de C
 *************************************************/
 
 kmain() 
