@@ -1,7 +1,5 @@
 #include "../include/kc.h"
 
-#define NULL 0
-
 /***************************************************************
 *k_clear_screen
 *
@@ -51,8 +49,10 @@ int putc( int character ){
 
 
 	// Si el puntero en la consola no es par, esta corrupto
-	if(__CONSOLE_PTR_ % 2 != 0)
+	if(__CONSOLE_PTR_ % 2 != 0){
+		__CONSOLE_PTR_ = 0;
 		return -1;
+	}
 
 	if( __CONSOLE_PTR_ >= 80*25*2)
 		__CONSOLE_PTR_ = 0;
@@ -70,21 +70,33 @@ int putc( int character ){
 	return character;
 } 
 
-int printf(const char * str){
+int printf(const char * str, ...){
 	int c;
 	int wait = 0;
+	int args = 0;
+	void * argument;
 	for(c=0;str[c] != NULL;c++){
 		if(wait){
+
+			__asm__(
+				"movl -8(%ebp),%eax\n\t"
+				"sall $2, %eax\n\t"
+				"addl $8, %eax\n\t"
+				"addl %ebp, %eax\n\t"
+				"movl %eax, %ecx\n\t"
+				"movl %ecx, -4(%ebp)\n\t"
+			);
+
 			switch(str[c]){
 
 			case 'd':
 				printf("NUMERO");
 				break;
 			case 'c':
-				putc(str[c]);
+				putc(*((char*)argument));
 				break;
 			case 's':
-				printf("STRING");
+				printf((char*)argument);
 				break;
 			default:
 				break;
@@ -92,8 +104,10 @@ int printf(const char * str){
 
 			wait = 0;
 		} else {
-			if(str[c] == '%')
-				wait = 1;
+			if(str[c] == '%'){
+				wait = 1;	
+				args++;
+			}
 			else 
 				putc(str[c]);
 		}
@@ -104,7 +118,7 @@ int printf(const char * str){
 /* Imprime símbolo de sistema */
 void printSystemSymbol() 
 {
-	printf("Pikachu:/>");
+	printf("Pikachu:/>", 4);
 }
 
 
