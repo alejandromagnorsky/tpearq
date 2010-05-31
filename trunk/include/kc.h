@@ -21,6 +21,9 @@ int putc( int character );
 /* Imprime un string en pantalla */
 int printf(const char * str,...);
 
+/* Imprime un numero */
+void putInt(int n);
+
 /* Tiempo de espera */
 void wait(int time);
 
