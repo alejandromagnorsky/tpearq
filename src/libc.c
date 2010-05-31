@@ -24,10 +24,21 @@ int getc(void)
 	int c;
 	char * buffer = (char *) 0x40;
 	
-	if(__KBUFFER_PTR_ % 2 != 0)
+	if(__KBUFFER_PTR % 2 != 0)
 		return -1;
 
-	c = buffer[__KBUFFER_PTR+=2] & 0xFF;
+	/* Si el ASCII en el buffer es 0000 0000 (la última tecla apretada fue una
+	** tecla de control o no se apretó ninguna), entonces llama a la interrupción 
+	** de lectura de teclado MIENTRAS se presionen teclas de control.
+	*/
+	if ( (buffer[__KBUFFER_PTR] & 0xFF) == 0 )
+		while ( (c = buffer[__KBUFFER_PTR] & 0xFF) == 0 ){ 
+		//Esta función debería llamar a la interrupción de teclado
+		// y esperar a que se escriba algo en caso de que el buffer
+		//esté vacío
+		}
+
+	__KBUFFER_PTR += 2;
 
 	if (__KBUFFER_PTR > 0x3D)
 		__KBUFFER_PTR = 0x1E;
