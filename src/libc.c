@@ -29,8 +29,8 @@ int getc(void)
 	** tecla de control o no se apretó ninguna), entonces llama a la interrupción 
 	** de lectura de teclado MIENTRAS se presionen teclas de control.
 	*/
-	if ( (buffer[__KBUFFER_PTR_] & 0xFF) == 0 )
-		while ( (c = buffer[__KBUFFER_PTR_] & 0xFF) == 0 ){ 
+	if ( (buffer[__KBUFFER_PTR_] & 0x0F) == 0 )
+		while ( (c = buffer[__KBUFFER_PTR_] & 0x0F) == 0 ){ 
 		//Esta función debería llamar a la interrupción de teclado
 		// y esperar a que se escriba algo en caso de que el buffer
 		//esté vacío
@@ -71,7 +71,10 @@ int putc( int character ){
 } 
 
 int printf(const char * str, ...){
+	// Hay muchas variables adelante para evitar conflictos
+	// con el codigo inyectado en assembler
 	int c;
+
 	int wait = 0;
 	int args = 0;
 	void * argument;
@@ -90,13 +93,13 @@ int printf(const char * str, ...){
 			switch(str[c]){
 
 			case 'd':
-				printf("NUMERO");
+				putInt( *( (int*) argument));
 				break;
 			case 'c':
 				putc(*((char*)argument));
 				break;
 			case 's':
-				printf((char*)argument);
+				printf(*((char**)argument));
 				break;
 			default:
 				break;
@@ -114,6 +117,24 @@ int printf(const char * str, ...){
 	}
 }
 
+int pow(int n, int exp){
+	int i;
+	int out = 1;
+	for(i=0;i<exp;i++)
+		out*=n;
+	return out;
+}
+
+void putInt(int n){
+
+	int i,j;
+	for(i=0;n/pow(10,i) > 0 ;i++); //cantidad de caracteres
+	for(j=i-1;j>0;j--){
+		putc( (n/pow(10,j))+'0');
+		n = n%pow(10,j);
+	}
+	putc((n%10)+'0');
+}
 
 /* Imprime símbolo de sistema */
 void printSystemSymbol() 
