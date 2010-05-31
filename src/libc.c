@@ -1,21 +1,5 @@
+#include "../include/kernel.h"
 #include "../include/kc.h"
-
-/***************************************************************
-*k_clear_screen
-*
-* Borra la pantalla en modo texto color.
-****************************************************************/
-
-void k_clear_screen() 
-{
-	int i=0;
-        while(i < (80*25))
-        {
-		putc(' ');
-		i++;
-        };
-	__CONSOLE_PTR_ = 0;
-}
 
 int getc(void)
 {
@@ -44,30 +28,8 @@ int getc(void)
 	return c;
 }
 
-int putc( int character ){
-	char * vidmem = (char*) 0xb8000;
-
-
-	// Si el puntero en la consola no es par, esta corrupto
-	if(__CONSOLE_PTR_ % 2 != 0){
-		__CONSOLE_PTR_ = 0;
-		return -1;
-	}
-
-	if( __CONSOLE_PTR_ >= 80*25*2)
-		__CONSOLE_PTR_ = 0;
-
-	if(character == '\n'){
-		int row = (__CONSOLE_PTR_/160) % 25;
-		__CONSOLE_PTR_ = (80*(row+1)*2);
-		return character;
-	}
-
-
-	vidmem[__CONSOLE_PTR_++] = character;
-	vidmem[__CONSOLE_PTR_++] = WHITE_TXT;
-
-	return character;
+int putc( int c ){
+	return __write(stdout,&c, 1);
 } 
 
 int printf(const char * str, ...){
@@ -76,40 +38,28 @@ int printf(const char * str, ...){
 	int c;
 
 	int wait = 0;
-	int args = 0;
-	void * argument;
+	void ** argv = (void **)(&str);
+
 	for(c=0;str[c] != NULL;c++){
 		if(wait){
-
-			__asm__(
-				"movl -8(%ebp),%eax\n\t"
-				"sall $2, %eax\n\t"
-				"addl $8, %eax\n\t"
-				"addl %ebp, %eax\n\t"
-				"movl %eax, %ecx\n\t"
-				"movl %ecx, -4(%ebp)\n\t"
-			);
-
 			switch(str[c]){
-
 			case 'd':
-				putInt( *( (int*) argument));
+				putInt( *( (int*) argv));
 				break;
 			case 'c':
-				putc(*((char*)argument));
+				putc(*((char*)argv));
 				break;
 			case 's':
-				printf(*((char**)argument));
+				printf(*((char**)argv));
 				break;
 			default:
 				break;
 			}
-
 			wait = 0;
 		} else {
 			if(str[c] == '%'){
 				wait = 1;	
-				args++;
+				argv++;
 			}
 			else 
 				putc(str[c]);
@@ -141,7 +91,6 @@ void printSystemSymbol()
 {
 	printf("Pikachu:/>", 4);
 }
-
 
 /* Imprime la hora */
 // Los argumentos están en BCD 

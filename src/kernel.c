@@ -1,5 +1,7 @@
 #include "../include/kasm.h"
 #include "../include/defs.h"
+#include "../include/kernel.h"
+#include "../include/keyboard.h"
 
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
@@ -11,6 +13,7 @@ void int_08() {
 }
 
 void int_09(){
+	//
 	int scanCode = _read_scancode() & 0xFF;
 	int i;
 	for(i = 0; i < 8; i++){
@@ -18,6 +21,21 @@ void int_09(){
 			printf("%d",scanCode);
 	};
 }
+
+size_t __write(int fd, const void* buffer, size_t count){
+	switch(fd){
+		case stdout:
+			__write_screen(buffer,count);
+			break;
+		case stdin:
+			// LLamar al teclado
+			break;
+		default:
+			break;
+	}
+	return fd;
+}
+
 
 /**********************************************
 kmain() 
@@ -31,7 +49,7 @@ kmain()
 
 /* Borra la pantalla. */ 
 
-	k_clear_screen();
+	__clear_screen();
 	printSystemSymbol();
 	printf("ImpactTrueno hizo %d de danio!!! \n", 4);
 	printf("Pikachu se cayo!! \n");
@@ -40,11 +58,8 @@ kmain()
 	printf("Me gusta la barra n \n");
 	printf("lala \n");
 	printf("La hora es: ");
-	printf("esto es un %c", 'B');
+	printf("esto es un %c \n", 'B');
 	_print_time();
-
-//	for(i=0;i<79*25;i++)
-//		putc('A');
 
 //	printf("HOLA");
 //	_print_time()
