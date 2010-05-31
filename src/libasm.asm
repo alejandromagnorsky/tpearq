@@ -119,7 +119,7 @@ _int_09_hand:				; Handler de INT 9 (Teclado)
 
 
 
-; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0
+; Debug para el BOCHS, detiene la ejecución; Para continuar colocar en el BOCHSDBG: set $eax=0
 ;
 
 

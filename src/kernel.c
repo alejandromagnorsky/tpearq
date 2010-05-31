@@ -18,12 +18,10 @@ void int_08() {
 }
 
 void int_09(dword scanCode) {
-
-	char *video = (char *) 0xb8000;
 	int i;
 	for(i = 0; i < 8; i++){
-		if(scanCodes[i][1] != scanCode)
-			video[tickpos+=2] = scanCodes[i][0];
+		if(scanCodes[i][1] == scanCode)
+			printf(scanCodes[i][0]);
 	};
 }
 
@@ -63,7 +61,7 @@ kmain()
 //	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
 
 //Rutina de atención del teclado
-//	setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
 	
 /* Carga de IDTR    /
 
