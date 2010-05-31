@@ -34,7 +34,7 @@ void k_clear_screen();
 void printSystemSymbol();
 
 /* Imprime horas, minutos y segundos en la pantalla */
-void printTime();
+void printTime(dword hours, dword minutes, dword seconds);
 
 
 /* Inicializa la entrada del IDT */

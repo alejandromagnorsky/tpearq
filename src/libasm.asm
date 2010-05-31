@@ -1,5 +1,6 @@
 GLOBAL  _read_msw,_lidt
 GLOBAL	_print_time
+GLOBAL	_read_scancode
 GLOBAL  _int_08_hand
 GLOBAL  _int_09_hand
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
@@ -58,20 +59,20 @@ _lidt:				; Carga el IDTR
 _print_time:
 	push	ebp
 	mov	ebp, esp
-	mov	ax, 0			; Lee los segundos
+	mov	eax, 0			; Lee los segundos
 	out	70h, al
 	in	al, 71h
-	push	ax
+	push	eax
 
-;	mov	al, 2			; Lee los minutos
-;	out	70h, al
-;	in	al, 71h
-	push	ax
+	mov	eax, 2			; Lee los minutos
+	out	70h, al
+	in	al, 71h
+	push	eax
 
-;	mov	al, 4			; Lee las horas
-;	out	70h, al
-;	in	al, 71h
-	push	ax
+	mov	eax, 4			; Lee las horas
+	out	70h, al
+	in	al, 71h
+	push	eax
 	call	printTime
 	add	esp, 12
 	leave
@@ -98,24 +99,30 @@ _int_08_hand:				; Handler de INT 8 (Timer tick)
 _int_09_hand:				; Handler de INT 9 (Teclado)
         push    ds
         push    es                      ; Se salvan los registros
-        pusha                           
-
+        pusha      
+                     
         mov     ax, 10h			
         mov     ds, ax			; Carga de DS y ES con el valor del selector a utilizar.
         mov     es, ax
 	
-	in	ax, 64h			; Leo el registro donde esta el scan code y lo paso como parámetro
-        push	ax
         call    int_09
-	pop	ax
-
-                 
+	              
         mov	al, 20h			; Envio de EOI generico al PIC
 	out	20h, al
 	popa                            
         pop     es
         pop     ds
         iret
+
+_read_scancode:
+	push	ebp
+	mov	ebp, esp
+	in	al, 60h
+	leave
+	ret
+
+
+        
 
 
 
