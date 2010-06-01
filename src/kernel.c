@@ -27,16 +27,8 @@ size_t __read(int fd, void* buffer, size_t count){
 }
 
 size_t __write(int fd, const void* buffer, size_t count){
-	switch(fd){
-		case stdout:
-			__write_screen(buffer,count);
-			break;
-		case stdin:
-			// LLamar al teclado
-			break;
-		default:
-			break;
-	}
+	if(fd == stdout)
+			__write_terminal(buffer,count);
 	return fd;
 }
 
@@ -57,10 +49,12 @@ kmain()
 	__KBUFFER_PTR_ = 0;
 	for(i = 0; i < KBUFFER_SIZE; i++)
 		__keyboard_buffer[i] = 8;
-	// First initialize video.
-	__INIT_VIDEO();
 
-	__clear_screen();
+
+	// First initialize terminals.
+	__INIT_TTY();
+
+	_turn_cursor_on();
 
 	printSystemSymbol();
 	printf("ImpactTrueno hizo %d de danio!!! \n", 1234693);
@@ -102,7 +96,7 @@ kmain()
 
         while(1)
         {
-		printf("%c", getc());
+	//	printf("%c", getc());
         }
 	
 }

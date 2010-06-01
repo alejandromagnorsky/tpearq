@@ -24,12 +24,6 @@ typedef short int ssize_t;
 typedef enum eINT_80 {WRITE=0, READ} tINT_80;
 typedef enum eUSER {U_KERNEL=0, U_NORMAL} tUSERS;
 
-/* __parseInput
-* Recibe como parametro
-* - String con argumentos ingresados por el usuario
-*/
-int __parseInput(const char * input );
-
 /* __write
 *
 * Recibe como parametros:
