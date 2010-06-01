@@ -19,10 +19,23 @@
 #define BLUE_BG 0x10
 #define BLACK_BG 0x00
 
-char __video_buffer[80*25*2];
+#define __MAX_CONSOLES 10
 
-int __CONSOLE_PTR_ = 0;	// Posicion del ultimo caracter en pantalla
-int __CONSOLE_ATTR_ = BLACK_BG | GREEN_FG;
+typedef struct{
+	
+	char buf[80*25*2];
+	int ptr;
+	int attr;
+
+} __screen_buffer;
+
+// All the posible usable consoles
+__screen_buffer __consoles[__MAX_CONSOLES];
+
+// The screen pointer
+__screen_buffer * __SCREEN;
+
+void __INIT_VIDEO();
 
 void __clear_screen();
 

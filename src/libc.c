@@ -6,10 +6,7 @@ int putc( int c ){
 } 
 
 int printf(const char * str, ...){
-	// Hay muchas variables adelante para evitar conflictos
-	// con el codigo inyectado en assembler
 	int c;
-
 	int wait = 0;
 	void ** argv = (void **)(&str);
 
