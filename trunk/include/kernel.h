@@ -12,6 +12,10 @@
 #define OS_PID	0
 #define stdout 1
 #define stdin 0
+#define KBUFFER_SIZE 16
+
+int __keyboard_buffer[KBUFFER_SIZE];
+int __KBUFFER_PTR_;
 
 int (*player)(void);
 
