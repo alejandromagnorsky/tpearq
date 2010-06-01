@@ -19,11 +19,17 @@ void __INIT_TTY(){
 }
 
 void __clear_terminal() {
-	int i;
+	int i = 0;
 	while( i< (80*25))
 		__tty[__TTY_INDEX].buf[i++] = ' ';
+	__tty[__TTY_INDEX].ptr = 0;
 	
 	__flush_terminal(0);
+	__printSystemSymbol();
+}
+
+void __printSystemSymbol(){
+	printf("tty%d/:", __TTY_INDEX);
 }
 
 int __write_terminal( const char* buffer, int count){
@@ -48,6 +54,7 @@ int __write_terminal( const char* buffer, int count){
 			case '\n':
 				row = (act_tty->ptr/80) % 25;
 				act_tty->ptr = (80*(row+1));
+				__printSystemSymbol();
 				break;
 			case '\t':
 				for(j=0;j<__TAB_LENGTH;j++)
@@ -83,6 +90,13 @@ void __flush_terminal(int append){
 	return;
 }
 
+void __switch_next_terminal(){
+	if(++__TTY_INDEX == __MAX_TERMINALS)
+		__TTY_INDEX = 0;
+	__flush_terminal(0);
+	__printSystemSymbol();
+}
+
 int __switch_terminal(int index){
 
 	if(index >= __MAX_TERMINALS )
@@ -90,6 +104,7 @@ int __switch_terminal(int index){
 	else {
 		__TTY_INDEX = index;
 		__flush_terminal(0);
+		__printSystemSymbol();
 	}
 	
 	return index;

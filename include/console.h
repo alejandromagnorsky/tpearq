@@ -17,6 +17,7 @@ __terminal __tty[__MAX_TERMINALS];
 // Index of visible console
 int __TTY_INDEX = 0;
 
+void __printSystemSymbol();
 
 void __INIT_TTY();
 
@@ -25,4 +26,8 @@ void __clear_terminal();
 int __write_terminal( const char* buffer, int count);
 
 void __flush_terminal(int append);
+
+int __switch_terminal(int index);
+
+void __switch_next_terminal();
 
