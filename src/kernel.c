@@ -1,6 +1,7 @@
 #include "../include/kasm.h"
 #include "../include/defs.h"
 #include "../include/kernel.h"
+
 #include "../include/keyboard.h"
 
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
@@ -13,13 +14,7 @@ void int_08() {
 }
 
 void int_09(){
-	//
-	int scanCode = _read_scancode() & 0xFF;
-	int i;
-	for(i = 0; i < 8; i++){
-		//if(scanCodes[i][1] == scanCode)
-			printf("%d",scanCode);
-	};
+	printKey();
 }
 
 size_t __write(int fd, const void* buffer, size_t count){
@@ -55,15 +50,6 @@ kmain()
 	printf("Esto es un %s \n", "pija");
 	printf("La hora es: ");
 	_print_time();
-
-	printf("\n Ok. me voy, hice que la pantalla este buffereada, y a medida");
-	printf(" que se agrega texto se appendea al buffer. PERO se puede elegir flushear todo el buffer de una.");
-	printf(" Esto hace que ande MUY LENTO, pero la idea no es usarlo para escribir, sino para cuando tengamos");
-	printf(" varias consolas, o cuando quieras mandar un buffer de una, etc etc., tiene muchas utilidades.");
-	printf(" Write() ya esta escrito, falta checkear que si es stdin se puede simular teclas(lo vemos dps).");
-	printf(" Otra: hice flags para el seteo de la consola para que se pueda poner el color que quieras.\n\n");
-	printf(" INTENTEN HACER LO MISMO CON EL TECLADO, es clave el tema del buffer. Manana sigo.");
-	printf(" Nota: para que el driver de video ande tuve que modificar el script ./compilar.");
 	
 	
 
