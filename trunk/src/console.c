@@ -15,6 +15,7 @@ void __INIT_TTY(){
 	}
 
 	__TTY_INDEX = 0;
+	__flush_terminal(0);
 }
 
 void __clear_terminal() {

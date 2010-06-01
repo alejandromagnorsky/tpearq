@@ -7,7 +7,7 @@ int getc(){
 }
 
 int putc( int c ){
-	return __write(stdout,&c, 1);
+	return _int_80_hand(1,stdout,&c, 1);
 } 
 
 int printf(const char * str, ...){
