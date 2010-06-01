@@ -2,8 +2,10 @@
 #include "../include/kc.h"
 
 int getc(){
-	int character;
-	return _int_80_hand(0, stdin, __keyboard_buffer, 1);
+	int character = -1;
+	_int_80_hand(0, stdin, &character, 1);
+	return character;
+	
 }
 
 int putc( int c ){

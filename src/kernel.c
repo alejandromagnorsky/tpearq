@@ -16,14 +16,21 @@ void int_09(){
 	int asciiCode = getAscii(scanCode);
 	
 	if(asciiCode != -1){
-		__KBUFFER_PTR_ = (__KBUFFER_PTR_+1) % KBUFFER_SIZE;	
-		__keyboard_buffer[__KBUFFER_PTR_] = asciiCode;
+		kbuffer.buf[kbuffer.__KBUFFER_PTR_WR] = asciiCode;
+		kbuffer.__KBUFFER_PTR_WR = (kbuffer.__KBUFFER_PTR_WR+1) % KBUFFER_SIZE;	
 	}
 }
 
 size_t __read(int fd, void* buffer, size_t count){
-	int *bufferPtr = buffer + __KBUFFER_PTR_*4;
-	return *bufferPtr;
+	int i;
+	int * vec = buffer;
+	for(i = 0; i <= count; i++){
+		if( kbuffer.__KBUFFER_PTR_RD ==  kbuffer.__KBUFFER_PTR_WR )
+			return i;
+		vec[i] = kbuffer.buf[kbuffer.__KBUFFER_PTR_RD];
+		kbuffer.__KBUFFER_PTR_RD = (kbuffer.__KBUFFER_PTR_RD+1) % KBUFFER_SIZE;
+	}
+	return i;
 }
 
 size_t __write(int fd, const void* buffer, size_t count){
@@ -45,12 +52,8 @@ kmain()
 
         int i,num;
 
-	// Inicializar puntero a buffer de teclado
-	__KBUFFER_PTR_ = 0;
-	for(i = 0; i < KBUFFER_SIZE; i++)
-		__keyboard_buffer[i] = 8;
-
-
+	kbuffer.__KBUFFER_PTR_RD = 0;
+	kbuffer.__KBUFFER_PTR_WR = 0;
 	// First initialize terminals.
 	__INIT_TTY();
 
@@ -94,9 +97,12 @@ kmain()
 
 
 
+       char c;
         while(1)
         {
-	//	printf("%c", getc());
+		c = getc();
+		if( c != -1 ) 
+			printf("%c", c);
         }
 	
 }
