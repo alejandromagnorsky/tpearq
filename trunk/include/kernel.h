@@ -14,8 +14,14 @@
 #define stdin 0
 #define KBUFFER_SIZE 16
 
-int __keyboard_buffer[KBUFFER_SIZE];
-int __KBUFFER_PTR_;
+typedef struct{
+	int buf[KBUFFER_SIZE];
+	int __KBUFFER_PTR_RD;
+	int __KBUFFER_PTR_WR;
+	char flag;
+}__keyboard_buffer;
+
+__keyboard_buffer kbuffer;
 
 int (*player)(void);
 
