@@ -48,12 +48,38 @@ int pow(int n, int exp){
 void putInt(int n){
 
 	int i,j;
+	
+	if(n<0){
+		putc('-');
+		n = -n;
+	}
+
 	for(i=0;n/pow(10,i) > 0 ;i++); //cantidad de caracteres
 	for(j=i-1;j>0;j--){
 		putc( (n/pow(10,j))+'0');
 		n = n%pow(10,j);
 	}
 	putc((n%10)+'0');
+}
+
+int strcmp(const char * str1, const char * str2){
+
+	int i = 0;
+	int out = 0;
+	while(str1[i] != NULL || str2[i] != NULL){
+
+		if( str1[i] != str2[i])
+			return str1[i] - str2[i];
+
+		i++;
+	}
+
+	if(str1[i] == NULL && str2[i] != NULL)
+		return -str2[i];
+	else if( str1[i] != NULL && str2[i] == NULL)
+		return str1[i];
+
+	return out;
 }
 
 /* Imprime símbolo de sistema */

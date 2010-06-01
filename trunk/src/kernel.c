@@ -1,7 +1,7 @@
 #include "../include/kasm.h"
 #include "../include/defs.h"
 #include "../include/kernel.h"
-
+#include "../include/kc.h"
 #include "../include/keyboard.h"
 
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
@@ -57,7 +57,7 @@ kmain()
 	printf("La hora es: ");
 	_print_time();
 
-	
+	printf("CMP: %d", strcmp("hola2", "hola"));
 
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */

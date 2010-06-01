@@ -21,6 +21,8 @@
 
 #define __MAX_CONSOLES 10
 
+// NOTA: Las consolas las maneja el video o el kernel? a preguntar.
+
 typedef struct{
 	char buf[80*25*2];
 	int ptr;
@@ -42,7 +44,5 @@ void __clear_screen();
 int __write_screen( const char* buffer, int count);
 
 int __flush_screen(int append);
-
-
 
 #endif
