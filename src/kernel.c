@@ -7,24 +7,22 @@
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
 
-#define KBUFFER_SIZE 16
-int __keyboard_buffer[KBUFFER_SIZE];
-int __KBUFFER_PTR_ = 0;
-
 void int_08() {
 
 }
 
-size_t __read(int fd, void* buffer, size_t count){
+void int_09(){
 	int scanCode = _read_scancode() & 0xFF;
-	int *bufferPtr = buffer + __KBUFFER_PTR_*4;
-	*bufferPtr = getAscii(scanCode);
+	int asciiCode = getAscii(scanCode);
 	
-	if (*bufferPtr != -1){
-		__KBUFFER_PTR_ = (__KBUFFER_PTR_ + 1) % KBUFFER_SIZE;	
-		/* TESTEO */
-		printf("%c", *bufferPtr);
+	if(asciiCode != -1){
+		__KBUFFER_PTR_ = (__KBUFFER_PTR_+1) % KBUFFER_SIZE;	
+		__keyboard_buffer[__KBUFFER_PTR_] = asciiCode;
 	}
+}
+
+size_t __read(int fd, void* buffer, size_t count){
+	int *bufferPtr = buffer + __KBUFFER_PTR_*4;
 	return *bufferPtr;
 }
 
@@ -43,6 +41,8 @@ size_t __write(int fd, const void* buffer, size_t count){
 }
 
 
+
+
 /**********************************************
 kmain() 
 Punto de entrada de C
@@ -53,6 +53,10 @@ kmain()
 
         int i,num;
 
+	// Inicializar puntero a buffer de teclado
+	__KBUFFER_PTR_ = 0;
+	for(i = 0; i < KBUFFER_SIZE; i++)
+		__keyboard_buffer[i] = 8;
 	// First initialize video.
 	__INIT_VIDEO();
 
@@ -95,9 +99,10 @@ kmain()
 	_Sti();
 
 
+
         while(1)
         {
-
+		printf("%c", getc());
         }
 	
 }

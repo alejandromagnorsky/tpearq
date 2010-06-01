@@ -1,6 +1,11 @@
 #include "../include/kernel.h"
 #include "../include/kc.h"
 
+int getc(){
+	int character;
+	return _int_80_hand(0, stdin, __keyboard_buffer, 1);
+}
+
 int putc( int c ){
 	return __write(stdout,&c, 1);
 } 
