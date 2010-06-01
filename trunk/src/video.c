@@ -43,6 +43,8 @@ int __flush_screen(int append){
 int __write_screen( const char* buffer, int count){
 
 	int i = 0;
+	int row,j;
+	int append = count;
 	while(i<count){
 		if(__SCREEN->ptr >= 80*25*2)
 			__SCREEN->ptr = 0;
@@ -53,18 +55,37 @@ int __write_screen( const char* buffer, int count){
 			return -1;
 		}
 
+		if(__SCREEN->ptr < 0)
+			__SCREEN->ptr = 0;
 
-		if(buffer[i] == '\n'){
-			int row = (__SCREEN->ptr/160) % 25;
-			__SCREEN->ptr = (80*(row+1)*2);
-			i++;
-		} else {
-			__SCREEN->buf[__SCREEN->ptr++] = buffer[i++];	
-			__SCREEN->buf[__SCREEN->ptr++] = __SCREEN->attr;
+		switch( buffer[i] ){
+			
+			case '\n':
+				row = (__SCREEN->ptr/160) % 25;
+				__SCREEN->ptr = (80*(row+1)*2);
+				i++;
+				break;
+			case '\t':
+				for(j=0;j<__TAB_LENGTH;j++){
+					__SCREEN->buf[__SCREEN->ptr++] = ' ';	
+					__SCREEN->buf[__SCREEN->ptr++] = __SCREEN->attr;				
+					i++;
+				}
+				break;
+			case '\b':
+				__SCREEN->buf[--__SCREEN->ptr] = __SCREEN->attr;	
+				__SCREEN->buf[--__SCREEN->ptr] = ' ';
+				append--;				
+				i++;
+				break;
+			default:
+				__SCREEN->buf[__SCREEN->ptr++] = buffer[i++];	
+				__SCREEN->buf[__SCREEN->ptr++] = __SCREEN->attr;
+				break;
 		}
 	}
 
-	__flush_screen(count);
+	__flush_screen(append);
 
 	return 1;
 }
