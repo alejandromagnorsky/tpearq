@@ -10,8 +10,8 @@
 #define _kernel_
 
 #define OS_PID	0
-#define stdout 0
-#define stdin 1
+#define stdout 1
+#define stdin 0
 
 int (*player)(void);
 

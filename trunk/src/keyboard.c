@@ -14,8 +14,7 @@
 
 int __SHIFT_ = 0;	// Flag Shift (0 = deshabilitado)
 int __CAPSLOCK_ = 0;	// Flag Capslock (0 = dehabilitado)
-int __KBUFFER_PTR_ = 0;	// Puntero al buffer del teclado
-int __keyboard_buffer[KBUFFER_SIZE] = {0};
+
 
 int makeCodes[73] =	 {-5, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '{', -5, '\b', '\t', 'q', 'w', 'e', 'r', 
 			't', 'y', 'u', 'i', 'o', 'p', -5, '+', '\n', -5, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k',
@@ -25,29 +24,25 @@ int shiftMakeCodes[54] = {-5, '!', '{', '#', '$', '%', '&', '&', '(', '(', ')', 
 			'T', 'Y', 'U', 'I', 'O', 'P', -5, '+', '\n', -5, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K',
 			'L', ';', '"', '}', -5, 302, 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '>', '>', '/', '/'};
 
-void printKey(){
-	int index = _read_scancode() & 0xFF;
-	if ( index == 170)
+int getAscii(int scanCode){
+	int asciiCode = -1;
+	
+	if (scanCode == 170)
 		__SHIFT_ = 0;  
-	if (index <= 83){
-		__keyboard_buffer[__KBUFFER_PTR_] = makeCodes[index-1];
-		
-		if(index == 42)
+	if (scanCode <= 83){
+		if(scanCode == 42)
 			__SHIFT_ = 1;
-		else if (index == 58)
+		else if (scanCode == 58)
 			__CAPSLOCK_ = !__CAPSLOCK_;
-		else if (__CAPSLOCK_ && __keyboard_buffer[__KBUFFER_PTR_] <= 'z' && __keyboard_buffer[__KBUFFER_PTR_] >= 'a')
+		else if (__CAPSLOCK_ && makeCodes[scanCode-1] <= 'z' && makeCodes[scanCode-1] >= 'a'){
 			if (!__SHIFT_)
-				printf("%c", __keyboard_buffer[__KBUFFER_PTR_]+'A'-'a');
+				asciiCode = makeCodes[scanCode-1]+'A'-'a';
 			else
-				printf("%c", __keyboard_buffer[__KBUFFER_PTR_]);
-		else if(__SHIFT_){
-			__keyboard_buffer[__KBUFFER_PTR_] = shiftMakeCodes[index-1];
-			printf("%c", __keyboard_buffer[__KBUFFER_PTR_]);
-		}
+				asciiCode = makeCodes[scanCode-1];
+		}else if(__SHIFT_)
+			asciiCode = shiftMakeCodes[scanCode-1];
 		else
-			printf("%c", __keyboard_buffer[__KBUFFER_PTR_]);
-
-		__KBUFFER_PTR_ = (__KBUFFER_PTR_+ 1) % KBUFFER_SIZE;
+			asciiCode = makeCodes[scanCode-1];	
 	}
+	return asciiCode;
 }
