@@ -46,12 +46,17 @@ kmain()
 	__INIT_VIDEO();
 
 	__clear_screen();
+
+	openConsole(0);
 	printSystemSymbol();
 	printf("ImpactTrueno hizo %d de danio!!! \n", 1234693);
+
+
+	openConsole(1);
 	printf("Esto es un %s \n", "pija");
 	printf("La hora es: ");
 	_print_time();
-	
+
 	
 
 

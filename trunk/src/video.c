@@ -68,3 +68,15 @@ int __write_screen( const char* buffer, int count){
 
 	return 1;
 }
+
+int openConsole(int index){
+
+	if(index >= __MAX_CONSOLES )
+		return -1;
+	else {
+		__SCREEN = __consoles+index;
+		__clear_screen();
+	}
+	
+	return index;
+}
