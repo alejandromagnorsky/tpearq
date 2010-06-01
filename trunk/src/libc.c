@@ -1,33 +1,6 @@
 #include "../include/kernel.h"
 #include "../include/kc.h"
 
-int getc(void)
-{
-	int c;
-	char * buffer = (char *) 0x40;
-	
-	if(__KBUFFER_PTR_ % 2 != 0)
-		return -1;
-
-	/* Si el ASCII en el buffer es 0000 0000 (la última tecla apretada fue una
-	** tecla de control o no se apretó ninguna), entonces llama a la interrupción 
-	** de lectura de teclado MIENTRAS se presionen teclas de control.
-	*/
-	if ( (buffer[__KBUFFER_PTR_] & 0x0F) == 0 )
-		while ( (c = buffer[__KBUFFER_PTR_] & 0x0F) == 0 ){ 
-		//Esta función debería llamar a la interrupción de teclado
-		// y esperar a que se escriba algo en caso de que el buffer
-		//esté vacío
-		}
-
-	__KBUFFER_PTR_ += 2;
-
-	if (__KBUFFER_PTR_ > 0x3D)
-		__KBUFFER_PTR_ = 0x1E;
-	
-	return c;
-}
-
 int putc( int c ){
 	return __write(stdout,&c, 1);
 } 
@@ -96,16 +69,16 @@ void printSystemSymbol()
 // Los argumentos están en BCD 
 void printTime(dword hours, dword minutes, dword seconds)
 {
-	putc(((hours & 0x000000F0)>>4) + '0');
-	putc((hours & 0x0000000F) + '0');
+	putc(((hours & 0xF0)>>4) + '0');
+	putc((hours & 0xF) + '0');
 	putc(':');
 
-	putc(((minutes & 0x000000F0)>>4) + '0');
-	putc((minutes & 0x0000000F) + '0');
+	putc(((minutes & 0xF0)>>4) + '0');
+	putc((minutes & 0xF) + '0');
 	putc(':');
 
-	putc(((seconds & 0x000000F0)>>4) + '0');
-	putc((seconds & 0x0000000F) + '0');
+	putc(((seconds & 0xF0)>>4) + '0');
+	putc((seconds & 0xF) + '0');
 }
 
 

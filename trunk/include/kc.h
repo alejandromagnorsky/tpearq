@@ -8,8 +8,6 @@
 
 #define NULL 0
 
-int __KBUFFER_PTR_ = 0x1E;	//Puntero al buffer del teclado
-
 /* Muestra la imagen de inicio */
 void showSplashScreen();
 
