@@ -1,0 +1,6 @@
+= TODO =
+
+- Definir responsabilidad de varios temas:
+  * Consola(s): video o kernel?
+  * int 80: __write() o en __flush_screen() ?
+  * Parser de argumentos: kernel o una capa mas alta?
