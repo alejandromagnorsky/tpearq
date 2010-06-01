@@ -3,13 +3,16 @@ GLOBAL	_print_time
 GLOBAL	_read_scancode
 GLOBAL  _int_08_hand
 GLOBAL  _int_09_hand
+GLOBAL  _int_80h_hand
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 
 EXTERN  int_08
 EXTERN  int_09
 EXTERN	printTime
-
+EXTERN __write
+EXTERN __read
+EXTERN __keyboard_buffer
 
 SECTION .text
 
@@ -105,8 +108,12 @@ _int_09_hand:				; Handler de INT 9 (Teclado)
         mov     ds, ax			; Carga de DS y ES con el valor del selector a utilizar.
         mov     es, ax
 	
-        call    int_09
+	push	0
+	push	__keyboard_buffer
+	push	1
+        call    __read
 	              
+	add	esp, 12
         mov	al, 20h			; Envio de EOI generico al PIC
 	out	20h, al
 	popa                            
@@ -114,15 +121,42 @@ _int_09_hand:				; Handler de INT 9 (Teclado)
         pop     ds
         iret
 
+
+_int_80h_hand:
+	push	ebp
+	mov	ebp, esp
+	push    ds
+        push    es                      ; Se salvan los registros
+        pusha      
+        
+	push dword	[ebp+12]		; Pushea los parámetros de read y write
+	push dword	[ebp+16]
+	push dword	[ebp+20]
+	mov	eax, [ebp+8]		; ebp+8 = 0 --> Read. ebp+8 = 1 --> Write
+	cmp	eax, 0
+	je	read
+	jmp	write
+continue:
+	add	esp, 12
+	popa                            
+        pop     es
+        pop     ds
+	leave
+        iret
+read:
+	call	__read
+	jmp	continue
+write:
+	call	__write
+	jmp	continue
+
+
 _read_scancode:
 	push	ebp
 	mov	ebp, esp
 	in	al, 60h
 	leave
-	ret
-
-
-        
+	ret       
 
 
 

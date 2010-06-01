@@ -7,14 +7,25 @@
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
 
-int tickpos=30;
+#define KBUFFER_SIZE 16
+int __keyboard_buffer[KBUFFER_SIZE];
+int __KBUFFER_PTR_ = 0;
 
 void int_08() {
 
 }
 
-void int_09(){
-	printKey();
+size_t __read(int fd, void* buffer, size_t count){
+	int scanCode = _read_scancode() & 0xFF;
+	int *bufferPtr = buffer + __KBUFFER_PTR_*4;
+	*bufferPtr = getAscii(scanCode);
+	
+	if (*bufferPtr != -1){
+		__KBUFFER_PTR_ = (__KBUFFER_PTR_ + 1) % KBUFFER_SIZE;	
+		/* TESTEO */
+		printf("%c", *bufferPtr);
+	}
+	return *bufferPtr;
 }
 
 size_t __write(int fd, const void* buffer, size_t count){
@@ -47,12 +58,10 @@ kmain()
 
 	__clear_screen();
 
-	openConsole(0);
 	printSystemSymbol();
 	printf("ImpactTrueno hizo %d de danio!!! \n", 1234693);
 
 
-	openConsole(1);
 	printf("Esto es un %s \n", "pija");
 	printf("La hora es: ");
 	_print_time();
