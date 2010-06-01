@@ -20,6 +20,8 @@
 #define BLACK_BG 0x00
 
 #define __MAX_CONSOLES 10
+#define __TAB_LENGTH 4
+
 
 // NOTA: Las consolas las maneja el video o el kernel? a preguntar.
 
