@@ -17,6 +17,9 @@ int putc( int character );
 /* Imprime un string en pantalla */
 int printf(const char * str,...);
 
+/* Compara dos strings */
+int strcmp(const char * str1, const char * str2);
+
 /* Imprime un numero */
 void putInt(int n);
 
