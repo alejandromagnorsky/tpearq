@@ -42,7 +42,8 @@ kmain()
 
         int i,num;
 
-/* Borra la pantalla. */ 
+	// First initialize video.
+	__INIT_VIDEO();
 
 	__clear_screen();
 	printSystemSymbol();
