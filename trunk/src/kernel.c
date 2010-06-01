@@ -59,15 +59,9 @@ kmain()
 
 	_turn_cursor_on();
 
-	printSystemSymbol();
-	printf("ImpactTrueno hizo %d de danio!!! \n", 1234693);
+	__printSystemSymbol();
 
-
-	printf("Esto es un %s \n", "pija");
-	printf("La hora es: ");
-	_print_time();
-
-	printf("CMP: %d", strcmp("hola2", "hola"));
+	printf("Trucos:\n \t SHIFT+T: Nueva terminal (circular). \n \t SHIFT+C: Borra terminal.\n");
 
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
@@ -96,13 +90,16 @@ kmain()
 	_Sti();
 
 
-
        char c;
         while(1)
         {
 		c = getc();
 		if( c != -1 ) 
 			printf("%c", c);
+		if( c == 'T')
+			__switch_next_terminal();
+		if( c == 'C')
+			__clear_terminal();
         }
 	
 }
