@@ -1,0 +1,28 @@
+#include "../include/video.h"
+
+#define __MAX_TERMINALS 10
+#define __TAB_LENGTH 4
+
+
+typedef struct{
+	char buf[80*25];
+	int ptr;
+	int attr;
+} __terminal;
+
+
+// Console buffers
+__terminal __tty[__MAX_TERMINALS];
+
+// Index of visible console
+int __TTY_INDEX = 0;
+
+
+void __INIT_TTY();
+
+void __clear_terminal();
+
+int __write_terminal( const char* buffer, int count);
+
+void __flush_terminal(int append);
+

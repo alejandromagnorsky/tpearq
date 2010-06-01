@@ -1,6 +1,8 @@
 GLOBAL  _read_msw,_lidt
 GLOBAL	_print_time
 GLOBAL	_read_scancode
+GLOBAL  _turn_cursor_on
+GLOBAL 	_move_cursor
 GLOBAL  _int_08_hand
 GLOBAL  _int_09_hand
 GLOBAL  _int_80_hand
@@ -160,6 +162,53 @@ _read_scancode:
 	in	al, 60h
 	leave
 	ret       
+
+_move_cursor:
+	push ebp
+	mov ebp, esp
+
+	mov cx, [ebp+8]
+
+	mov dx, 3D4h
+	mov ax, 0Fh
+	out dx, ax
+
+	mov dx, 3D5h
+	mov ax, cx
+	out dx, ax
+
+	sar cx, 8
+
+	mov dx, 3D4h
+	mov ax, 0Eh
+	out dx, ax
+
+	mov dx, 3D5h
+	mov ax, cx
+	out dx, ax
+
+
+	leave
+	ret
+
+_turn_cursor_on:
+	push ebp
+	mov ebp, esp
+	
+	mov eax, 0
+	mov edx, 0
+
+	mov dx, 3D4h
+	mov ax, 0Ah
+	out dx, ax
+
+	mov dx, 3D5h
+	mov ax, 0h
+	out dx, ax
+
+
+	leave
+	ret
 
 
 
