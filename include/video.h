@@ -22,11 +22,9 @@
 #define __MAX_CONSOLES 10
 
 typedef struct{
-	
 	char buf[80*25*2];
 	int ptr;
 	int attr;
-
 } __screen_buffer;
 
 // All the posible usable consoles
@@ -35,6 +33,8 @@ __screen_buffer __consoles[__MAX_CONSOLES];
 // The screen pointer
 __screen_buffer * __SCREEN;
 
+int openConsole();
+
 void __INIT_VIDEO();
 
 void __clear_screen();
@@ -42,5 +42,7 @@ void __clear_screen();
 int __write_screen( const char* buffer, int count);
 
 int __flush_screen(int append);
+
+
 
 #endif
