@@ -10,7 +10,7 @@ int __write_test(char c, int pos, int attr){
 	vidmem[pos*2] = c;
 	vidmem[(pos*2)+1] = attr;
 
-	_move_cursor(pos+1);
+	_move_cursor(pos);
 
 	return pos;
 }

@@ -59,8 +59,10 @@ int __write_terminal( const char* buffer, int count){
 				row = (act_tty->ptr/80) % 25;
 				if(row == 24 )
 					__scroll_terminal();
-				else while(act_tty->ptr<80*(row+1))
+				else while(act_tty->ptr<80*(row+1)){
 					act_tty->buf[act_tty->ptr++] = ' ';
+					append++;
+				}
 				__printSystemSymbol();
 				break;
 			case '\t':
@@ -70,7 +72,7 @@ int __write_terminal( const char* buffer, int count){
 			case '\b':
 				if( act_tty->buf[act_tty->ptr-1] != __BLOCK_ASCII){
 					act_tty->buf[--act_tty->ptr] = ' ';
-					if(count!= 1)
+					if(count != 1)
 						append++;
 				}
 				break;
@@ -104,24 +106,21 @@ void __flush_terminal(int append){
 	char c;
 	// The pointer to the active terminal
 	__terminal * act_tty = __tty + __TTY_INDEX;
-	if(append){
-		for(i=0;i<append*2;i++){
+	_turn_cursor_off();
+	if(append) 
+		for(i=(append*2)-1;i>=0;i--){
 			c = act_tty->buf[act_tty->ptr-i];
 			if( c == __BLOCK_ASCII)
 				c = ' ';
 			__write_test(c, act_tty->ptr-i, act_tty->attr);
 		}
-		//__write_test(act_tty->buf[act_tty->ptr], act_tty->ptr, act_tty->attr);
-	} else{ 
-		_turn_cursor_off();
-		for(i = 0;i<80*25*2;i++){
-			c = act_tty->buf[i];
-			if( c == __BLOCK_ASCII)
-				c = ' ';
-			__write_test(c, i, act_tty->attr);
-		}
-		_turn_cursor_on();
+	 else for(i = 0;i<80*25*2;i++){
+		c = act_tty->buf[i];
+		if( c == __BLOCK_ASCII)
+			c = ' ';
+		__write_test(c, i, act_tty->attr);
 	}
+	_turn_cursor_on();
 	return;
 }
 
