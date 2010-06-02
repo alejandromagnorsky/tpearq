@@ -22,6 +22,7 @@ void		_int_08_hand();      /* Timer tick */
 void		_int_09_hand();	     /* Teclado */
 
 void 		_turn_cursor_on();
+void 		_turn_cursor_off();
 void		_move_cursor(unsigned int pos);
 
 void		_debug (void);

@@ -31,7 +31,7 @@ void __clear_terminal() {
 }
 
 void __printSystemSymbol(){
-	printf("tty%d/:", __TTY_INDEX);
+	printf("tty%d/:%c", __TTY_INDEX, __BLOCK_ASCII);
 }
 
 int __write_terminal( const char* buffer, int count){
@@ -68,8 +68,11 @@ int __write_terminal( const char* buffer, int count){
 					act_tty->buf[act_tty->ptr++] = ' ';	
 				break;
 			case '\b':
-				act_tty->buf[--act_tty->ptr] = ' ';
-				append--;				
+				if( act_tty->buf[act_tty->ptr-1] != __BLOCK_ASCII){
+					act_tty->buf[--act_tty->ptr] = ' ';
+					if(count!= 1)
+						append++;
+				}
 				break;
 			default:
 				act_tty->buf[act_tty->ptr++] = buffer[i];	
@@ -98,13 +101,27 @@ void __scroll_terminal(){
 
 void __flush_terminal(int append){
 	int i;
+	char c;
 	// The pointer to the active terminal
 	__terminal * act_tty = __tty + __TTY_INDEX;
 	if(append){
-		for(i=-append*2;i<0;i++)
-			__write_test(act_tty->buf[act_tty->ptr+i], act_tty->ptr+i, act_tty->attr);
-	} else for(i = 0;i<80*25*2;i++)
-		__write_test(act_tty->buf[i], i, act_tty->attr);
+		for(i=0;i<append*2;i++){
+			c = act_tty->buf[act_tty->ptr-i];
+			if( c == __BLOCK_ASCII)
+				c = ' ';
+			__write_test(c, act_tty->ptr-i, act_tty->attr);
+		}
+		//__write_test(act_tty->buf[act_tty->ptr], act_tty->ptr, act_tty->attr);
+	} else{ 
+		_turn_cursor_off();
+		for(i = 0;i<80*25*2;i++){
+			c = act_tty->buf[i];
+			if( c == __BLOCK_ASCII)
+				c = ' ';
+			__write_test(c, i, act_tty->attr);
+		}
+		_turn_cursor_on();
+	}
 	return;
 }
 
