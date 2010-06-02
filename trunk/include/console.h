@@ -2,6 +2,7 @@
 
 #define __MAX_TERMINALS 10
 #define __TAB_LENGTH 4
+#define __BLOCK_ASCII -10
 
 
 typedef struct{

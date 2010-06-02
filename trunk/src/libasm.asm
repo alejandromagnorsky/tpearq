@@ -2,6 +2,7 @@ GLOBAL  _read_msw,_lidt
 GLOBAL	_print_time
 GLOBAL	_read_scancode
 GLOBAL  _turn_cursor_on
+GLOBAL  _turn_cursor_off
 GLOBAL 	_move_cursor
 GLOBAL  _int_08_hand
 GLOBAL  _int_09_hand
@@ -204,6 +205,26 @@ _turn_cursor_on:
 
 	mov dx, 3D5h
 	mov ax, 0h
+	out dx, ax
+
+
+	leave
+	ret
+
+
+_turn_cursor_off:
+	push ebp
+	mov ebp, esp
+	
+	mov eax, 0
+	mov edx, 0
+
+	mov dx, 3D4h
+	mov ax, 0Ah
+	out dx, ax
+
+	mov dx, 3D5h
+	mov ax, 020h
 	out dx, ax
 
 
