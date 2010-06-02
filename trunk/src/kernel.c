@@ -61,7 +61,8 @@ kmain()
 
 	__printSystemSymbol();
 
-	printf("Trucos:\n \t SHIFT+T: Nueva terminal (circular). \n \t SHIFT+C: Borra terminal.\n");
+	printf("Trucos:\n \t SHIFT+Q: Proxima terminal.  \n \t SHIFT+W: Ultima terminal \n \t SHIFT+C: Borra terminal.\n");
+	printf("Nota: SCROLLEA!!!");
 
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
@@ -95,11 +96,21 @@ kmain()
         {
 		c = getc();
 		if( c != -1 ) 
-			printf("%c", c);
-		if( c == 'T')
-			__switch_next_terminal();
-		if( c == 'C')
-			__clear_terminal();
+			switch(c){
+
+				case 'Q':
+					__switch_next_terminal();
+					break;
+				case 'W':
+					__switch_last_terminal();
+					break;
+				case 'C':
+					__clear_terminal();
+					break;
+				default:
+					printf("%c", c);
+					break;
+			}
         }
 	
 }

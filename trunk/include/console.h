@@ -8,6 +8,7 @@ typedef struct{
 	char buf[80*25];
 	int ptr;
 	int attr;
+	int empty;
 } __terminal;
 
 
@@ -16,6 +17,10 @@ __terminal __tty[__MAX_TERMINALS];
 
 // Index of visible console
 int __TTY_INDEX = 0;
+
+
+
+void __scroll_terminal();
 
 void __printSystemSymbol();
 
@@ -30,4 +35,6 @@ void __flush_terminal(int append);
 int __switch_terminal(int index);
 
 void __switch_next_terminal();
+
+void __switch_last_terminal();
 
