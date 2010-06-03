@@ -1,8 +1,27 @@
-#include "../include/video.h"
+#define WHITE_FG 0x07 
+#define ORANGE_FG 0x06
+#define VIOLET_FG 0x05
+#define RED_FG 0x04
+#define SKY_FG 0x03
+#define GREEN_FG 0x02
+#define BLUE_FG 0x01
+#define BLACK_FG 0x00
+
+#define WHITE_BG 0x70 
+#define ORANGE_BG 0x60
+#define VIOLET_BG 0x50
+#define RED_BG 0x40
+#define SKY_BG 0x30
+#define GREEN_BG 0x20
+#define BLUE_BG 0x10
+#define BLACK_BG 0x00
 
 #define __MAX_TERMINALS 10
 #define __TAB_LENGTH 4
+
 #define __BLOCK_ASCII -10
+#define __TAB_ASCII -11
+#define __ENTER_ASCII -12
 
 
 typedef struct{

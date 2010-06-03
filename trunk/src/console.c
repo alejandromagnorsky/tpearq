@@ -1,7 +1,11 @@
 #include "../include/console.h"
 
-
 void __INIT_TTY(){
+
+
+	__register_special_ascii(__BLOCK_ASCII, ' ');
+	__register_special_ascii(__TAB_ASCII, ' ');
+	__register_special_ascii(__ENTER_ASCII, ' ');
 
 	int i=0,j=0;
 
@@ -14,6 +18,7 @@ void __INIT_TTY(){
 		while(j<80*25)
 			__tty[i].buf[j++] = ' ';
 	}
+
 
 	__TTY_INDEX = 0;
 	__flush_terminal(0);
@@ -31,7 +36,7 @@ void __clear_terminal() {
 }
 
 void __printSystemSymbol(){
-	printf("tty%d/:%c", __TTY_INDEX, __BLOCK_ASCII);
+	printf("dio%d/:%c", __TTY_INDEX, __BLOCK_ASCII);
 }
 
 int __write_terminal( const char* buffer, int count){
@@ -66,8 +71,11 @@ int __write_terminal( const char* buffer, int count){
 				__printSystemSymbol();
 				break;
 			case '\t':
-				for(j=0;j<__TAB_LENGTH;j++)
+				for(j=0;j<__TAB_LENGTH;j++){
+					if(act_tty->ptr == 80*25 - 1 )
+						__scroll_terminal();
 					act_tty->buf[act_tty->ptr++] = ' ';	
+				}
 				break;
 			case '\b':
 				if( act_tty->buf[act_tty->ptr-1] != __BLOCK_ASCII){
@@ -90,7 +98,6 @@ int __write_terminal( const char* buffer, int count){
 	return count;
 }
 
-
 void __scroll_terminal(){
 
 	int i=0;
@@ -102,27 +109,15 @@ void __scroll_terminal(){
 	__flush_terminal(0);
 }
 
-
 void __flush_terminal(int append){
-	int i;
-	char c;
 	// The pointer to the active terminal
 	__terminal * act_tty = __tty + __TTY_INDEX;
-	_turn_cursor_off();
+	
 	if(append) 
-		for(i=(append*2)-1;i>=0;i--){
-			c = act_tty->buf[act_tty->ptr-i];
-			if( c == __BLOCK_ASCII)
-				c = ' ';
-			__write_test(c, act_tty->ptr-i, act_tty->attr);
-		}
-	 else for(i = 0;i<80*25*2;i++){
-		c = act_tty->buf[i];
-		if( c == __BLOCK_ASCII)
-			c = ' ';
-		__write_test(c, i, act_tty->attr);
-	}
-	_turn_cursor_on();
+		__flush_screen(act_tty->buf, act_tty->ptr-append, act_tty->ptr, act_tty->attr);
+	 else
+		__flush_screen(act_tty->buf,0, 80*25,act_tty->attr);
+
 	return;
 }
 
@@ -133,8 +128,6 @@ void __switch_next_terminal(){
 	if(__tty[__TTY_INDEX].empty)
 		__printSystemSymbol();
 }
-
-
 
 void __switch_last_terminal(){
 	if(--__TTY_INDEX < 0)

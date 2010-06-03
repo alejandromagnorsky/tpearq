@@ -1,28 +1,22 @@
 #ifndef _video_
 #define _video_
 
-#define WHITE_FG 0x07 // Atributo de video. Letras blancas, fondo negro
-#define ORANGE_FG 0x06
-#define VIOLET_FG 0x05
-#define RED_FG 0x04
-#define SKY_FG 0x03
-#define GREEN_FG 0x02
-#define BLUE_FG 0x01
-#define BLACK_FG 0x00
+#define MAX_SPECIAL_ASCII 5
 
-#define WHITE_BG 0x70 // Atributo de video. Letras blancas, fondo negro
-#define ORANGE_BG 0x60
-#define VIOLET_BG 0x50
-#define RED_BG 0x40
-#define SKY_BG 0x30
-#define GREEN_BG 0x20
-#define BLUE_BG 0x10
-#define BLACK_BG 0x00
+typedef struct{
+	int ascii;
+	char repr;
+} __special_ASCII;
 
-#define __MAX_CONSOLES 10
-#define __TAB_LENGTH 4
+__special_ASCII __special_ASCII_map[MAX_SPECIAL_ASCII];
+int __QTY_SPECIAL_ASCII = 0;
 
+
+
+int __register_special_ascii(int ascii, char repr);
 
 int __write_test(char c, int pos, int attr);
+
+void __flush_screen(char * screen, int from, int to, int attr);
 
 #endif
