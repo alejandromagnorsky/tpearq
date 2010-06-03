@@ -1,10 +1,11 @@
 #include "../include/console.h"
 
+
 void __INIT_TTY(){
 
 
 	__register_special_ascii(__BLOCK_ASCII, ' ');
-	__register_special_ascii(__TAB_ASCII, ' ');
+	__register_special_ascii(__TAB_ASCII, 'T');
 	__register_special_ascii(__ENTER_ASCII, ' ');
 
 	int i=0,j=0;
@@ -36,58 +37,92 @@ void __clear_terminal() {
 }
 
 void __printSystemSymbol(){
-	printf("dio%d/:%c", __TTY_INDEX, __BLOCK_ASCII);
+	printf("dio%d/:", __TTY_INDEX, __BLOCK_ASCII);
+}
+
+void __enter(){
+	__terminal * act_tty = __tty + __TTY_INDEX;
+	int row = (act_tty->ptr/80) % 25;
+	int append = 0;
+
+	while(act_tty->ptr<80*(row+1)){
+		act_tty->buf[act_tty->ptr++] = __ENTER_ASCII;
+		append++;
+	}
+
+	if(row == 24 )
+		__scroll_terminal();
+	__flush_screen(act_tty->buf,act_tty->ptr-append, act_tty->ptr, act_tty->attr);
+}
+
+
+void __tab(){
+	int i;
+	__terminal * act_tty = __tty + __TTY_INDEX;
+	for(i=0;i<__TAB_LENGTH;i++){
+		if(act_tty->ptr == 80*25 - 1 )
+			__scroll_terminal();
+		act_tty->buf[act_tty->ptr++] = ' ';	
+	}
+	act_tty->buf[act_tty->ptr-1] = __TAB_ASCII;
+}
+
+void __backspace(){
+	__terminal * act_tty = __tty + __TTY_INDEX;
+	char c = act_tty->buf[act_tty->ptr-1];
+	int append = 0;
+	switch(c){
+	case __BLOCK_ASCII:
+		break;
+	case __TAB_ASCII:
+		for(;append<__TAB_LENGTH;append++)
+			act_tty->buf[--act_tty->ptr] = ' ';
+		break;
+	case __ENTER_ASCII:
+		for(;act_tty->buf[act_tty->ptr-1] == __ENTER_ASCII;append++)
+			act_tty->buf[--act_tty->ptr] = ' ';
+		break;
+	default:
+		act_tty->buf[--act_tty->ptr] = ' ';		
+	}
+
+	__flush_screen(act_tty->buf,act_tty->ptr, act_tty->ptr+append, act_tty->attr);
+	return;
 }
 
 int __write_terminal( const char* buffer, int count){
 
 	int i = 0;
-	int row,j;
+	int j;
 	int append = count;
+
 	// The pointer to the active terminal
 	__terminal * act_tty = __tty + __TTY_INDEX;
+	act_tty->empty = 0;
+
 	while(i<count){
 
 		// Si el cursor se pasa de la pantalla, vuelvo a 0
-		if(act_tty->ptr >= 80*25)
+		if(act_tty->ptr >= 80*25 || act_tty->ptr < 0)
 			act_tty->ptr = 0;
-
-		// Si es negativo, vuelvo a 0
-		if(act_tty->ptr < 0)
-			act_tty->ptr = 0;
-
-		act_tty->empty = 0;
 
 		switch( buffer[i] ){
 			
 			case '\n':
-				row = (act_tty->ptr/80) % 25;
-				if(row == 24 )
-					__scroll_terminal();
-				else while(act_tty->ptr<80*(row+1)){
-					act_tty->buf[act_tty->ptr++] = ' ';
-					append++;
-				}
+				__enter();
 				__printSystemSymbol();
 				break;
 			case '\t':
-				for(j=0;j<__TAB_LENGTH;j++){
-					if(act_tty->ptr == 80*25 - 1 )
-						__scroll_terminal();
-					act_tty->buf[act_tty->ptr++] = ' ';	
-				}
+				__tab();
 				break;
 			case '\b':
-				if( act_tty->buf[act_tty->ptr-1] != __BLOCK_ASCII){
-					act_tty->buf[--act_tty->ptr] = ' ';
-					if(count != 1)
-						append++;
-				}
+				__backspace();
 				break;
 			default:
-				if(act_tty->ptr == 80*25 - 1 )
-					__scroll_terminal();
 				act_tty->buf[act_tty->ptr++] = buffer[i];	
+				if(act_tty->ptr == 80*25 )
+					__scroll_terminal();
+
 				break;
 		}
 		i++;
@@ -97,6 +132,7 @@ int __write_terminal( const char* buffer, int count){
 
 	return count;
 }
+
 
 void __scroll_terminal(){
 
@@ -108,6 +144,7 @@ void __scroll_terminal(){
 	__tty[__TTY_INDEX].ptr = 80*24;
 	__flush_terminal(0);
 }
+
 
 void __flush_terminal(int append){
 	// The pointer to the active terminal
@@ -128,6 +165,8 @@ void __switch_next_terminal(){
 	if(__tty[__TTY_INDEX].empty)
 		__printSystemSymbol();
 }
+
+
 
 void __switch_last_terminal(){
 	if(--__TTY_INDEX < 0)

@@ -13,7 +13,7 @@ int __register_special_ascii(int ascii, char repr){
 }
 
 
-int __write_test(char c, int pos, int attr){
+int __write_screen(char c, int pos, int attr){
 
 	if( pos > 80*25 || pos < 0)
 		return -1;
@@ -34,8 +34,8 @@ int __write_test(char c, int pos, int attr){
 void __flush_screen(char * screen, int from, int to, int attr){
 	_turn_cursor_off();
 	int i;
-	for(i=from;i<to;i++)
-		__write_test(screen[i], i,attr);
+	for(i=from;i<=to;i++)
+		__write_screen(screen[i], i,attr);
 	_move_cursor(to);
 	_turn_cursor_on();
 }
