@@ -1,11 +1,9 @@
 #include "../include/console.h"
 
-
 void __INIT_TTY(){
 
-
 	__register_special_ascii(__BLOCK_ASCII, ' ');
-	__register_special_ascii(__TAB_ASCII, 'T');
+	__register_special_ascii(__TAB_ASCII, ' ');
 	__register_special_ascii(__ENTER_ASCII, ' ');
 
 	int i=0,j=0;
@@ -20,7 +18,6 @@ void __INIT_TTY(){
 			__tty[i].buf[j++] = ' ';
 	}
 
-
 	__TTY_INDEX = 0;
 	__flush_terminal(0);
 }
@@ -31,13 +28,13 @@ void __clear_terminal() {
 		__tty[__TTY_INDEX].buf[i++] = ' ';
 	__tty[__TTY_INDEX].ptr = 0;
 	__tty[__TTY_INDEX].empty = 1;
-		
+
 	__flush_terminal(0);
 	__printSystemSymbol();
 }
 
 void __printSystemSymbol(){
-	printf("dio%d/:", __TTY_INDEX, __BLOCK_ASCII);
+	printf("dio%d/:%c", __TTY_INDEX, __BLOCK_ASCII);
 }
 
 void __enter(){
@@ -54,7 +51,6 @@ void __enter(){
 		__scroll_terminal();
 	__flush_screen(act_tty->buf,act_tty->ptr-append, act_tty->ptr, act_tty->attr);
 }
-
 
 void __tab(){
 	int i;
@@ -133,7 +129,6 @@ int __write_terminal( const char* buffer, int count){
 	return count;
 }
 
-
 void __scroll_terminal(){
 
 	int i=0;
@@ -144,7 +139,6 @@ void __scroll_terminal(){
 	__tty[__TTY_INDEX].ptr = 80*24;
 	__flush_terminal(0);
 }
-
 
 void __flush_terminal(int append){
 	// The pointer to the active terminal
@@ -165,8 +159,6 @@ void __switch_next_terminal(){
 	if(__tty[__TTY_INDEX].empty)
 		__printSystemSymbol();
 }
-
-
 
 void __switch_last_terminal(){
 	if(--__TTY_INDEX < 0)
