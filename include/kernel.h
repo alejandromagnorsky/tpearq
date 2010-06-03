@@ -12,7 +12,7 @@
 #define OS_PID	0
 #define stdout 1
 #define stdin 0
-#define KBUFFER_SIZE 16
+#define KBUFFER_SIZE 128
 
 typedef struct{
 	int buf[KBUFFER_SIZE];
