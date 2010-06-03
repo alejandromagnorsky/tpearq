@@ -15,7 +15,7 @@ int __QTY_SPECIAL_ASCII = 0;
 
 int __register_special_ascii(int ascii, char repr);
 
-int __write_test(char c, int pos, int attr);
+int __write_screen(char c, int pos, int attr);
 
 void __flush_screen(char * screen, int from, int to, int attr);
 

@@ -17,7 +17,7 @@
 #define BLACK_BG 0x00
 
 #define __MAX_TERMINALS 10
-#define __TAB_LENGTH 4
+#define __TAB_LENGTH 5
 
 #define __BLOCK_ASCII -10
 #define __TAB_ASCII -11
