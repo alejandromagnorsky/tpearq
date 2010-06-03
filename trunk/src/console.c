@@ -77,6 +77,8 @@ int __write_terminal( const char* buffer, int count){
 				}
 				break;
 			default:
+				if(act_tty->ptr == 80*25 - 1 )
+					__scroll_terminal();
 				act_tty->buf[act_tty->ptr++] = buffer[i];	
 				break;
 		}
