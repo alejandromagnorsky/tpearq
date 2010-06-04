@@ -28,7 +28,6 @@ int scanf(const char * str, ...){
 	**	strTrueLen:	longitud de la string str una vez reemplazados los % por los valores ingresados por el usuario.
 	**	strInLen:	longitud de la string strIn, ingresada por el usuario
 	*/
-	int retFlag = 0;	/* retFlag = 0 --> string inválida. reFlag = 1 --> string válida */
 	char * strIn;
 	void ** argv = (void **)(&str);
 	
@@ -47,12 +46,12 @@ int scanf(const char * str, ...){
 					for(k=0; isDigit(strIn[i-1-k]); k++)
 						acum = acum + ((strIn[i-1-k]-'0') * pow(10, exponents-k-1) );
 					printf("ACUM: %d|||", acum);	//PRINTF DE  DEBUGGEO//
-					*((int *)++argv) = acum;
+					*(*((int **)++argv)) = acum;
 					strTrueLen = strTrueLen - 2 + exponents + 1;	/* Resto 2 a strTrueLen (% y d) y sumo exp+1 (cant. dígitos leidos)*/
 					break;
 				case 'c':
 					printf("ACUM: %c", strIn[i-1]);
-					*((int *)++argv) = strIn[i-1];
+					*(*((int **)++argv)) = strIn[i-1];
 					strTrueLen = strTrueLen - 2 + 1;
 					break;
 				case 's':			/* FIJARME BIEN COMO REACCIONAR CON STRINGS */
@@ -74,6 +73,61 @@ int scanf(const char * str, ...){
 	}
 	printf("%d", 0);	/* PRINTF  DE DEBUGGEO */
 	return 0;
+}
+
+int scanfSINMALLOC(const char * str, ...){
+	int i, j, acum = 0;
+	int retFlag = 0, flagPorc = 0;	/* retFlag = 0 --> string inválida. reFlag = 1 --> string válida */
+	char c;
+	void ** argv = (void **)(&str);
+	
+	for (i=0, j=0; flagPorc || (c = getc()) != '\n'; i++, j++){
+		validate(str, argv, &i, &j, &c, &flagPorc, &retFlag);
+	}
+		printf("str[i] FINAL: %d", str[i]);	/* PRINTF  DE DEBUGGEO */
+	if (str[i] != '\0' || retFlag){
+		printf("%d", -1);	/* PRINTF  DE DEBUGGEO */
+		return -1;
+	}
+	printf("JOTA: %d", j);	/* PRINTF  DE DEBUGGEO */
+	return j;
+}
+
+int validate(const char * str, void ** argv, int * i, int * j, char *c, int *flagPorc, int *retFlag){
+	int acum = 0;
+		if ( *c != str[*i] ){
+			if ( str[*i] == '%' ){
+			switch(str[(*i)++]){
+				case 'd':				/* VER SI PUEDO ARREGLAR LA CHANCHADA ESTA */
+					*flagPorc = 2;
+					for(; isDigit(*c); (*j)++){	/* Primer for para contar k . j sincroniza strings str y strIn*/
+						printf("%c", *c);
+						acum = acum * 10 + *c-48;
+						*c = getc();
+						validate(str, argv, i, j, c, flagPorc, retFlag);
+					}
+					printf("$%d", acum);	//PRINTF DE  DEBUGGEO//
+					*(*((int **)++argv)) = acum;
+					break;
+				case 'c':
+					printf("ACUM: %c", *c);//PRINTF DE  DEBUGGEO//
+					*(*((int **)++argv)) = *c;
+					break;
+				case 's':			/* FIJARME BIEN COMO REACCIONAR CON STRINGS */
+					break;
+				default:	/* VER BIEN CASO DEFAULT */
+					i--;
+					break;
+			}
+			} else if (str[*i] != *c){
+				printf("%c", *c);
+				*retFlag = 1;
+			}
+		} else{
+			//PRINTF DE  DEBUGGEO//
+			printf("%c", *c);
+		}
+		*flagPorc = (*flagPorc != 0)*(*flagPorc-1);
 }
 
 int isDigit(int a){

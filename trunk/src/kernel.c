@@ -96,8 +96,10 @@ kmain()
         while(1)
         {
 		/* TESTEO SCANF */
-			c = scanf("pi %dj", &in, &ch);
+			c = scanfSINMALLOC("pij%dh", &in, &ch);
+		//	c = scanf("pija%c", &ch, &in);
 			printf("EN IN sE GUARDO: %d|||", in);	//PRINTF DE  DEBUGGEO//
+			printf("EN IN sE GUARDO: %c|||", ch);	//PRINTF DE  DEBUGGEO//
 		//c = getc();
 		if( c != -1 ) 
 			switch(c){
