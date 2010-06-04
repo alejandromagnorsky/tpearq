@@ -90,12 +90,15 @@ kmain()
 
 	_Sti();
 
-	int in;
+	int in = 99;
 	/* TESTEO SCANF */char ch;
 	char c;
         while(1)
         {
-		c = getc();
+		/* TESTEO SCANF */
+			c = scanf("pi %dj", &in, &ch);
+			printf("EN IN sE GUARDO: %d|||", in);	//PRINTF DE  DEBUGGEO//
+		//c = getc();
 		if( c != -1 ) 
 			switch(c){
 
