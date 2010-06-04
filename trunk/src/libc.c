@@ -9,54 +9,83 @@ int getc(){
 	
 }
 
-int scanf(const char * str, ...){
-	int i, j, c, lengthStr = 0;
-	int flagPorc = 0;
-	int retFlag = 0;
-	void ** argv = (void **) (&str);
-	
-/* DEBUGGEO --> LOS PRINTF SON PARA DEBUGGEO */
-	if ( str[0] == ""){
-		printf("%s", "string vacia");
-		return -1;
+void getString(char * str){
+	int i;
+	char c;
+	char * ret;
+	for (i=0; (c = getc()) != '\n' ; i++){
+		printf("%c", c);	/* PRINTF  DE DEBUGGEO */
+		str[i] = c;
 	}
+	str[i] = '\0';
+	str = ret;
+	printf("\n");	/* PRINTF  DE DEBUGGEO */
+}
 
-	/*  Falta validar si hay EOF despues de un %. Probar desues con strings cuyo ultimo caracter sea % */
-	for (i=0 ;  (c=getc()) != '\n'; i++){
-		if (!lengthStr || ( i!=0 && i == lengthStr) ){
-			if ( str[i] == '%' )	
-				flagPorc = 1;	
-			else if( flagPorc ){		
-				switch(str[i]){
-				case 'd':
-					*((int *)++argv) = c;
+int scanf(const char * str, ...){
+	int i, j, k, exponents, acum = 0, strLen, strTrueLen, strInLen;
+	/*	strLen:		longitud de la string str.
+	**	strTrueLen:	longitud de la string str una vez reemplazados los % por los valores ingresados por el usuario.
+	**	strInLen:	longitud de la string strIn, ingresada por el usuario
+	*/
+	int retFlag = 0;	/* retFlag = 0 --> string inválida. reFlag = 1 --> string válida */
+	char * strIn;
+	void ** argv = (void **)(&str);
+	
+	getString(strIn); /* El usuario ingresa una string */
+	strLen = strlen(str);
+	strTrueLen = strLen;	/* Inicialmente la string real tiene la misma longitud que la string del scanf */
+	strInLen = strlen(strIn);
+
+	for (i=0, j=0; i<strLen && j<strInLen; i++, j++){
+		if ( str[i] == '%' )
+			switch(str[++i]){
+				case 'd':					/* VER SI PUEDO ARREGLAR LA CHANCHADA ESTA */
+					for(k=0; isDigit(strIn[i-1-k]); k++, j++)	/* Primer for para contar k . j sincroniza strings str y strIn*/
+					exponents = k;
+					printf("K: %d", k);	//PRINTF DE  DEBUGGEO//
+					for(k=0; isDigit(strIn[i-1-k]); k++)
+						acum = acum + ((strIn[i-1-k]-'0') * pow(10, exponents-k-1) );
+					printf("ACUM: %d|||", acum);	//PRINTF DE  DEBUGGEO//
+					*((int *)++argv) = acum;
+					strTrueLen = strTrueLen - 2 + exponents + 1;	/* Resto 2 a strTrueLen (% y d) y sumo exp+1 (cant. dígitos leidos)*/
 					break;
 				case 'c':
-					*((char *)++argv) = c;
+					printf("ACUM: %c", strIn[i-1]);
+					*((int *)++argv) = strIn[i-1];
+					strTrueLen = strTrueLen - 2 + 1;
 					break;
-				case 's':
-					*((char **)++argv) = c;
+				case 's':			/* FIJARME BIEN COMO REACCIONAR CON STRINGS */
 					break;
 				default:
+					i--;
+					strTrueLen--;
 					break;
-				}
-				flagPorc = 0;
-			} else if ( c != str[i] ){
-				printf("|| TECLA MAL: %c ||",c);
-				retFlag = 1;
-			} else if (!lengthStr && str[i+1] == '\0'){
-				lengthStr = i+1;	//Reduzco la lengthStr en 1 así nunca va a ser igual
 			}
-		}
-		printf("%c",c);
+		else
+			if (str[i] != strIn[j]){
+				printf("%d", -1);	/* PRINTF  DE DEBUGGEO */
+				return -1;
+			}
 	}
-	printf("%c",c);	//Si salio del for, este c es un barra n
-	if (i==0 || retFlag || i != lengthStr){
-		printf("DEBUGGEO i:%d  l:%d: no matcheó str de scanf", i, lengthStr);
+	if (strInLen != strTrueLen){
+		printf("%d", -1);	/* PRINTF  DE DEBUGGEO */
 		return -1;
-	} else
-		printf("%s","MATCHEO BIEN");
-	
+	}
+	printf("%d", 0);	/* PRINTF  DE DEBUGGEO */
+	return 0;
+}
+
+int isDigit(int a){
+	if( (a >= '0') && (a <= '9') )
+		return 1;
+	return 0;
+}
+
+int strlen(const char * str){
+	int i;
+	for (i = 0; str[i] != '\0'; i++);
+		return i;
 }
 
 int putc( int c ){
