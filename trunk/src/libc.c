@@ -3,8 +3,59 @@
 
 int getc(){
 	int character = -1;
-	_int_80_hand(0, stdin, &character, 1);
+	while (character == -1)
+		_int_80_hand(0, stdin, &character, 1);
 	return character;
+	
+}
+
+int scanf(const char * str, ...){
+	int i, j, c, lengthStr = 0;
+	int flagPorc = 0;
+	int retFlag = 0;
+	void ** argv = (void **) (&str);
+	
+/* DEBUGGEO --> LOS PRINTF SON PARA DEBUGGEO */
+	if ( str[0] == ""){
+		printf("%s", "string vacia");
+		return -1;
+	}
+
+	/*  Falta validar si hay EOF despues de un %. Probar desues con strings cuyo ultimo caracter sea % */
+	for (i=0 ;  (c=getc()) != '\n'; i++){
+		if (!lengthStr || ( i!=0 && i == lengthStr) ){
+			if ( str[i] == '%' )	
+				flagPorc = 1;	
+			else if( flagPorc ){		
+				switch(str[i]){
+				case 'd':
+					*((int *)++argv) = c;
+					break;
+				case 'c':
+					*((char *)++argv) = c;
+					break;
+				case 's':
+					*((char **)++argv) = c;
+					break;
+				default:
+					break;
+				}
+				flagPorc = 0;
+			} else if ( c != str[i] ){
+				printf("|| TECLA MAL: %c ||",c);
+				retFlag = 1;
+			} else if (!lengthStr && str[i+1] == '\0'){
+				lengthStr = i+1;	//Reduzco la lengthStr en 1 así nunca va a ser igual
+			}
+		}
+		printf("%c",c);
+	}
+	printf("%c",c);	//Si salio del for, este c es un barra n
+	if (i==0 || retFlag || i != lengthStr){
+		printf("DEBUGGEO i:%d  l:%d: no matcheó str de scanf", i, lengthStr);
+		return -1;
+	} else
+		printf("%s","MATCHEO BIEN");
 	
 }
 

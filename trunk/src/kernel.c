@@ -90,8 +90,9 @@ kmain()
 
 	_Sti();
 
-
-       char c;
+	int in;
+	/* TESTEO SCANF */char ch;
+	char c;
         while(1)
         {
 		c = getc();
