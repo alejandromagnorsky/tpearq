@@ -112,8 +112,7 @@ _int_09_hand:				; Handler de INT 9 (Teclado)
                      
         mov     ax, 10h			
         mov     ds, ax			; Carga de DS y ES con el valor del selector a utilizar.
-        mov     es, ax
-	
+        mov     es, ax	
 
 	call	int_09
 
