@@ -1,0 +1,8 @@
+Bibliografia usada:
+http://wiki.osdev.org/Main_Page
+http://www.beyondlogic.org/interrupts/interupt.htm#6
+"Programming the PIC" - Alexander Blessing - www.osdever.net/tutorials/pdf/pic.pdf
+http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
+http://www.cdrummond.qc.ca/cegep/informat/Professeurs/Alain/files/ascii.htm
+http://www.ee.bgu.ac.il/~microlab/MicroLab/Labs/ScanCodes.htm
+

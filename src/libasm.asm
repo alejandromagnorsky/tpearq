@@ -4,14 +4,15 @@ GLOBAL	_read_scancode
 GLOBAL  _turn_cursor_on
 GLOBAL  _turn_cursor_off
 GLOBAL 	_move_cursor
-GLOBAL  _int_08_hand
-GLOBAL  _int_09_hand
+GLOBAL  _int_20_hand
+GLOBAL  _int_21_hand
 GLOBAL  _int_80_hand
+GLOBAL  _out_pic
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 
-EXTERN  int_08
-EXTERN  int_09
+EXTERN  int_20
+EXTERN  int_21
 EXTERN	printTime
 EXTERN __write
 EXTERN __read
@@ -90,14 +91,14 @@ _print_time:
 
 
 
-_int_08_hand:				; Handler de INT 8 (Timer tick)
+_int_20_hand:				; Handler de INT 8 (Timer tick)
         push    ds
         push    es                      ; Se salvan los registros
         pusha                           
         mov     ax, 10h			
         mov     ds, ax			; Carga de DS y ES con el valor del selector a utilizar.
         mov     es, ax                  
-        call    int_08                 
+        call    int_20                 
         mov	al, 20h			; Envio de EOI generico al PIC
 	out	20h, al
 	popa                            
@@ -105,7 +106,7 @@ _int_08_hand:				; Handler de INT 8 (Timer tick)
         pop     ds
         iret
 
-_int_09_hand:				; Handler de INT 9 (Teclado)
+_int_21_hand:				; Handler de INT 9 (Teclado)
         push    ds
         push    es                      ; Se salvan los registros
         pusha      
@@ -114,7 +115,7 @@ _int_09_hand:				; Handler de INT 9 (Teclado)
         mov     ds, ax			; Carga de DS y ES con el valor del selector a utilizar.
         mov     es, ax	
 
-	call	int_09
+	call	int_21
 
         mov	al, 20h			; Envio de EOI generico al PIC
 	out	20h, al
@@ -162,6 +163,36 @@ _read_scancode:
 	in	al, 60h
 	leave
 	ret       
+
+
+_out_pic:
+	push	ebp
+	mov	ebp, esp
+	pusha
+	mov	ebx, [ebp+8]
+	mov	eax, [ebp+12]
+	cmp	ebx, 20h
+	jne	else1
+	out	20h, al
+	jmp	endif
+else1:
+	cmp	ebx, 21h
+	jne	else2
+	out	21h, al
+	jmp	endif
+else2:
+	cmp	ebx, 0A0h
+	jne	else3
+	out	0A0h, al
+	jmp	endif
+else3:
+	out	0A1h, al
+endif:
+	popa
+	leave
+	ret
+
+
 
 _move_cursor:
 	push ebp

@@ -4,14 +4,48 @@
 #include "../include/kc.h"
 #include "../include/keyboard.h"
 
-DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
+DESCR_INT idt[0x30];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
 
-void int_08() {
+
+/* AGREGAR BIBLIOGRAFIA
+** PREGUNTAR SI SE PUEDE USAR LA MISMA PAGINA WEB QUE OTRO GRUPO
+** Initialize the PICs and remap them
+*/
+void initializePics()
+{
+	/* Send ICW1 to both PICS 
+	** ICW1 is used to tell the PICs if a ICW4 is following 
+	** and if the PIC is working in a cascaded PIC environment
+	*/
+
+	_out_pic(0x20, 0x11);
+	_out_pic(0xA0, 0x11);
+	/* Send ICW2 to both PICS 
+	** ICW2 tells the PICs where to map IRQ0 and IRQ8.
+	*/
+	_out_pic(0x21, 0x20);
+	_out_pic(0xA1, 0x28);
+	/* Send ICW3 to both PICS 
+	** ICW3 is used for telling the PICs which IRQ to use for
+	** the communication between each other
+	*/
+	_out_pic(0x21, 2);      // Set the master PIC's IRQ2 to be connected whit the slave PIC
+	_out_pic(0xA1, 0);	// For the slave PIC, it means that it is the Slave0
+	/* Send ICW4 to both PICS 
+	** ICW4 is used for telling that we are working in a 80x86 architecture 
+	** and if the interruption is handled automatically or if it needs help from software.
+	*/
+	_out_pic(0x21, 1);
+	_out_pic(0xA1, 1);
+}
+
+
+void int_20() {
 
 }
 
-void int_09(){
+void int_21(){
 	int scanCode = _read_scancode() & 0xFF;
 	int asciiCode = getAscii(scanCode);
 	
@@ -49,10 +83,8 @@ Punto de entrada de C
 
 kmain() 
 {
-
-        int i,num;
-
-	kbuffer.__KBUFFER_PTR_RD = 0;
+	initializePics();
+      	kbuffer.__KBUFFER_PTR_RD = 0;
 	kbuffer.__KBUFFER_PTR_WR = 0;
 	// First initialize terminals.
 	__INIT_TTY();
@@ -67,10 +99,10 @@ kmain()
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 //Rutina de atención del timer tick
-	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x20], 0x08, (dword)&_int_20_hand, ACS_INT, 0);
 
 //Rutina de atención del teclado
-	setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x21], 0x08, (dword)&_int_21_hand, ACS_INT, 0);
 	
 
 /* Carga de IDTR    */
@@ -99,13 +131,13 @@ kmain()
 	char c;
         while(1)
         {
-		/* TESTEO SCANF */
+		/* TESTEO SCANF
 			c = scanf("Pija%c %d %d %c", &ch1, &in1, &in2, &ch2);
 			printf("\n EN CH1 sE GUARDO: %c|||", ch1);	//PRINTF DE  DEBUGGEO//
 			printf("\n EN IN1 sE GUARDO: %d|||", in1);	//PRINTF DE  DEBUGGEO//
 			printf("\n EN IN2 sE GUARDO: %d|||", in2);	//PRINTF DE  DEBUGGEO//
-			printf("\n EN CH2 sE GUARDO: %c|||", ch2);	//PRINTF DE  DEBUGGEO//
-		//c = getc();
+			printf("\n EN CH2 sE GUARDO: %c|||", ch2);	//PRINTF DE  DEBUGGEO//*/
+		c = getc();
 		if( c != -1 ) 
 			switch(c){
 
