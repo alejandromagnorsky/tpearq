@@ -22,6 +22,38 @@ void __INIT_TTY(){
 	__flush_terminal(0);
 }
 
+void __change_color(int fg, int bg){
+
+	int colorFG, colorBG = 0;
+	switch(fg){
+		case 0:	colorFG=BLACK_FG; break;
+		case 1:	colorFG=WHITE_FG; break;
+		case 2:	colorFG=ORANGE_FG; break;
+		case 3:	colorFG=VIOLET_FG; break;
+		case 4:	colorFG=RED_FG; break;
+		case 5:	colorFG=SKY_FG; break;
+		case 6:	colorFG=GREEN_FG; break;
+		case 7:	colorFG=BLUE_FG; break;
+		default: colorFG=WHITE_FG;break;
+	}
+
+	switch(bg){
+		case 0:	colorBG=BLACK_BG; break;
+		case 1:	colorBG=WHITE_BG; break;
+		case 2:	colorBG=ORANGE_BG; break;
+		case 3:	colorBG=VIOLET_BG; break;
+		case 4:	colorBG=RED_BG; break;
+		case 5:	colorBG=SKY_BG; break;
+		case 6:	colorBG=GREEN_BG; break;
+		case 7:	colorBG=BLUE_BG; break;
+		default: colorBG=BLACK_BG;break;
+	}
+
+	__tty[__TTY_INDEX].attr = colorBG | colorFG;
+
+	// To flush or not to flush? That is the question.
+}
+
 void __clear_terminal() {
 	int i = 0;
 	while( i< (80*25))
@@ -34,7 +66,7 @@ void __clear_terminal() {
 }
 
 void __printSystemSymbol(){
-	printf("dio%d/:%c", __TTY_INDEX, __BLOCK_ASCII);
+	printf("ChuckNorris/%d/:%c", __TTY_INDEX, __BLOCK_ASCII);
 }
 
 void __enter(){
@@ -98,15 +130,13 @@ int __write_terminal( const char* buffer, int count){
 
 	while(i<count){
 
-		// Si el cursor se pasa de la pantalla, vuelvo a 0
+		// THIS SHOULD NEVER HAPPEN. But the pointer is public, so it can.
 		if(act_tty->ptr >= 80*25 || act_tty->ptr < 0)
 			act_tty->ptr = 0;
 
 		switch( buffer[i] ){
-			
 			case '\n':
 				__enter();
-				__printSystemSymbol();
 				break;
 			case '\t':
 				__tab();
@@ -118,7 +148,6 @@ int __write_terminal( const char* buffer, int count){
 				act_tty->buf[act_tty->ptr++] = buffer[i];	
 				if(act_tty->ptr == 80*25 )
 					__scroll_terminal();
-
 				break;
 		}
 		i++;
@@ -180,3 +209,4 @@ int __switch_terminal(int index){
 	
 	return index;
 }
+

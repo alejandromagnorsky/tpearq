@@ -1,3 +1,8 @@
+#ifndef _terminal_
+#define _terminal_
+
+
+
 #define WHITE_FG 0x07 
 #define ORANGE_FG 0x06
 #define VIOLET_FG 0x05
@@ -57,4 +62,6 @@ int __switch_terminal(int index);
 void __switch_next_terminal();
 
 void __switch_last_terminal();
+
+#endif
 
