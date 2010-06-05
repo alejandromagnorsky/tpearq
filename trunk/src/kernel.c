@@ -92,9 +92,6 @@ kmain()
 
 	__printSystemSymbol();
 
-	printf("Trucos:\n \t SHIFT+Q: Proxima terminal.  \n \t SHIFT+W: Ultima terminal \n \t SHIFT+C: Borra terminal.\n");
-	printf("Nota: SCROLLEA!!!");
-
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 //Rutina de atención del timer tick
@@ -126,34 +123,8 @@ kmain()
 	int in2 = -1;
 	int ch1 = 'X';
 	int ch2 = 'X';
-	
-	char c;
-        while(1)
-        {
-		/* TESTEO SCANF
-			c = scanf("Pija%c %d %d %c", &ch1, &in1, &in2, &ch2);
-			printf("\n EN CH1 sE GUARDO: %c|||", ch1);	//PRINTF DE  DEBUGGEO//
-			printf("\n EN IN1 sE GUARDO: %d|||", in1);	//PRINTF DE  DEBUGGEO//
-			printf("\n EN IN2 sE GUARDO: %d|||", in2);	//PRINTF DE  DEBUGGEO//
-			printf("\n EN CH2 sE GUARDO: %c|||", ch2);	//PRINTF DE  DEBUGGEO//*/
-		c = getc();
-		if( c != -1 ) 
-			switch(c){
 
-				case 'Q':
-					__switch_next_terminal();
-					break;
-				case 'W':
-					__switch_last_terminal();
-					break;
-				case 'C':
-					__clear_terminal();
-					break;
-				default:
-					printf("%c", c);
-					break;
-			}
-        }
-	
+	shell();
+
 }
 
