@@ -90,16 +90,21 @@ kmain()
 
 	_Sti();
 
-	int in = 99;
-	/* TESTEO SCANF */char ch;
+/* TESTEO SCANF */
+	int in1 = -1;
+	int in2 = -1;
+	int ch1 = 'X';
+	int ch2 = 'X';
+	
 	char c;
         while(1)
         {
 		/* TESTEO SCANF */
-			c = scanfSINMALLOC("pij%dh", &in, &ch);
-		//	c = scanf("pija%c", &ch, &in);
-			printf("EN IN sE GUARDO: %d|||", in);	//PRINTF DE  DEBUGGEO//
-			printf("EN IN sE GUARDO: %c|||", ch);	//PRINTF DE  DEBUGGEO//
+			c = scanf("Pija%c %d %d %c", &ch1, &in1, &in2, &ch2);
+			printf("\n EN CH1 sE GUARDO: %c|||", ch1);	//PRINTF DE  DEBUGGEO//
+			printf("\n EN IN1 sE GUARDO: %d|||", in1);	//PRINTF DE  DEBUGGEO//
+			printf("\n EN IN2 sE GUARDO: %d|||", in2);	//PRINTF DE  DEBUGGEO//
+			printf("\n EN CH2 sE GUARDO: %c|||", ch2);	//PRINTF DE  DEBUGGEO//
 		//c = getc();
 		if( c != -1 ) 
 			switch(c){
