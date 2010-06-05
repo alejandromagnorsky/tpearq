@@ -7,7 +7,7 @@ GLOBAL 	_move_cursor
 GLOBAL  _int_20_hand
 GLOBAL  _int_21_hand
 GLOBAL  _int_80_hand
-GLOBAL  _out_pic
+GLOBAL  _outport
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 
@@ -155,7 +155,18 @@ write:
 	call	__write
 	jmp	continue
 
+_outport:
+	push ebp
+	mov ebp, esp
+	pusha
 
+	mov dx, [ebp+8]
+	mov ax, [ebp+12]
+	out dx, al
+	
+	popa
+	leave
+	ret
 
 _read_scancode:
 	push	ebp
@@ -163,36 +174,6 @@ _read_scancode:
 	in	al, 60h
 	leave
 	ret       
-
-
-_out_pic:
-	push	ebp
-	mov	ebp, esp
-	pusha
-	mov	ebx, [ebp+8]
-	mov	eax, [ebp+12]
-	cmp	ebx, 20h
-	jne	else1
-	out	20h, al
-	jmp	endif
-else1:
-	cmp	ebx, 21h
-	jne	else2
-	out	21h, al
-	jmp	endif
-else2:
-	cmp	ebx, 0A0h
-	jne	else3
-	out	0A0h, al
-	jmp	endif
-else3:
-	out	0A1h, al
-endif:
-	popa
-	leave
-	ret
-
-
 
 _move_cursor:
 	push ebp

@@ -33,6 +33,60 @@ void getString(char ** str, char * ret){
 
 
 
+int scanf(const char * str, ...){
+        int i, j, k, acum = 0, strLen, strTrueLen, strInLen;
+        /*      strLen:         longitud de la string str.
+        **      strTrueLen:     longitud de la string str una vez reemplazados los % por los valores ingresados por el usuario.
+        **      strInLen:       longitud de la string strIn, ingresada por el usuario
+        */
+        char * strIn;
+        char ret[MAX_STRLEN];
+        void ** argv = (void **)(&str);
+        
+        getString(&strIn, ret); /* El usuario ingresa una string */
+        strLen = strlen(str);
+        strTrueLen = strLen;    /* Inicialmente la string real tiene la misma longitud que la string del scanf */
+        strInLen = strlen(strIn);
+
+        for (i=0, j=0; i<strLen && j<strInLen; i++, j++){
+                if ( str[i] == '%' )
+                        switch(str[++i]){
+                                case 'd':                                       /* VER SI PUEDO ARREGLAR LA CHANCHADA ESTA */
+                                        for(k=0; isDigit(strIn[i-1+k]); k++, j++){/* Primer for para contar k . j sincroniza strings str y strIn*/
+                                                printf("K: %d", k);     //PRINTF DE  DEBUGGEO//
+                                                acum = acum * 10 + strIn[i-1+k] +'0';
+                                                printf("ACUM: %d|||", acum);    //PRINTF DE  DEBUGGEO//
+                                        }
+                                        *(*((int **)++argv)) = acum;
+                                        strTrueLen = strTrueLen - 2 + k;        /* Resto 2 a strTrueLen (% y d) y sumo k+1 (cant. dígitos leidos)*/
+                                        break;
+                                case 'c':
+                                        printf("**ACUM: %c**", strIn[i-1]);
+                                        *(*((char **)++argv)) = strIn[i-1];
+                                        break;
+                                case 's':                       /* FIJARME BIEN COMO REACCIONAR CON STRINGS */
+                                        break;
+                                default:
+                                        i--;
+                                        strTrueLen--;
+                                        break;
+                        }
+                else
+                        if (str[i] != strIn[j]){
+                                printf("**%c != %c**", str[i], strIn[j]);       /* PRINTF  DE DEBUGGEO */
+                                return -1;
+                        }
+        }
+        if (strInLen != strTrueLen){
+                printf("|||%d  %d|||", strInLen, strTrueLen);
+                printf("%d", -1);       /* PRINTF  DE DEBUGGEO */
+                return -1;
+        }
+        printf("%d", 0);        /* PRINTF  DE DEBUGGEO */
+        return 0;
+}
+
+
 int isDigit(int a){
 	if( (a >= '0') && (a <= '9') )
 		return 1;
@@ -124,12 +178,6 @@ int strcmp(const char * str1, const char * str2){
 		return str1[i];
 
 	return out;
-}
-
-/* Imprime símbolo de sistema */
-void printSystemSymbol() 
-{
-	printf("Pikachu:/>", 4);
 }
 
 /* Imprime la hora */

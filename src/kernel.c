@@ -4,12 +4,11 @@
 #include "../include/kc.h"
 #include "../include/keyboard.h"
 
-DESCR_INT idt[0x30];			/* IDT de 10 entradas*/
+DESCR_INT idt[0x30];			/* IDT de 30 entradas*/
 IDTR idtr;				/* IDTR */
 
 
-/* AGREGAR BIBLIOGRAFIA
-** PREGUNTAR SI SE PUEDE USAR LA MISMA PAGINA WEB QUE OTRO GRUPO
+/* PREGUNTAR SI SE PUEDE USAR LA MISMA PAGINA WEB QUE OTRO GRUPO
 ** Initialize the PICs and remap them
 */
 void initializePics()
@@ -19,25 +18,25 @@ void initializePics()
 	** and if the PIC is working in a cascaded PIC environment
 	*/
 
-	_out_pic(0x20, 0x11);
-	_out_pic(0xA0, 0x11);
+	_outport(0x20, 0x11);
+	_outport(0xA0, 0x11);
 	/* Send ICW2 to both PICS 
 	** ICW2 tells the PICs where to map IRQ0 and IRQ8.
 	*/
-	_out_pic(0x21, 0x20);
-	_out_pic(0xA1, 0x28);
+	_outport(0x21, 0x20);
+	_outport(0xA1, 0x28);
 	/* Send ICW3 to both PICS 
 	** ICW3 is used for telling the PICs which IRQ to use for
 	** the communication between each other
 	*/
-	_out_pic(0x21, 2);      // Set the master PIC's IRQ2 to be connected whit the slave PIC
-	_out_pic(0xA1, 0);	// For the slave PIC, it means that it is the Slave0
+	_outport(0x21, 2);      // Set the master PIC's IRQ2 to be connected whit the slave PIC
+	_outport(0xA1, 0);	// For the slave PIC, it means that it is the Slave0
 	/* Send ICW4 to both PICS 
 	** ICW4 is used for telling that we are working in a 80x86 architecture 
 	** and if the interruption is handled automatically or if it needs help from software.
 	*/
-	_out_pic(0x21, 1);
-	_out_pic(0xA1, 1);
+	_outport(0x21, 1);
+	_outport(0xA1, 1);
 }
 
 
@@ -70,7 +69,7 @@ size_t __read(int fd, void* buffer, size_t count){
 size_t __write(int fd, const void* buffer, size_t count){
 	if(fd == stdout)
 			__write_terminal(buffer,count);
-	return fd;
+	return count;
 }
 
 
