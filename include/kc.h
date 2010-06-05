@@ -7,6 +7,7 @@
 #define _kc_
 
 #define NULL 0
+#define MAX_STRLEN 64
 
 /* Muestra la imagen de inicio */
 void showSplashScreen();
