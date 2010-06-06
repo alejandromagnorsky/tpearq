@@ -12,68 +12,97 @@ int getc(){
 /* Lee string hasta que se presione enter o se escriban más de MAX_STRLEN caracteres, en cuyo caso deja de cargarlo en la string
 ** Limitación por no tener malloc.
  */
-void getString(char ** str, char * ret){
-	int i;
+void getString(char * ans){
+	int i, j;
 	char c;
-	for (i=0; (c = getc()) != '\n'; ){
-		//	PRINTF DE DEBUGGEO;
-		printf("%c", c);
+	for (i=0, j=0; (c = getc()) != '\n' ; j++){ //Voy con i hasta MAX_STRLEN-1, porque en caso de que el usuario escriba MAX_STRLEN-1 caracteres
+		printf("%c", c); //PRINTF DE DEBUGGEO;	   // dejo ans[MAX_STRLEN] para el '\0'
 		if(c == '\b'){
 			if (i)		
-				ret[--i] = '\0';
+				ans[--i] = '\0';
 		} else if (i<MAX_STRLEN){
-			ret[i] = c;
+			ans[i] = c;
 			i++;
 		}
 	}
-	ret[i] = '\0';
-	*str = ret;
-	printf("\n");	/* PRINTF  DE DEBUGGEO */
+	ans[i] = '\0';
+	printf("STR LEVANTADA: %s\nSTRLEN DE LO LEVANTADO: %d\n", ans,strlen(ans));	/* PRINTF  DE DEBUGGEO */
 }
 
+int strlen(const char * str){
+	int i;
+	for (i = 0; str[i] != '\0'; i++);
+		return i;
+}
 
+/* 
+** COMENTAR BIEN CADA FUNCIÓN QUE HICE, EXPLICAR TOdO MEJOR, FIJAR SI SE PUEDE ACHICAR Y OPTIMIZAR EL CODIGO
+**
+** CONVERSAR SOBRE EL TEMA DE SIMILARIDAD CON K&R URGENTE!!!!!!!!!!!!!!!!!!!!!!
+*/
 
 int scanf(const char * str, ...){
-        int i, j, k, acum = 0, strLen, strTrueLen, strInLen;
+        int i, j, k, acum, strLen, strTrueLen, strInLen, typeONegative;  // TYPE O NEGATVE CAMBIAR PARA LA ENTREGA POSTA
         /*      strLen:         longitud de la string str.
         **      strTrueLen:     longitud de la string str una vez reemplazados los % por los valores ingresados por el usuario.
-        **      strInLen:       longitud de la string strIn, ingresada por el usuario
+        **      strInLen:       longitud de la string strIn, string que es ingresada por el usuario
         */
-        char * strIn;
-        char ret[MAX_STRLEN];
+        char strIn[MAX_STRLEN+1]; //Le sumo uno al máximo de caracteres porque asi el último lo dejo para '\0'
         void ** argv = (void **)(&str);
         
-        getString(&strIn, ret); /* El usuario ingresa una string */
+        getString(strIn); /* El usuario ingresa una string */
         strLen = strlen(str);
         strTrueLen = strLen;    /* Inicialmente la string real tiene la misma longitud que la string del scanf */
         strInLen = strlen(strIn);
 
-        for (i=0, j=0; i<strLen && j<strInLen; i++, j++){
+        for (i=0, j=0 ; i<strLen && j<strInLen; i++, j++){
                 if ( str[i] == '%' )
                         switch(str[++i]){
                                 case 'd':                                       /* VER SI PUEDO ARREGLAR LA CHANCHADA ESTA */
-                                        for(k=0; isDigit(strIn[i-1+k]); k++, j++){/* Primer for para contar k . j sincroniza strings str y strIn*/
-                                                printf("K: %d", k);     //PRINTF DE  DEBUGGEO//
-                                                acum = acum * 10 + strIn[i-1+k] +'0';
-                                                printf("ACUM: %d|||", acum);    //PRINTF DE  DEBUGGEO//
+                                        for(k=0, acum = 0, typeONegative = 0; ( strIn[j] == '-' && !typeONegative ) || isDigit(strIn[j])  ; k++, j++){
+						if (strIn[j] != '-'){
+							printf("K: %d", k);     //PRINTF DE DEBUGGEO//
+                                              	  	acum = acum * 10 + strIn[j] -'0';
+                                               		printf("ACUM: %d|||", acum);    //PRINTF DE  DEBUGGEO//
+						} else 
+							typeONegative = 1;
                                         }
-                                        *(*((int **)++argv)) = acum;
-                                        strTrueLen = strTrueLen - 2 + k;        /* Resto 2 a strTrueLen (% y d) y sumo k+1 (cant. dígitos leidos)*/
+					j--;
+					if (!k){
+						printf("\nIntrodujo %c, debió haber introducido un número entero\n", strIn[j+1]);
+						return -1;
+					} else if (!isDigit(strIn[j]) && typeONegative){
+						printf("\nPusiste el signo y te olvidaste el int\n");
+						return -1;
+					}
+                                        *(*((int **)++argv)) = typeONegative * -1 * acum + !typeONegative * acum;
+                                        strTrueLen = strTrueLen - 2 + k;      /* Resto 2 a strTrueLen (% y d) y sumo k (cant. dígitos leidos-1)*/
                                         break;
                                 case 'c':
-                                        printf("**ACUM: %c**", strIn[i-1]);
-                                        *(*((char **)++argv)) = strIn[i-1];
+                                        printf("**CHAR: %c**", strIn[j]);
+                                        *(*((char **)++argv)) = strIn[j];
+					strTrueLen--;
                                         break;
                                 case 's':                       /* FIJARME BIEN COMO REACCIONAR CON STRINGS */
+					argv++;
+					for (k=0; strIn[j] != str[i+1]; k++, j++){
+						((char *)(*((char **) argv)))[k] = strIn[j];
+					}
+					((char *)(*((char **) argv)))[k] = '\0';
+					j--;
+					strTrueLen = strTrueLen -2 + k;
                                         break;
+				/* Hice el default así para que sea análogo del printf de mariano. Si recibe % y una letra que no es ni d ni c ni s, 
+				** entonces se saltea el porcentaje y dicha letra.
+				*/
                                 default:
-                                        i--;
-                                        strTrueLen--;
+					j--;
+                                        strTrueLen-=2;
                                         break;
                         }
                 else
                         if (str[i] != strIn[j]){
-                                printf("**%c != %c**", str[i], strIn[j]);       /* PRINTF  DE DEBUGGEO */
+                                printf("**%c != %c**-1", str[i], strIn[j]);       /* PRINTF  DE DEBUGGEO */
                                 return -1;
                         }
         }
@@ -86,17 +115,10 @@ int scanf(const char * str, ...){
         return 0;
 }
 
-
 int isDigit(int a){
 	if( (a >= '0') && (a <= '9') )
 		return 1;
 	return 0;
-}
-
-int strlen(const char * str){
-	int i;
-	for (i = 0; str[i] != '\0'; i++);
-		return i;
 }
 
 int putc( int c ){
@@ -218,3 +240,4 @@ void setup_IDT_entry (DESCR_INT *item, byte selector, dword offset, byte access,
   item->access = access;
   item->cero = cero;
 }
+
