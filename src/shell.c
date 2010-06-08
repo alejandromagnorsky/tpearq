@@ -65,14 +65,14 @@ int man(int argc, char * argv[]){
 
 		__executable * tmp = getExecutableByDescriptor(argv[1]);
 		if(tmp!=NULL){
-			printf("\n%s: %s \n", tmp->descriptor, tmp->man);
+			printf("%s: %s \n", tmp->descriptor, tmp->man);
 			return 0;
 		} else {
-			printf("Invalid argument.");
+			printf("Invalid argument. \n");
 			return 1;
 		}
 	}	
-	printf("Please enter a program name.");
+	printf("Please enter a program name. \n");
 	return 1;
 }
 
@@ -96,6 +96,10 @@ int tty(int argc, char * argv[]){
 
 		if(!strcmp(argv[1], "-l"))
 			__switch_last_terminal();
+
+		if(!strcmp(argv[1], "-ss") && argv[2] != NULL)
+			__changeSystemSymbol(argv[2]);
+
 
 
 		return 0;
@@ -125,17 +129,17 @@ void shell(){
 				" \t [-s terminal_index] | _Switches terminal \n"
 				" \t [-l] | Switches to the _last terminal \n"
 				" \t [-n] | Switches to the _next terminal \n"
+				" \t [-ss string] | Changes the _system _symbol to string \n"
 				" \t [-c foreground background] | Changes terminal _color.");
 
-	printf("Ojo: no imprime lo que escribe porque el scanf no esta terminado. \n");
 	// Data for user input
-	char user_input[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS] = "man tty -c 5 3 pepe popo aa a a aa-c";
+	char user_input[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS];
 	int i;
 	// Main loop
 	while(1){
 
-		getc();
-		//scanf("%s", user_input);
+		user_input[0] = NULL;
+		scanf("%s", user_input);
 
 		char arg_data[MAX_ARGUMENTS][MAX_ARGUMENT_LENGTH];
 		char argc = 0;
@@ -148,7 +152,7 @@ void shell(){
 				tmp = 0;
 			} else 	arg_data[argc][tmp++] = user_input[i];
 		}
-		arg_data[argc][tmp] = NULL;	// Last argument
+		arg_data[argc++][tmp] = NULL;	// Last argument
 
 		// Convert data to pointer
 		char * argv[MAX_ARGUMENTS];
@@ -158,7 +162,9 @@ void shell(){
 		__executable * exec = getExecutableByDescriptor(argv[0]);
 		if(exec != NULL)
 			exec->execute(argc, argv);
-		else printf("Error: invalid command.");
+		else if(user_input[0] != NULL)
+			printf("Error: invalid command. \n");
+		else printf("\n");
 
 		__printSystemSymbol();
 

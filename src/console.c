@@ -52,6 +52,7 @@ void __change_color(int fg, int bg){
 	__tty[__TTY_INDEX].attr = colorBG | colorFG;
 
 	// To flush or not to flush? That is the question.
+	__flush_terminal(0);
 }
 
 void __clear_terminal() {
@@ -62,11 +63,17 @@ void __clear_terminal() {
 	__tty[__TTY_INDEX].empty = 1;
 
 	__flush_terminal(0);
-	__printSystemSymbol();
+}
+
+void __changeSystemSymbol(char * str){
+	int i;
+	for(i=0;str[i] != '\0';i++)
+		__SYSTEM_SYMBOL[i] = str[i];
+	__SYSTEM_SYMBOL[i] = '\0';
 }
 
 void __printSystemSymbol(){
-	printf("ChuckNorris/%d/:%c", __TTY_INDEX, __BLOCK_ASCII);
+	printf("%s/%d/:%c", __SYSTEM_SYMBOL, __TTY_INDEX, __BLOCK_ASCII);
 }
 
 void __enter(){
@@ -185,16 +192,12 @@ void __switch_next_terminal(){
 	if(++__TTY_INDEX == __MAX_TERMINALS)
 		__TTY_INDEX = 0;
 	__flush_terminal(0);
-	if(__tty[__TTY_INDEX].empty)
-		__printSystemSymbol();
 }
 
 void __switch_last_terminal(){
 	if(--__TTY_INDEX < 0)
 		__TTY_INDEX = __MAX_TERMINALS-1;
 	__flush_terminal(0);
-	if(__tty[__TTY_INDEX].empty)
-		__printSystemSymbol();
 }
 
 int __switch_terminal(int index){
@@ -204,7 +207,6 @@ int __switch_terminal(int index){
 	else {
 		__TTY_INDEX = index;
 		__flush_terminal(0);
-		__printSystemSymbol();
 	}
 	
 	return index;
