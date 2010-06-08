@@ -118,12 +118,6 @@ kmain()
 
 	_Sti();
 
-/* TESTEO SCANF */
-	int in1 = -1;
-	int in2 = -1;
-	int ch1 = 'X';
-	int ch2 = 'X';
-
 	shell();
 
 }

@@ -11,11 +11,11 @@
 **		
 */
 
-int __L_SHIFT_ = 0;	// Left Shift flag (0 = unabled)
-int __R_SHIFT_ = 0; // Right Shift flag (0 = unabled)
-int __CAPSLOCK_ = 0;	// Capslock flag (0 = unabled)
-int __NUMLOCK_ = 0; // NumLock flag (0 = unabled)
-int __TILDE_ = 0;
+int __L_SHIFT_ = 0;	// Left Shift flag (0 = disabled)
+int __R_SHIFT_ = 0; // Right Shift flag (0 = disabled)
+int __CAPSLOCK_ = 0;	// Capslock flag (0 = disabled)
+int __NUMLOCK_ = 0; // NumLock flag (0 = disabled)
+int __TILDE_ = 0; // Tilde flag (0 = disabled)
 int __EXTENDED_ = 0;
 
 int makeCodes[83] =	 {-1, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 39, 168, '\b', '\t', 'q', 'w', 'e', 'r', 
