@@ -9,7 +9,6 @@
 
 typedef struct{
 	char * descriptor;				// The name
-	char ** aliases;				//not implemented yet
 	int (*execute)(int argc, char * argv[]);	// The executable
 	char * man;				// The manual page 
 } __executable;

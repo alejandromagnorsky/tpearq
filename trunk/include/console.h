@@ -23,6 +23,7 @@
 
 #define __MAX_TERMINALS 10
 #define __TAB_LENGTH 5
+#define __MAX_SS 15
 
 #define __BLOCK_ASCII -10
 #define __TAB_ASCII -11
@@ -43,9 +44,13 @@ __terminal __tty[__MAX_TERMINALS];
 // Index of visible console
 int __TTY_INDEX = 0;
 
+char __SYSTEM_SYMBOL[__MAX_SS] = "tty";
+
 
 
 void __scroll_terminal();
+
+void __changeSystemSymbol(char * str);
 
 void __printSystemSymbol();
 
