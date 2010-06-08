@@ -12,6 +12,20 @@ int getc(){
 /* Lee string hasta que se presione enter o se escriban más de MAX_STRLEN caracteres, en cuyo caso deja de cargarlo en la string
 ** Limitación por no tener malloc.
  */
+
+int rand(){
+	_outport(0x70, 0);
+	int seconds = _inport(0x71);
+	_outport(0x70, 2);
+	int minutes = _inport(0x71);
+	_outport(0x70, 4);
+	int hours = _inport(0x71);
+
+	long num1;
+	num1 = pow(2, hours) * pow(3, minutes) * pow(5, seconds);
+	return num1;
+}
+
 void getString(char * ans){
 	int i, j;
 	char c;
