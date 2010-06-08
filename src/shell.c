@@ -1,5 +1,5 @@
 #include "../include/shell.h"
-
+#include "../include/interrupts.h"
 
 int __register_program(char * descriptor, int (*execute)(int argc, char * argv[])){
 	__executable exec;
@@ -93,6 +93,25 @@ int arnold(int argc, char * argv[]){
 	return 1;
 }
 
+int mkexc(int argc, char * argv[]){
+	if(argc != 2){
+		printf("Cantidad de argumentos inválida\n");
+		return 1;
+	}
+	int num = 5;
+	int cero = 0;
+	switch(*(argv[1])){
+		case '0':
+			num = num/cero;
+			break;
+		default : 
+			printf("Error. Argumento inválido\n");
+			return 1;
+	}
+	return 0;
+}
+
+
 /* Prints hour, minutes and seconds */
 int time(int argc, char * argv[])
 {
@@ -156,6 +175,7 @@ void shell(){
 	__register_program("tty", tty);
 	__register_program("time", time);
 	__register_program("arnold", arnold);
+	__register_program("mkexc", mkexc);
 
 	__register_man_page("echo","Prints the string received.");
 	__register_man_page("clear", "Clears the screen.");
@@ -171,6 +191,9 @@ void shell(){
 				" \t [-c foreground background] | Changes terminal _color.");
 	__register_man_page("time","Imprime la hora, los minutos y los segundos.");
 	__register_man_page("arnold","Date un baño de vapor, Bennet!");
+	__register_man_page("mkexc","Genera la excepción que corresponde al segundo argumento.\
+				     Los valores válidos son los números entre 0 y 31.");
+	
 
 	// Data for user input
 	char user_input[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS];

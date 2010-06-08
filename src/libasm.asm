@@ -3,6 +3,7 @@ GLOBAL	_read_scancode
 GLOBAL  _turn_cursor_on
 GLOBAL  _turn_cursor_off
 GLOBAL 	_move_cursor
+GLOBAL	_int_00_hand
 GLOBAL  _int_20_hand
 GLOBAL  _int_21_hand
 GLOBAL  _int_80_hand
@@ -11,6 +12,7 @@ GLOBAL  _outport
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 
+EXTERN int_00_hand
 EXTERN  int_20
 EXTERN  int_21
 EXTERN __write
@@ -64,7 +66,7 @@ _lidt:				; Carga el IDTR
         retn
 
 
-_int_20_hand:				; Handler de INT 8 (Timer tick)
+_int_20_hand:				; Handler de INT 20h (Timer tick)
         push    ds
         push    es                      ; Se salvan los registros
         pusha                           
@@ -79,7 +81,7 @@ _int_20_hand:				; Handler de INT 8 (Timer tick)
         pop     ds
         iret
 
-_int_21_hand:				; Handler de INT 9 (Teclado)
+_int_21_hand:				; Handler de INT 21h (Teclado)
         push    ds
         push    es                      ; Se salvan los registros
         pusha      
@@ -96,9 +98,6 @@ _int_21_hand:				; Handler de INT 9 (Teclado)
         pop     es
         pop     ds
         iret
-
-
-
 
 
 _int_80_hand:
@@ -127,6 +126,8 @@ read:
 write:
 	call	__write
 	jmp	continue
+
+
 
 _inport:
 	push ebp
