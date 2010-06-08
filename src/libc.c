@@ -58,28 +58,23 @@ int scanf(const char * str, ...){
         for (i=0, j=0 ; i<strLen && j<strInLen; i++, j++){
                 if ( str[i] == '%' )
                         switch(str[++i]){
-                                case 'd':                                       /* VER SI PUEDO ARREGLAR LA CHANCHADA ESTA */
+                                case 'd':
                                         for(k=0, acum = 0, typeONegative = 0; ( strIn[j] == '-' && !typeONegative ) || isDigit(strIn[j])  ; k++, j++){
 						if (strIn[j] != '-'){
-							//printf("K: %d", k);     //PRINTF DE DEBUGGEO//
-                                              	  	acum = acum * 10 + strIn[j] -'0';
-                                               		//printf("ACUM: %d|||", acum);    //PRINTF DE  DEBUGGEO//
-						} else 
+							acum = acum * 10 + strIn[j] -'0';
+                                               	} else 
 							typeONegative = 1;
                                         }
 					j--;
 					if (!k){
-						//printf("\nIntrodujo %c, debió haber introducido un número entero\n", strIn[j+1]);
 						return -1;
 					} else if (!isDigit(strIn[j]) && typeONegative){
-						//printf("\nPusiste el signo y te olvidaste el int\n");
 						return -1;
 					}
                                         *(*((int **)++argv)) = typeONegative * -1 * acum + !typeONegative * acum;
-                                        strTrueLen = strTrueLen - 2 + k;      /* Resto 2 a strTrueLen (% y d) y sumo k (cant. dígitos leidos-1)*/
+                                        strTrueLen = strTrueLen - 2 + k;  /* Resto 2 a strTrueLen (% y d) y sumo k (cant. dígitos leidos-1)*/
                                         break;
                                 case 'c':
-                                   //     printf("**CHAR: %c**", strIn[j]);
                                         *(*((char **)++argv)) = strIn[j];
 					strTrueLen--;
                                         break;
@@ -107,12 +102,10 @@ int scanf(const char * str, ...){
                         }
         }
         if (strInLen != strTrueLen){
-           //     printf("|||%d  %d|||", strInLen, strTrueLen);
-          //      printf("%d", -1);       /* PRINTF  DE DEBUGGEO */
+        //      printf("%d", -1);       /* PRINTF  DE DEBUGGEO */
                 return -1;
         }
 	printf("\n");	// The user entered \n, so it must be used
-  //      printf("%d", 0);        /* PRINTF  DE DEBUGGEO */
         return 0;
 }
 
