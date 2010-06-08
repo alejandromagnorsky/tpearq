@@ -80,6 +80,19 @@ int gcc(int argc, char * argv[]){
 	printf("It's a joke! No gcc here. \n");
 }
 
+int arnold(int argc, char * argv[]){
+	int random = rand()%32;
+	switch(random){
+		case 0:
+			printf("- 'Vete al demonio'\n- 'Ni lo sueñes'\n");
+			break;
+		default:
+			printf("\n");
+			break;
+	}
+	return 1;
+}
+
 /* Prints hour, minutes and seconds */
 int time(int argc, char * argv[])
 {
@@ -142,6 +155,7 @@ void shell(){
 	__register_program("gcc", gcc);
 	__register_program("tty", tty);
 	__register_program("time", time);
+	__register_program("arnold", arnold);
 
 	__register_man_page("echo","Prints the string received.");
 	__register_man_page("clear", "Clears the screen.");
@@ -156,6 +170,7 @@ void shell(){
 				" \t [-ss string] | Changes the _system _symbol to string \n"
 				" \t [-c foreground background] | Changes terminal _color.");
 	__register_man_page("time","Imprime la hora, los minutos y los segundos.");
+	__register_man_page("arnold","Date un baño de vapor, Bennet!");
 
 	// Data for user input
 	char user_input[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS];
