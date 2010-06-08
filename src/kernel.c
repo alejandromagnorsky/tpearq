@@ -4,7 +4,7 @@
 #include "../include/kc.h"
 #include "../include/keyboard.h"
 
-DESCR_INT idt[0x30];			/* IDT de 30 entradas*/
+DESCR_INT idt[0x81];			/* IDT de 81h entradas*/
 IDTR idtr;				/* IDTR */
 
 
@@ -97,8 +97,10 @@ kmain()
 	setup_IDT_entry (&idt[0x20], 0x08, (dword)&_int_20_hand, ACS_INT, 0);
 
 //Rutina de atención del teclado
-	setup_IDT_entry (&idt[0x21], 0x08, (dword)&_int_21_hand, ACS_INT, 0);
-	
+	setup_IDT_entry (&idt[0x21], 0x08, (dword)&_int_21_hand, ACS_INT, 0);	
+
+//Rutina de atención de escritura y lectura
+	setup_IDT_entry (&idt[0x80], 0x08, (dword)&_int_80_hand, ACS_INT, 0);
 
 /* Carga de IDTR    */
 

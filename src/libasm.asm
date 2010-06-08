@@ -15,7 +15,6 @@ EXTERN  int_20
 EXTERN  int_21
 EXTERN __write
 EXTERN __read
-EXTERN putc
 EXTERN getAscii
 EXTERN __keyboard_buffer
 EXTERN __KBUFFER_PTR_

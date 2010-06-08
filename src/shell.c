@@ -98,21 +98,21 @@ int time(int argc, char * argv[])
 {
 	_outport(0x70, 4);
 	int hours = _inport(0x71);
-	putc(((hours & 0xF0)>>4) + '0');
-	putc((hours & 0xF) + '0');
-	putc(':');
+	putchar(((hours & 0xF0)>>4) + '0');
+	putchar((hours & 0xF) + '0');
+	putchar(':');
 
 	_outport(0x70, 2);
 	int minutes = _inport(0x71);
-	putc(((minutes & 0xF0)>>4) + '0');
-	putc((minutes & 0xF) + '0');
-	putc(':');
+	putchar(((minutes & 0xF0)>>4) + '0');
+	putchar((minutes & 0xF) + '0');
+	putchar(':');
 	
 	_outport(0x70, 0);
 	int seconds = _inport(0x71);
-	putc(((seconds & 0xF0)>>4) + '0');
-	putc((seconds & 0xF) + '0');
-	putc('\n');
+	putchar(((seconds & 0xF0)>>4) + '0');
+	putchar((seconds & 0xF) + '0');
+	putchar('\n');
 	return 0;
 }
 
