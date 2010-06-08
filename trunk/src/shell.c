@@ -101,8 +101,27 @@ int mkexc(int argc, char * argv[]){
 	int num = 5;
 	int cero = 0;
 	switch(*(argv[1])){
+		//DIVIDE BY ZERO - LOOP
 		case '0':
-			num = num/cero;
+			__asm__("movl	$0, %ebx\n\t"
+				"div	%ebx, %eax");
+			break;
+		//BOUND CHECK
+		case '5':			
+			__asm__("movl	$0, -8(%ebp)\n\t"
+				"movl	$2, -4(%ebp)\n\t"
+				"movl	$3, %eax\n\t"
+				"bound	%eax, -8(%ebp)");
+			break;
+		//INVALID OPCODE - LOOP
+		case '6':
+			__asm__("jmp	%eax");
+			break;
+		//OVERFLOW
+		case '7':
+			__asm__("movb	$127, %dl\n\t"
+				"addb	$127, %dl\n\t"
+				"into");
 			break;
 		default : 
 			printf("Error. Argumento inválido\n");

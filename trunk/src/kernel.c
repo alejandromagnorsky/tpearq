@@ -81,69 +81,69 @@ kmain()
 
 //Load exceptions
 	//Divide by cero
-	setup_IDT_entry (&idt[0x00], 0x08, (dword)&int_00_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x00], 0x08, (dword)&_int_00_hand, ACS_INT, 0);
 	//Debug exceptions
-	setup_IDT_entry (&idt[0x01], 0x08, (dword)&int_01_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x01], 0x08, (dword)&_int_01_hand, ACS_INT, 0);
 	//Nonmaskable interrupt
-	setup_IDT_entry (&idt[0x02], 0x08, (dword)&int_02_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x02], 0x08, (dword)&_int_02_hand, ACS_INT, 0);
 	//Breakpoint
-	setup_IDT_entry (&idt[0x03], 0x08, (dword)&int_03_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x03], 0x08, (dword)&_int_03_hand, ACS_INT, 0);
 	//Overflow
-	setup_IDT_entry (&idt[0x04], 0x08, (dword)&int_04_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x04], 0x08, (dword)&_int_04_hand, ACS_INT, 0);
 	//Bounds check
-	setup_IDT_entry (&idt[0x05], 0x08, (dword)&int_05_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x05], 0x08, (dword)&_int_05_hand, ACS_INT, 0);
 	//Invalid opcode
-	setup_IDT_entry (&idt[0x06], 0x08, (dword)&int_06_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x06], 0x08, (dword)&_int_06_hand, ACS_INT, 0);
 	//Coprocessor not available
-	setup_IDT_entry (&idt[0x07], 0x08, (dword)&int_07_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x07], 0x08, (dword)&_int_07_hand, ACS_INT, 0);
 	//Double fault
-	setup_IDT_entry (&idt[0x08], 0x08, (dword)&int_08_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x09], 0x08, (dword)&int_09_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
 	//Invalid TSS
-	setup_IDT_entry (&idt[0x0A], 0x08, (dword)&int_0A_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x0A], 0x08, (dword)&_int_0A_hand, ACS_INT, 0);
 	//Segment not present
-	setup_IDT_entry (&idt[0x0B], 0x08, (dword)&int_0B_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x0B], 0x08, (dword)&_int_0B_hand, ACS_INT, 0);
 	//Stack exception
-	setup_IDT_entry (&idt[0x0C], 0x08, (dword)&int_0C_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x0C], 0x08, (dword)&_int_0C_hand, ACS_INT, 0);
 	//General protection
-	setup_IDT_entry (&idt[0x0D], 0x08, (dword)&int_0D_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x0D], 0x08, (dword)&_int_0D_hand, ACS_INT, 0);
 	//Page fault
-	setup_IDT_entry (&idt[0x0E], 0x08, (dword)&int_0E_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x0E], 0x08, (dword)&_int_0E_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x0F], 0x08, (dword)&int_0F_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x0F], 0x08, (dword)&_int_0F_hand, ACS_INT, 0);
 	//Coprocessor error
-	setup_IDT_entry (&idt[0x10], 0x08, (dword)&int_10_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x10], 0x08, (dword)&_int_10_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x11], 0x08, (dword)&int_11_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x11], 0x08, (dword)&_int_11_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x12], 0x08, (dword)&int_12_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x12], 0x08, (dword)&_int_12_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x13], 0x08, (dword)&int_13_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x13], 0x08, (dword)&_int_13_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x14], 0x08, (dword)&int_14_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x14], 0x08, (dword)&_int_14_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x15], 0x08, (dword)&int_15_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x15], 0x08, (dword)&_int_15_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x16], 0x08, (dword)&int_16_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x16], 0x08, (dword)&_int_16_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x17], 0x08, (dword)&int_17_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x17], 0x08, (dword)&_int_17_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x18], 0x08, (dword)&int_18_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x18], 0x08, (dword)&_int_18_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x19], 0x08, (dword)&int_19_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x19], 0x08, (dword)&_int_19_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x1A], 0x08, (dword)&int_1A_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x1A], 0x08, (dword)&_int_1A_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x1B], 0x08, (dword)&int_1B_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x1B], 0x08, (dword)&_int_1B_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x1C], 0x08, (dword)&int_1C_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x1C], 0x08, (dword)&_int_1C_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x1D], 0x08, (dword)&int_1D_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x1D], 0x08, (dword)&_int_1D_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x1E], 0x08, (dword)&int_1E_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x1E], 0x08, (dword)&_int_1E_hand, ACS_INT, 0);
 	//Reserved
-	setup_IDT_entry (&idt[0x1F], 0x08, (dword)&int_1F_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x1F], 0x08, (dword)&_int_1F_hand, ACS_INT, 0);
 
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
