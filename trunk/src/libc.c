@@ -1,35 +1,26 @@
 #include "../include/kernel.h"
 #include "../include/kc.h"
 
-int getc(){
+int getchar(){
+	return getc(stdin);
+}
+
+int getc(int fd){
 	int character = -1;
 	while (character == -1)
-		_int_80_hand(0, stdin, &character, 1);
+		read(fd, &character, 1);
 	return character;
 	
 }
 
-/* Lee string hasta que se presione enter o se escriban más de MAX_STRLEN caracteres, en cuyo caso deja de cargarlo en la string
+/* Lee string hasta que se presione enter o se escriban más de MAX_STRLEN caracteres, 
+** en cuyo caso deja de cargarlo en la string
 ** Limitación por no tener malloc.
  */
-
-int rand(){
-	_outport(0x70, 0);
-	int seconds = _inport(0x71);
-	_outport(0x70, 2);
-	int minutes = _inport(0x71);
-	_outport(0x70, 4);
-	int hours = _inport(0x71);
-
-	long num1;
-	num1 = pow(2, hours) * pow(3, minutes) * pow(5, seconds);
-	return num1;
-}
-
 void getString(char * ans){
 	int i, j;
 	char c;
-	for (i=0, j=0; (c = getc()) != '\n' ; j++){ //Voy con i hasta MAX_STRLEN-1, porque en caso de que el usuario escriba MAX_STRLEN-1 caracteres
+	for (i=0, j=0; (c = getchar()) != '\n' ; j++){ //Voy con i hasta MAX_STRLEN-1, porque en caso de que el usuario escriba MAX_STRLEN-1 caracteres
 		printf("%c", c); //PRINTF DE DEBUGGEO;	   // dejo ans[MAX_STRLEN] para el '\0'
 		if(c == '\b'){
 			if (i)		
@@ -43,11 +34,6 @@ void getString(char * ans){
 //	printf("STR LEVANTADA: %s\nSTRLEN DE LO LEVANTADO: %d\n", ans,strlen(ans));	/* PRINTF  DE DEBUGGEO */
 }
 
-int strlen(const char * str){
-	int i;
-	for (i = 0; str[i] != '\0'; i++);
-		return i;
-}
 
 /* 
 ** COMENTAR BIEN CADA FUNCIÓN QUE HICE, EXPLICAR TOdO MEJOR, FIJAR SI SE PUEDE ACHICAR Y OPTIMIZAR EL CODIGO
@@ -123,14 +109,30 @@ int scanf(const char * str, ...){
         return 0;
 }
 
+
+int read(int fd, int * c, size_t count){
+	return _int_80_hand(0, fd, c, count);
+}
+
+
+int strlen(const char * str){
+	int i;
+	for (i = 0; str[i] != '\0'; i++);
+		return i;
+}
+
 int isDigit(int a){
 	if( (a >= '0') && (a <= '9') )
 		return 1;
 	return 0;
 }
 
-int putc( int c ){
-	return _int_80_hand(1,stdout,&c, 1);
+int putchar(int c){
+	return putc(stdout, c);
+}
+
+int putc(int fd, int c){
+	return write(fd, &c, 1);
 } 
 
 int printf(const char * str, ...){
@@ -145,7 +147,7 @@ int printf(const char * str, ...){
 				putInt( *( (int*) argv));
 				break;
 			case 'c':
-				putc(*((char*)argv));
+				putchar(*((char*)argv));
 				break;
 			case 's':
 				printf(*((char**)argv));
@@ -160,9 +162,13 @@ int printf(const char * str, ...){
 				argv++;
 			}
 			else 
-				putc(str[c]);
+				putchar(str[c]);
 		}
 	}
+}
+
+int write(int fd, int * c, size_t count){
+	return _int_80_hand(1, fd, c, count);
 }
 
 int pow(int n, int exp){
@@ -178,16 +184,16 @@ void putInt(int n){
 	int i,j;
 	
 	if(n<0){
-		putc('-');
+		putchar('-');
 		n = -n;
 	}
 
 	for(i=0;n/pow(10,i) > 0 ;i++); //cantidad de caracteres
 	for(j=i-1;j>0;j--){
-		putc( (n/pow(10,j))+'0');
+		putchar( (n/pow(10,j))+'0');
 		n = n%pow(10,j);
 	}
-	putc((n%10)+'0');
+	putchar((n%10)+'0');
 }
 
 int strcmp(const char * str1, const char * str2){
@@ -208,6 +214,19 @@ int strcmp(const char * str1, const char * str2){
 		return str1[i];
 
 	return out;
+}
+
+int rand(){
+	_outport(0x70, 0);
+	int seconds = _inport(0x71);
+	_outport(0x70, 2);
+	int minutes = _inport(0x71);
+	_outport(0x70, 4);
+	int hours = _inport(0x71);
+
+	long num1;
+	num1 = pow(2, hours) * pow(3, minutes) * pow(5, seconds);
+	return num1;
 }
 
 
