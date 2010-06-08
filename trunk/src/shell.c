@@ -81,7 +81,7 @@ int gcc(int argc, char * argv[]){
 }
 
 int arnold(int argc, char * argv[]){
-	int random = rand()%32;
+	int random = rand()%15;
 	switch(random){
 		case 0:
 			printf("- 'Vete al demonio'\n- 'Ni lo sueñes'\n");
