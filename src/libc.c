@@ -196,24 +196,6 @@ int strcmp(const char * str1, const char * str2){
 	return out;
 }
 
-/* Imprime la hora */
-// Los argumentos están en BCD 
-void printTime(dword hours, dword minutes, dword seconds)
-{
-	putc(((hours & 0xF0)>>4) + '0');
-	putc((hours & 0xF) + '0');
-	putc(':');
-
-	putc(((minutes & 0xF0)>>4) + '0');
-	putc((minutes & 0xF) + '0');
-	putc(':');
-
-	putc(((seconds & 0xF0)>>4) + '0');
-	putc((seconds & 0xF) + '0');
-}
-
-
-
 
 /***************************************************************
 *setup_IDT_entry

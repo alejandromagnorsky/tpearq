@@ -89,7 +89,6 @@ kmain()
 	__INIT_TTY();
 
 	_turn_cursor_on();
-
 	__printSystemSymbol();
 
 

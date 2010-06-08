@@ -1,5 +1,4 @@
 GLOBAL  _read_msw,_lidt
-GLOBAL	_print_time
 GLOBAL	_read_scancode
 GLOBAL  _turn_cursor_on
 GLOBAL  _turn_cursor_off
@@ -7,13 +6,13 @@ GLOBAL 	_move_cursor
 GLOBAL  _int_20_hand
 GLOBAL  _int_21_hand
 GLOBAL  _int_80_hand
+GLOBAL	_inport
 GLOBAL  _outport
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 
 EXTERN  int_20
 EXTERN  int_21
-EXTERN	printTime
 EXTERN __write
 EXTERN __read
 EXTERN putc
@@ -64,31 +63,6 @@ _lidt:				; Carga el IDTR
         pop     ebx
         pop     ebp
         retn
-
-
-_print_time:
-	push	ebp
-	mov	ebp, esp
-	mov	eax, 0			; Lee los segundos
-	out	70h, al
-	in	al, 71h
-	push	eax
-
-	mov	eax, 2			; Lee los minutos
-	out	70h, al
-	in	al, 71h
-	push	eax
-
-	mov	eax, 4			; Lee las horas
-	out	70h, al
-	in	al, 71h
-	push	eax
-	call	printTime
-	add	esp, 12
-	leave
-	ret
-
-
 
 
 _int_20_hand:				; Handler de INT 8 (Timer tick)
@@ -154,6 +128,19 @@ read:
 write:
 	call	__write
 	jmp	continue
+
+_inport:
+	push ebp
+	mov ebp, esp
+	push dx	
+
+	mov eax, 0
+	mov dx, [ebp+8]
+	in al, dx
+	
+	pop dx
+	leave
+	ret
 
 _outport:
 	push ebp

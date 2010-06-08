@@ -29,8 +29,6 @@ void putInt(int n);
 /* Tiempo de espera */
 void wait(int time);
 
-/* Imprime horas, minutos y segundos en la pantalla */
-void printTime(dword hours, dword minutes, dword seconds);
 
 /* Inicializa la entrada del IDT */
 void setup_IDT_entry (DESCR_INT *item, byte selector, dword offset, byte access,

@@ -80,6 +80,29 @@ int gcc(int argc, char * argv[]){
 	printf("It's a joke! No gcc here. \n");
 }
 
+/* Prints hour, minutes and seconds */
+int time(int argc, char * argv[])
+{
+	_outport(0x70, 4);
+	int hours = _inport(0x71);
+	putc(((hours & 0xF0)>>4) + '0');
+	putc((hours & 0xF) + '0');
+	putc(':');
+
+	_outport(0x70, 2);
+	int minutes = _inport(0x71);
+	putc(((minutes & 0xF0)>>4) + '0');
+	putc((minutes & 0xF) + '0');
+	putc(':');
+	
+	_outport(0x70, 0);
+	int seconds = _inport(0x71);
+	putc(((seconds & 0xF0)>>4) + '0');
+	putc((seconds & 0xF) + '0');
+	putc('\n');
+	return 0;
+}
+
 int tty(int argc, char * argv[]){
 
 	// NECESITO UN PARSER DE INTS
@@ -118,6 +141,7 @@ void shell(){
 	__register_program("man", man);
 	__register_program("gcc", gcc);
 	__register_program("tty", tty);
+	__register_program("time", time);
 
 	__register_man_page("echo","Prints the string received.");
 	__register_man_page("clear", "Clears the screen.");
@@ -131,6 +155,7 @@ void shell(){
 				" \t [-n] | Switches to the _next terminal \n"
 				" \t [-ss string] | Changes the _system _symbol to string \n"
 				" \t [-c foreground background] | Changes terminal _color.");
+	__register_man_page("time","Imprime la hora, los minutos y los segundos.");
 
 	// Data for user input
 	char user_input[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS];
