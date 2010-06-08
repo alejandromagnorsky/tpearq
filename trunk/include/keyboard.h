@@ -15,4 +15,14 @@ char isLetter(int scanCode);
 ** Returns 1 if the scanCode is a number or a ".", or 0 otherwise
 */
 char isNumber(int scanCode);
+
+/*
+** Returns 1 if the scanCode is a vocal
+*/
+char isVocal(int scanCode);
+
+/*
+** Returns the vocal with tilde
+*/
+char getTildeVocal(int scanCode);
 #endif

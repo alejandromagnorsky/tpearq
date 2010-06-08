@@ -8,7 +8,7 @@ DESCR_INT idt[0x30];			/* IDT de 30 entradas*/
 IDTR idtr;				/* IDTR */
 
 
-/* PREGUNTAR SI SE PUEDE USAR LA MISMA PAGINA WEB QUE OTRO GRUPO
+/* 
 ** Initialize the PICs and remap them
 */
 void initializePics()
@@ -45,7 +45,7 @@ void int_20() {
 }
 
 void int_21(){
-	int scanCode = _read_scancode() & 0xFF;
+	int scanCode = _read_scancode();
 	int asciiCode = getAscii(scanCode);
 	
 	if(asciiCode != -1){
