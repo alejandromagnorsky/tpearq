@@ -36,7 +36,6 @@ int __register_man_page(char * descriptor, char * man){
 }
 
 int echo(int argc, char * argv[]){
-
 	int i;
 	for(i=1;i<argc;i++)
 		printf("%s ", argv[i]);
@@ -50,7 +49,7 @@ int clear(int argc, char * argv[]){
 }
 
 int help(int argc, char * argv[]){
-	printf("Possible commands: \n");
+	printf("Possible commands:\n");
 
 	int i;
 	for(i=0;i<__QTY_PROGRAMS;i++)
@@ -68,7 +67,7 @@ int man(int argc, char * argv[]){
 			printf("%s: %s \n", tmp->descriptor, tmp->man);
 			return 0;
 		} else {
-			printf("Invalid argument. \n");
+			printf("Invalid argument.\n");
 			return 1;
 		}
 	}	
@@ -95,12 +94,13 @@ int arnold(int argc, char * argv[]){
 
 int mkexc(int argc, char * argv[]){
 	if(argc != 2){
-		printf("Cantidad de argumentos inválida\n");
+		printf("Invalid quantity of arguments.\n");
 		return 1;
 	}
 	int num = atoi(argv[1]);
-	if( !num && !(argv[1][0] == '0' && argv[1][1] == '\0')){
-		printf("Error. Argumento inválido\n");
+	if((num == 0 && !(argv[1][0] == '0' && argv[1][1] == '\0')) 
+	    || num < 0 || num > 31){
+		printf("Invalid argument.\n");
 		return 1;
 	}		
 	switch(num){
@@ -108,6 +108,14 @@ int mkexc(int argc, char * argv[]){
 		case 0:
 			__asm__("movl	$0, %ebx\n\t"
 				"div	%ebx, %eax");
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
 			break;
 		//BOUND CHECK
 		case 5:			
@@ -122,21 +130,38 @@ int mkexc(int argc, char * argv[]){
 			break;
 		//OVERFLOW
 		case 7:
-			__asm__("movb	$127, %dl\n\t"
-				"addb	$127, %dl\n\t"
-				"into");
+			__asm__("movb   $127, %dl\n\t"
+                                "addb   $127, %dl\n\t"
+                                "into");
 			break;
+		case 8:
+			break;
+		case 10:
+			break;
+		case 11:
+			break;
+		case 12:
+			break;
+		case 13:
+			break;
+		case 14:
+			break;
+		case 16:
+			break;
+		//RESERVED
 		default : 
-			printf("Error. Argumento inválido\n");
-			return 1;
+			int_09();
 	}
 	return 0;
 }
 
 
-/* Prints hour, minutes and seconds */
 int time(int argc, char * argv[])
 {
+	if(argc != 1){
+		printf("Invalid arguments.\n");
+		return 1;
+	}
 	_outport(0x70, 4);
 	int hours = _inport(0x71);
 	putchar(((hours & 0xF0)>>4) + '0');
@@ -156,6 +181,7 @@ int time(int argc, char * argv[])
 	putchar('\n');
 	return 0;
 }
+
 
 int tty(int argc, char * argv[]){
 
@@ -182,9 +208,10 @@ int tty(int argc, char * argv[]){
 		return 0;
 	}
 
-	printf("Invalid arguments. \n");
+	printf("Invalid arguments.\n");
 	return 1;
 }
+
 
 void shell(){
 
@@ -211,10 +238,10 @@ void shell(){
 				" \t [-n] | Switches to the _next terminal \n"
 				" \t [-ss string] | Changes the _system _symbol to string \n"
 				" \t [-c foreground background] | Changes terminal _color.");
-	__register_man_page("time","Imprime la hora, los minutos y los segundos.");
+	__register_man_page("time","Prints hour, minutes and seconds.");
 	__register_man_page("arnold","Date un baño de vapor, Bennet!");
-	__register_man_page("mkexc","Genera la excepción que corresponde al segundo argumento.\
-				     Los valores válidos son los números entre 0 y 31.");
+	__register_man_page("mkexc","Generates the exception corresponding to the second argument.\
+				     Valid values are numbers between 0 and 31.");
 	
 
 	// Data for user input
