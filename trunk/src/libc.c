@@ -17,6 +17,21 @@ int getc(int fd){
 ** en cuyo caso deja de cargarlo en la string
 ** Limitación por no tener malloc.
  */
+
+int atoi(const char *str){
+	int i, acum, flagNegative = 0;
+	for (i = 0, acum = 0; (!flagNegative && str[i]=='-') || isDigit(str[i]) && str[i] != '\0'); i++){
+		if (str[i]=='-')
+			flagNegative = 1;
+		else
+			acum = acum * 10 + str[i] - '0';
+	}
+	if (i==strlen(str))
+		return flagNegative * -1 * acum + !flagNegative * acum;
+	return 0;
+}
+
+
 void getString(char * ans){
 	int i, j;
 	char c;
