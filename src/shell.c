@@ -98,27 +98,30 @@ int mkexc(int argc, char * argv[]){
 		printf("Cantidad de argumentos inválida\n");
 		return 1;
 	}
-	int num = 5;
-	int cero = 0;
-	switch(*(argv[1])){
+	int num = atoi(argv[1]);
+	if( !num && !(argv[1][0] == '0' && argv[1][1] == '\0')){
+		printf("Error. Argumento inválido\n");
+		return 1;
+	}		
+	switch(num){
 		//DIVIDE BY ZERO - LOOP
-		case '0':
+		case 0:
 			__asm__("movl	$0, %ebx\n\t"
 				"div	%ebx, %eax");
 			break;
 		//BOUND CHECK
-		case '5':			
+		case 5:			
 			__asm__("movl	$0, -8(%ebp)\n\t"
 				"movl	$2, -4(%ebp)\n\t"
 				"movl	$3, %eax\n\t"
 				"bound	%eax, -8(%ebp)");
 			break;
 		//INVALID OPCODE - LOOP
-		case '6':
-			__asm__("jmp	%eax");
+		case 6:
+			__asm__("jmp	(%eax)");
 			break;
 		//OVERFLOW
-		case '7':
+		case 7:
 			__asm__("movb	$127, %dl\n\t"
 				"addb	$127, %dl\n\t"
 				"into");

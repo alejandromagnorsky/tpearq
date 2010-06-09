@@ -172,7 +172,7 @@ kmain()
 	_mascaraPIC2(0xFF);
 
 	_Sti();
-
+	
 	shell();
 }
 
