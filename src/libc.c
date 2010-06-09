@@ -20,7 +20,7 @@ int getc(int fd){
 
 int atoi(const char *str){
 	int i, acum, flagNegative = 0;
-	for (i = 0, acum = 0; (i==0 && str[i]=='-') || isDigit(str[i]) && str[i] != '\0'; i++){
+	for (i = 0, acum = 0; (!i && str[i]=='-') || isDigit(str[i]) && str[i] != '\0'; i++){
 		if (str[i]=='-')
 			flagNegative = 1;
 		else
@@ -74,7 +74,7 @@ int scanf(const char * str, ...){
                 if ( str[i] == '%' )
                         switch(str[++i]){
                                 case 'd':
-                                        for(k=0, acum = 0, typeONegative = 0; ( strIn[j] == '-' && !typeONegative ) || isDigit(strIn[j])  ; k++, j++){
+                                        for(k=0, acum = 0, typeONegative = 0; ( strIn[j] == '-' && !k ) || isDigit(strIn[j])  ; k++, j++){
 						if (strIn[j] != '-'){
 							acum = acum * 10 + strIn[j] -'0';
                                                	} else 
