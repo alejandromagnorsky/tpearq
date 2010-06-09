@@ -20,7 +20,7 @@ int getc(int fd){
 
 int atoi(const char *str){
 	int i, acum, flagNegative = 0;
-	for (i = 0, acum = 0; (!flagNegative && str[i]=='-') || isDigit(str[i]) && str[i] != '\0'); i++){
+	for (i = 0, acum = 0; (i==0 && str[i]=='-') || isDigit(str[i]) && str[i] != '\0'; i++){
 		if (str[i]=='-')
 			flagNegative = 1;
 		else

@@ -15,6 +15,8 @@ void showSplashScreen();
 
 int putchar(int character);
 
+int atoi(const char *str);
+
 /* Imprime un caracter en pantalla */
 int putc(int fd, int character);
 
