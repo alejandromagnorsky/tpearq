@@ -110,12 +110,16 @@ int mkexc(int argc, char * argv[]){
 				"div	%ebx, %eax");
 			break;
 		case 1:
+			int_01();
 			break;
 		case 2:
+			int_02();
 			break;
 		case 3:
+			int_03();
 			break;
 		case 4:
+			int_04();
 			break;
 		//BOUND CHECK
 		case 5:			
@@ -124,9 +128,8 @@ int mkexc(int argc, char * argv[]){
 				"movl	$3, %eax\n\t"
 				"bound	%eax, -8(%ebp)");
 			break;
-		//INVALID OPCODE - LOOP
 		case 6:
-			__asm__("jmp	(%eax)");
+			int_06();
 			break;
 		//OVERFLOW
 		case 7:
@@ -135,18 +138,25 @@ int mkexc(int argc, char * argv[]){
                                 "into");
 			break;
 		case 8:
+			int_08();
 			break;
 		case 10:
+			int_0A();
 			break;
 		case 11:
+			int_0B();
 			break;
 		case 12:
+			int_0C();
 			break;
 		case 13:
+			int_0D();
 			break;
 		case 14:
+			int_0E();
 			break;
 		case 16:
+			int_10();
 			break;
 		//RESERVED
 		default : 
