@@ -1,4 +1,5 @@
 #include "../include/keyboard.h"
+#include "../include/kasm.h"
 /*	PROBLEMAS
 **	TECLAS QUE NO TIRAN INTERRUPCIÓN:
 **		AltGr.	
@@ -10,6 +11,12 @@
 **	AVERIGUAR QUE HACER CON LAS TECLAS INSERT, INICIO, SUPR y FIN cuando el numPad esta activado
 **		
 */
+
+/* Globales para los LEDS */
+int __CURRENT_LEDS = 0;
+int __SCROLL_LED = 1;
+int __NUM_LED = 2;
+int __CAPS_LED = 4;
 
 int __L_SHIFT_ = 0;	// Left Shift flag (0 = disabled)
 int __R_SHIFT_ = 0; // Right Shift flag (0 = disabled)
@@ -70,11 +77,18 @@ int getAscii(int scanCode){
 			__L_SHIFT_ = 1;
 		else if(scanCode == 54)
 			__R_SHIFT_ = 1;
-		else if (scanCode == 58)
+		else if (scanCode == 58){
+			__CURRENT_LEDS += __CAPS_LED;
+			keyboardLeds(__CURRENT_LEDS);
+			__CAPS_LED *= -1;
 			__CAPSLOCK_ = !__CAPSLOCK_;
-		else if(scanCode == 69)
-			__NUMLOCK_ = !__NUMLOCK_;
-		else if (__CAPSLOCK_ && isLetter(scanCode) ){
+		}
+		else if(scanCode == 69){
+			__CURRENT_LEDS += __NUM_LED;
+			keyboardLeds(__CURRENT_LEDS);
+			__NUM_LED *= -1;
+			__NUMLOCK_ = !__NUMLOCK_;		
+		}else if (__CAPSLOCK_ && isLetter(scanCode) ){
 			if (!__L_SHIFT_ && !__R_SHIFT_)
 				asciiCode = shiftMakeCodes[scanCode-1];
 			else
@@ -128,6 +142,34 @@ char getTildeVocal(int scanCode){
 	if(__CAPSLOCK_ || __L_SHIFT_ || __R_SHIFT_)
 		ans = -1;
 	return ans;
+}
+
+void keyboardLeds(int leds){
+	while ( (_inport(0x64) & 2) != 0); //DESPUES COMENTAR BIEN: while (el buffer del teclado está lleno (bit 1 != 0))
+	_outport(0x60, 0xED);	//Envío el comando ED que se prepara para recibir los bits de activación de LED
+	while ( (_inport(0x64) & 2) != 0); //DESPUES COMENTAR BIEN: while (el buffer del teclado está lleno (bit 1 != 0))
+	_outport(0x60, leds);
+}
+
+/* BORRAR SEGURAMENTE, ANDUVO COMO EL ORTO EN UNA PC REAL
+** TODAVIA NO LA BORRO POR LAS DUDAS
+*/
+void fireWorks(){
+	int i;
+	for (i=0; i<10000; i++){
+		if (i%4 == 3)
+			keyboardLeds(i+1);
+		else
+			keyboardLeds(i);
+	}
+	for (i=0; i<10000; i++);
+		keyboardLeds(7);
+	for (i=0; i<5000; i++);
+		keyboardLeds(0);
+	for (i=0; i<10000; i++);
+		keyboardLeds(7);
+	for (i=0; i<5000; i++);
+		keyboardLeds(0);
 }
 
 

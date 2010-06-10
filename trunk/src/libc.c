@@ -13,10 +13,6 @@ int getc(int fd){
 	
 }
 
-/* Lee string hasta que se presione enter o se escriban más de MAX_STRLEN caracteres, 
-** en cuyo caso deja de cargarlo en la string
-** Limitación por no tener malloc.
- */
 
 int atoi(const char *str){
 	int i, acum, flagNegative = 0;
@@ -31,12 +27,10 @@ int atoi(const char *str){
 	return 0;
 }
 
-
 void getString(char * ans){
 	int i, j;
 	char c;
-	for (i=0, j=0; (c = getchar()) != '\n' ; j++){ //Voy con i hasta MAX_STRLEN-1, porque en caso de que el usuario escriba MAX_STRLEN-1 caracteres
-		printf("%c", c); //PRINTF DE DEBUGGEO;	   // dejo ans[MAX_STRLEN] para el '\0'
+	for (i=0, j=0; (c = getchar()) != '\n' ; j++){
 		if(c == '\b'){
 			if (i)		
 				ans[--i] = '\0';
@@ -46,7 +40,6 @@ void getString(char * ans){
 		}
 	}
 	ans[i] = '\0';
-//	printf("STR LEVANTADA: %s\nSTRLEN DE LO LEVANTADO: %d\n", ans,strlen(ans));	/* PRINTF  DE DEBUGGEO */
 }
 
 

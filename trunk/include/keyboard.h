@@ -25,4 +25,14 @@ char isVocal(int scanCode);
 ** Returns the vocal with tilde
 */
 char getTildeVocal(int scanCode);
+
+/*
+** Manipulate keyboards LEDs (Caps, Num-Block, Scroll-block)
+*/
+void keyboardLeds();
+
+/*
+** Fuegos artificiales de bienvenida al usuario.
+*/
+void fireWorks();
 #endif
