@@ -3,6 +3,7 @@ GLOBAL	_read_scancode
 GLOBAL  _turn_cursor_on
 GLOBAL  _turn_cursor_off
 GLOBAL 	_move_cursor
+GLOBAL	_capsLight
 GLOBAL	_int_00_hand
 GLOBAL	_int_01_hand
 GLOBAL	_int_02_hand
@@ -82,6 +83,7 @@ EXTERN __read
 EXTERN getAscii
 EXTERN __keyboard_buffer
 EXTERN __KBUFFER_PTR_
+EXTERN putchar
 
 SECTION .text
 
