@@ -9,18 +9,19 @@
 **              }
 */
 
-/* Globales para los LEDS */
+/* LED variables */
 int __CURRENT_LEDS = 0;
 int __SCROLL_LED = 1;
 int __NUM_LED = 2;
 int __CAPS_LED = 4;
 
-int __L_SHIFT_ = 0;	// Left Shift flag (0 = disabled)
-int __R_SHIFT_ = 0;	// Right Shift flag (0 = disabled)
-int __CAPSLOCK_ = 0;	// Capslock flag (0 = disabled)
-int __NUMLOCK_ = 0;	// NumLock flag (0 = disabled)
-int __TILDE_ = 0;	// Tilde flag (0 = disabled)
-int __EXTENDED_ = 0;	// Flag que indica que el scanCode tiene 2 bytes
+/* Special ASCII flags [0 = disabled] */
+int __L_SHIFT_ = 0;
+int __R_SHIFT_ = 0;
+int __CAPSLOCK_ = 0;
+int __NUMLOCK_ = 0;
+int __TILDE_ = 0;
+int __EXTENDED_ = 0;
 
 
 int makeCodes[83] =	 {-1, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 39, 168, '\b', '\t', 'q', 'w', 'e', 'r', 
@@ -138,12 +139,18 @@ char getTildeVocal(int scanCode){
 }
 
 void keyboardLeds(int leds){
-        while ( (_inport(0x64) & 2) != 0); //DESPUES COMENTAR BIEN: while (el buffer del teclado está lleno (bit 1 != 0))
-	_outport(0x60, 0xED);   //Envío el comando ED que se prepara para recibir los bits de activación de LED
-        while ( (_inport(0x64) & 2) != 0); //DESPUES COMENTAR BIEN: while (el buffer del teclado está lleno (bit 1 != 0))
-        _outport(0x60, leds);
+	/* Read until buffer if empty (bit 1 in port 64h must be zero) */
+        while ( (_inport(0x64) & 2) != 0);
+        _outport(0x60, 0xED);   /* Send commando code: 0xED -> Next byte sent to port 60h will change LEDs status */
+
+	/* Empty buffer again */
+        while ( (_inport(0x64) & 2) != 0);
+        _outport(0x60, leds);	/* Send LEDs status byte */
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* BORRAR SEGURAMENTE, ANDUVO COMO EL ORTO EN UNA PC REAL
 ** TODAVIA NO LA BORRO POR LAS DUDAS
 */

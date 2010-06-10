@@ -28,9 +28,11 @@ int atoi(const char *str){
 }
 
 
-/* Lee string hasta que se presione enter o se escriban más de MAX_STRLEN caracteres,
-** en cuyo caso deja de cargarlo en la string
-** Limitación por no tener malloc.
+/*
+** NOTE:
+** 	This implementation of 'getString' is aimed for being used only by 'scanf' function (where
+** 'ans' is always a vector of MAX_STRLEN chars), as i counter is only compared against MAX_STRLEN
+** constant (in the 'else if' clause), regardless the length of 'ans'.
 */
 void getString(char * ans){
         int i, j;
@@ -50,43 +52,44 @@ void getString(char * ans){
 
 
 /*
-** COMENTAR BIEN CADA FUNCIÓN QUE HICE, EXPLICAR TOdO MEJOR, FIJAR SI SE PUEDE ACHICAR Y OPTIMIZAR EL CODIGO
-**
-** CONVERSAR SOBRE EL TEMA DE SIMILARIDAD CON K&R URGENTE!!!!!!!!!!!!!!!!!!!!!!
+** NOTE:
+**	As we can't make use of 'malloc' function, we decided to set MAX_STRLEN constant with the
+** max quantity of characters the user can enter. Then, 'scanf' reserves MAX_STRLEN+1 bytes for
+** vector strIn (strIn[MAX_STRLEN] = '\0').
 */
 
 int scanf(const char * str, ...){
-        int i, j, k, acum, strLen, strTrueLen, strInLen, typeONegative;  // TYPE O NEGATVE CAMBIAR PARA LA ENTREGA POSTA
-        /*      strLen:         longitud de la string str.
-        **      strTrueLen:     longitud de la string str una vez reemplazados los % por los valores ingresados por el usuario.
-        **      strInLen:       longitud de la string strIn, string que es ingresada por el usuario
+        int i, j, k, acum, strLen, strTrueLen, strInLen, flagNegative;  // TYPE O NEGATVE CAMBIAR PARA LA ENTREGA POSTA
+        /*      strLen:         'str' length. Scanf's string.
+        **      strTrueLen:     final 'str' length, once every %x in 'str' has been replaced with values.
+        **      strInLen:       'strIn' length, user-introduced string. 
         */
-        char strIn[MAX_STRLEN+1]; //Le sumo uno al máximo de caracteres porque asi el último lo dejo para '\0'
+        char strIn[MAX_STRLEN+1];	/* Last position is reserved for '\0'; the user can effectively introduce MAX_STRLEN chars */
         void ** argv = (void **)(&str);
        
-        getString(strIn); /* El usuario ingresa una string */
+        getString(strIn); /* User enters a string */
         strLen = strlen(str);
-        strTrueLen = strLen;    /* Inicialmente la string real tiene la misma longitud que la string del scanf */
+        strTrueLen = strLen;    /* At start, boths lengths are equals, because no %x has been replaced */
         strInLen = strlen(strIn);
 
         for (i=0, j=0 ; i<strLen && j<strInLen; i++, j++){
                 if ( str[i] == '%' )
                         switch(str[++i]){
                                 case 'd':
-                                        for(k=0, acum = 0, typeONegative = 0; ( strIn[j] == '-' && !k ) || isDigit(strIn[j])  ; k++, j++){
+                                        for(k=0, acum = 0, flagNegative = 0; ( strIn[j] == '-' && !k ) || isDigit(strIn[j])  ; k++, j++){
                                                 if (strIn[j] != '-'){
                                                         acum = acum * 10 + strIn[j] -'0';
                                                 } else
-                                                        typeONegative = 1;
+                                                        flagNegative = 1;
                                         }
                                         j--;
                                         if (!k){
                                                 return -1;
-                                        } else if (!isDigit(strIn[j]) && typeONegative){
+                                        } else if (!isDigit(strIn[j]) && flagNegative){
                                                 return -1;
                                         }
-                                        *(*((int **)++argv)) = typeONegative * -1 * acum + !typeONegative * acum;
-                                        strTrueLen = strTrueLen - 2 + k;  /* Resto 2 a strTrueLen (% y d) y sumo k (cant. dígitos leidos-1)*/
+                                        *(*((int **)++argv)) = flagNegative * -1 * acum + !flagNegative * acum;
+                                        strTrueLen = strTrueLen - 2 + k;  /* Sub 2 ('%' and 'd') and add k (qty. of read digits - 1) */
                                         break;
                                 case 'c':
                                         *(*((char **)++argv)) = strIn[j];
@@ -101,25 +104,23 @@ int scanf(const char * str, ...){
                                         j--;
                                         strTrueLen = strTrueLen -2 + k;
                                         break;
-                                /* Hice el default así para que sea análogo del printf de mariano. Si recibe % y una letra que no es ni d ni c ni s,
-                                ** entonces se saltea el porcentaje y dicha letra.
-                                */
+
+				/* NOTE:
+				** 	'default' case works this way to keep analogy to 'printf' function. If it detects a '%' and next character
+				** is neither 'd' nor 'c' nor 's', then it skips both characters ('%' and that char). 
+				*/
                                 default:
                                         j--;
                                         strTrueLen-=2;
                                         break;
                         }
                 else
-                        if (str[i] != strIn[j]){
-                             //   printf("**%c != %c**-1", str[i], strIn[j]);       /* PRINTF  DE DEBUGGEO */
+                        if (str[i] != strIn[j])
                                 return -1;
-                        }
         }
-        if (strInLen != strTrueLen){
-        //      printf("%d", -1);       /* PRINTF  DE DEBUGGEO */
+        if (strInLen != strTrueLen)
                 return -1;
-        }
-        printf("\n");   // The user entered \n, so it must be used
+        printf("\n");   /* The user entered '\n', so it must be used */
         return 0;
 }
 
@@ -203,7 +204,7 @@ void putInt(int n){
         }
 
 
-        for(i=0;n/pow(10,i) > 0 ;i++); //cantidad de caracteres
+        for(i=0;n/pow(10,i) > 0 ;i++); /* char quantity */
         for(j=i-1;j>0;j--){
                 putchar( (n/pow(10,j))+'0');
                 n = n%pow(10,j);

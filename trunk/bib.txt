@@ -1,7 +1,14 @@
 Bibliografia usada:
+
 http://wiki.osdev.org/Main_Page
+
+********************
+PIC
 http://www.beyondlogic.org/interrupts/interupt.htm#6
 "Programming the PIC" - Alexander Blessing - www.osdever.net/tutorials/pdf/pic.pdf
+
+********************
+SCANCODES y ASCII
 http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
 http://www.cdrummond.qc.ca/cegep/informat/Professeurs/Alain/files/ascii.htm
 http://www.ee.bgu.ac.il/~microlab/MicroLab/Labs/ScanCodes.htm
@@ -10,3 +17,7 @@ http://www.ee.bgu.ac.il/~microlab/MicroLab/Labs/ScanCodes.htm
 EXCEPTION DESCRIPTOR
 http://en.wikipedia.org/wiki/Overflow_flag
 http://pdos.csail.mit.edu/6.828/2008/readings/i386/s09_08.htm
+
+********************
+LEDS
+http://wiki.osdev.org/PS2_Keyboard#Keyboard_LEDs
