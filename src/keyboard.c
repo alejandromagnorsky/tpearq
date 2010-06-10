@@ -41,8 +41,8 @@ int extendedMakeCodes[83] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 int getAscii(int scanCode){
 	int asciiCode = -1;
 	//For scanCodes with more than 1 byte
-	if(scanCode & 0xFF00 == 0x0E00){
-		printf("asdasd");
+	if(scanCode == 0xE0){
+		//printf("ext");
 		__EXTENDED_ = 1;
 	}
 		
