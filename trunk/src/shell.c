@@ -117,8 +117,11 @@ int mkexc(int argc, char * argv[]){
 		case 3:
 			int_03();
 			break;
+		//OVERFLOW
 		case 4:
-			int_04();
+			__asm__("movb   $127, %dl\n\t"
+                                "addb   $127, %dl\n\t"
+                                "into");
 			break;
 		//BOUND CHECK
 		case 5:			
@@ -130,12 +133,9 @@ int mkexc(int argc, char * argv[]){
 		case 6:
 			int_06();
 			break;
-		//OVERFLOW
 		case 7:
-			__asm__("movb   $127, %dl\n\t"
-                                "addb   $127, %dl\n\t"
-                                "into");
-			break;
+			int_07();
+			break;		
 		case 8:
 			int_08();
 			break;

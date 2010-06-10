@@ -1,15 +1,12 @@
 #include "../include/keyboard.h"
 #include "../include/kasm.h"
+
 /*      PROBLEMAS
-**      TECLAS QUE NO TIRAN INTERRUPCIÓN:
-**              AltGr.  
 **      AVERIGUAR EL SCAN CODE DE
 **              La tecla de al lado de la Ñ
 **              Shift+| y |
 **              < y >
 **              }
-**      AVERIGUAR QUE HACER CON LAS TECLAS INSERT, INICIO, SUPR y FIN cuando el numPad esta activado
-**              
 */
 
 /* Globales para los LEDS */
@@ -18,23 +15,23 @@ int __SCROLL_LED = 1;
 int __NUM_LED = 2;
 int __CAPS_LED = 4;
 
-int __L_SHIFT_ = 0;     // Left Shift flag (0 = disabled)
-int __R_SHIFT_ = 0; // Right Shift flag (0 = disabled)
-int __CAPSLOCK_ = 0;    // Capslock flag (0 = disabled)
-int __NUMLOCK_ = 0; // NumLock flag (0 = disabled)
-int __TILDE_ = 0; // Tilde flag (0 = disabled)
-int __EXTENDED_ = 0;
+int __L_SHIFT_ = 0;	// Left Shift flag (0 = disabled)
+int __R_SHIFT_ = 0;	// Right Shift flag (0 = disabled)
+int __CAPSLOCK_ = 0;	// Capslock flag (0 = disabled)
+int __NUMLOCK_ = 0;	// NumLock flag (0 = disabled)
+int __TILDE_ = 0;	// Tilde flag (0 = disabled)
+int __EXTENDED_ = 0;	// Flag que indica que el scanCode tiene 2 bytes
 
 
 int makeCodes[83] =	 {-1, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 39, 168, '\b', '\t', 'q', 'w', 'e', 'r', 
-			  't', 'y', 'u', 'i', 'o', 'p', -5, '+', '\n', -1, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 
-                          164, '{', '}', 124, -5, 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '-', -5, -5, -1, ' ', -5,
+			  't', 'y', 'u', 'i', 'o', 'p', '{', '+', '\n', -1, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 
+                          164, -5, '}', 124, -5, 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '-', -1, '*', -1, ' ', -5,
 			  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 'N', 'S', 'H', 202, -1, '-', 185, 206, 204, '+', 'E',
 			  203, -1, 'I', 'D'};
 
 int shiftMakeCodes[83] = {-1, '!', '"', '#', '$', '%', '&', '/', '(', ')', '=', '\?', 173, '\b', '\t', 'Q', 'W', 'E', 'R', 
-			  'T', 'Y', 'U', 'I', 'O', 'P', -5, '*', '\n', -1, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 
-			  165, '[', ']', 167, -5, 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ';', ':', '_', -5, -5, -1, ' ', -5,
+			  'T', 'Y', 'U', 'I', 'O', 'P', '[', '*', '\n', -1, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 
+			  165, -5, ']', 167, -5, 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ';', ':', '_', -5, '*', -1, ' ', -5,
 			  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 'N', 'S', 'H', 202, -1, '-', 185, 206, 204, '+', 'E',
 			  203, -1, 'I', 'D'};
 
@@ -142,7 +139,7 @@ char getTildeVocal(int scanCode){
 
 void keyboardLeds(int leds){
         while ( (_inport(0x64) & 2) != 0); //DESPUES COMENTAR BIEN: while (el buffer del teclado está lleno (bit 1 != 0))
-        _outport(0x60, 0xED);   //Envío el comando ED que se prepara para recibir los bits de activación de LED
+	_outport(0x60, 0xED);   //Envío el comando ED que se prepara para recibir los bits de activación de LED
         while ( (_inport(0x64) & 2) != 0); //DESPUES COMENTAR BIEN: while (el buffer del teclado está lleno (bit 1 != 0))
         _outport(0x60, leds);
 }
