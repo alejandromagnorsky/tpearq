@@ -133,11 +133,10 @@ _lidt:				; Carga el IDTR
 _int_00_hand:				
         mov     ax, 10h			
         mov     ds, ax	
-        mov     es, ax	
-
+        mov     es, ax
+	
 	call	int_00
-       	mov	ebx, 1
-
+       	
         iret
 
 

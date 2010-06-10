@@ -6,7 +6,6 @@
 
 void int_00(){
 	printf("Error al dividir por cero.\n");
-	__asm__("movl	$1, %ebx");
 }
 
 void int_01(){

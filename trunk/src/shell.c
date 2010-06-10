@@ -106,8 +106,7 @@ int mkexc(int argc, char * argv[]){
 	switch(num){
 		//DIVIDE BY ZERO - LOOP
 		case 0:
-			__asm__("movl	$0, %ebx\n\t"
-				"div	%ebx, %eax");
+			int_00();
 			break;
 		case 1:
 			int_01();
