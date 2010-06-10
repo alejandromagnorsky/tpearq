@@ -32,7 +32,7 @@ char getTildeVocal(int scanCode);
 void keyboardLeds();
 
 /*
-** Fuegos artificiales de bienvenida al usuario.
+** User-welcome fireworks
 */
 void fireWorks();
 #endif
