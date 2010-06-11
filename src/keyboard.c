@@ -155,20 +155,26 @@ void keyboardLeds(int leds){
 ** TODAVIA NO LA BORRO POR LAS DUDAS
 */
 void fireWorks(){
-        int i;
-        for (i=0; i<10000; i++){
-                if (i%4 == 3)
-                        keyboardLeds(i+1);
-                else
-                        keyboardLeds(i);
-        }
-        for (i=0; i<10000; i++);
-                keyboardLeds(7);
-        for (i=0; i<5000; i++);
-                keyboardLeds(0);
-        for (i=0; i<10000; i++);
-                keyboardLeds(7);
-        for (i=0; i<5000; i++);
-                keyboardLeds(0);
+      	keyboardLeds(__CAPS_LED + __NUM_LED + __SCROLL_LED);
+//	wait(1);
+      	keyboardLeds(0);
+//	wait(1);
+      	keyboardLeds(__CAPS_LED);
+//	wait(1);
+      	keyboardLeds(__NUM_LED + __SCROLL_LED);
+//	wait(1);
+      	keyboardLeds(__CAPS_LED);
+//	wait(1);
+      	keyboardLeds(__CAPS_LED + __NUM_LED + __SCROLL_LED);
+//	wait(1);
+      	keyboardLeds(0);
+//	wait(1);
+      	keyboardLeds(__CAPS_LED);
+//	wait(1);
+      	keyboardLeds(0);
+//	wait(1);
+      	keyboardLeds(__CAPS_LED + __NUM_LED + __SCROLL_LED);
+//	wait(1);
+      	keyboardLeds(0);
 }
 

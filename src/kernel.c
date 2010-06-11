@@ -172,7 +172,8 @@ kmain()
 	_mascaraPIC2(0xFF);
 
 	_Sti();
-	
+
+	fireWorks();	
 	shell();
 }
 
