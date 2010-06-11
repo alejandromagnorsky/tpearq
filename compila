@@ -10,4 +10,5 @@ gcc -g -c ../src/keyboard.c -o keyboard.o -fno-builtin -fno-stack-protector
 gcc -g -c ../src/console.c -o console.o -fno-builtin -fno-stack-protector
 gcc -g -c ../src/interrupts.c -o interrupts.o -fno-builtin -fno-stack-protector
 gcc -g -c ../src/shell.c -o shell.o -fno-builtin
-ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o video.o keyboard.o libc.o libasm.o console.o interrupts.o shell.o
+gcc -g -c ../src/programs/cpuid.c -o cpuid.o -fno-builtin -fno-stack-protector
+ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o video.o keyboard.o libc.o libasm.o console.o interrupts.o shell.o cpuid.o
