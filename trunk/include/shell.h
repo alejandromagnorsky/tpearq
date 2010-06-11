@@ -14,10 +14,14 @@ typedef struct{
 } __executable;
 
 __executable __executable_programs[MAX_PROGRAMS];
-int __QTY_PROGRAMS = 0;
+int __QTY_PROGRAMS;
 
 
 int __register_program(char * descriptor, int (*program)(int argc, char * argv[]));
+
+__executable * getExecutableByDescriptor(char * descriptor);
+
+int __register_man_page(char * descriptor, char * man);
 
 void shell();
 

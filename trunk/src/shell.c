@@ -1,5 +1,6 @@
 #include "../include/shell.h"
 #include "../include/interrupts.h"
+#include "../include/programs.h"
 
 int __register_program(char * descriptor, int (*execute)(int argc, char * argv[])){
 	__executable exec;
@@ -35,238 +36,14 @@ int __register_man_page(char * descriptor, char * man){
 	return 0;
 }
 
-int echo(int argc, char * argv[]){
-	int i;
-	for(i=1;i<argc;i++)
-		printf("%s ", argv[i]);
-	printf("\n");
-	return 0;
-}
 
-int clear(int argc, char * argv[]){
-	__clear_terminal();
-	return 0;
-}
-
-int help(int argc, char * argv[]){
-	printf("Possible commands:\n");
-
-	int i;
-	for(i=0;i<__QTY_PROGRAMS;i++)
-		printf("%s\n", __executable_programs[i].descriptor);
-	
-	return 0;
-}
-
-int man(int argc, char * argv[]){
-	if(argc >= 1){
-		int i, exists = 0;
-
-		__executable * tmp = getExecutableByDescriptor(argv[1]);
-		if(tmp!=NULL){
-			printf("%s: %s \n", tmp->descriptor, tmp->man);
-			return 0;
-		} else {
-			printf("Invalid argument.\n");
-			return 1;
-		}
-	}	
-	printf("Please enter a program name. \n");
-	return 1;
-}
 
 int cpuid(int argc, char * argv[]){
-
 	detect_cpu();
 }
 
-int gcc(int argc, char * argv[]){
-	printf("It's a joke! No gcc here. \n");
-}
-
-int arnold(int argc, char * argv[]){
-	int random = rand()%10;
-	switch(random){
-		case 0:
-			printf("Let off some steam, Bennett.\n\n");
-			break;
-		case 1:
-			printf("Sully: Here's twenty dollars to get some beers in Val Verde. It'll give us all a little more time with your daughter.\n");
-			printf("Matrix: You're a funny man, Sully, I like you. That's why I'm going to kill you last.\n\n");
-			break;
-		case 2:
-			printf("Remember, Sully, when I promised to kill you last?\n");
-			printf("That's right, Matrix. You did.\n");
-			printf("I lied.\n\n");
-			break;
-		case 3:
-			printf("Cooke: You scared, motherfucker? Well, you should be, because this Green Beret is going to kick your big ass!\n");
-			printf("Matrix: I eat Green Berets for breakfast. And right now, I'm very hungry!\n\n");
-			break;
-		case 4:
-			printf("Matrix: Don't break radio silence until they see me.\n");
-			printf("Cindy: How will I know?\n");
-			printf("Matrix: Because all fucking hell is going to break loose. \n\n");
-			break;
-		case 5:
-			printf("Gen. Kirby: Keep on the airwaves and let me know if you hear anything unusual.\n");
-			printf("Soldier: I'll keep at it. What are you expecting?\n");
-			printf("Gen. Kirby: World War Three. \n\n");
-			break;
-		case 6:
-			printf("Cooke: Fuck you, asshole!.\n");
-			printf("Matrix: Fuck YOU, asshole!.\n\n");
-			break;
-		case 7:
-			printf("Cindy: What happened to Sully?\n");
-			printf("Matrix: I let him go. \n\n");
-			break;
-		case 8:
-			printf("Cindy: You steal my car, you rip the seat out, you kidnap me, you ask me to help you find your daughter which I very kindly do, and then you get me involved in a shoot out where people are dying and there's blood spurting all over the place, and then I watch you rip a phone booth out of a wall, swing from the ceiling like Tarzan, and then there's a cop that's going to shoot you and I save you and they start chasing me. Are you going to tell me what's going on or what?\n");
-			printf("Matrix: No. \n\n");
-			break;
-		case 9:
-			printf("Diaz: My people, they got some business with you. And if you want your kid back, then you gotta co-operate, right?\n");
-			printf("Matrix: Wrong! \n\n");
-			break;
-		default:
-			printf("RANDOM: %d", random);
-			break;
-	}
-	return 1;
-}
-
-int mkexc(int argc, char * argv[]){
-	if(argc != 2){
-		printf("Invalid quantity of arguments.\n");
-		return 1;
-	}
-	int num = atoi(argv[1]);
-	if((num == 0 && !(argv[1][0] == '0' && argv[1][1] == '\0')) 
-	    || num < 0 || num > 31){
-		printf("Invalid argument.\n");
-		return 1;
-	}		
-	switch(num){
-		//DIVIDE BY ZERO - LOOP
-		case 0:
-			int_00();
-			break;
-		case 1:
-			int_01();
-			break;
-		case 2:
-			int_02();
-			break;
-		case 3:
-			int_03();
-			break;
-		//OVERFLOW
-		case 4:
-			__asm__("movb   $127, %dl\n\t"
-                                "addb   $127, %dl\n\t"
-                                "into");
-			break;
-		//BOUND CHECK
-		case 5:			
-			__asm__("movl	$0, -8(%ebp)\n\t"
-				"movl	$2, -4(%ebp)\n\t"
-				"movl	$3, %eax\n\t"
-				"bound	%eax, -8(%ebp)");
-			break;
-		case 6:
-			int_06();
-			break;
-		case 7:
-			int_07();
-			break;		
-		case 8:
-			int_08();
-			break;
-		case 10:
-			int_0A();
-			break;
-		case 11:
-			int_0B();
-			break;
-		case 12:
-			int_0C();
-			break;
-		case 13:
-			int_0D();
-			break;
-		case 14:
-			int_0E();
-			break;
-		case 16:
-			int_10();
-			break;
-		//RESERVED
-		default : 
-			int_09();
-	}
-	return 0;
-}
-
-
-int time(int argc, char * argv[])
-{
-	if(argc != 1){
-		printf("Invalid arguments.\n");
-		return 1;
-	}
-	_outport(0x70, 4);
-	int hours = _inport(0x71);
-	putchar(((hours & 0xF0)>>4) + '0');
-	putchar((hours & 0xF) + '0');
-	putchar(':');
-
-	_outport(0x70, 2);
-	int minutes = _inport(0x71);
-	putchar(((minutes & 0xF0)>>4) + '0');
-	putchar((minutes & 0xF) + '0');
-	putchar(':');
-	
-	_outport(0x70, 0);
-	int seconds = _inport(0x71);
-	putchar(((seconds & 0xF0)>>4) + '0');
-	putchar((seconds & 0xF) + '0');
-	putchar('\n');
-	return 0;
-}
-
-
-int tty(int argc, char * argv[]){
-
-	// NECESITO UN PARSER DE INTS
-	if(argc > 0 ){
-
-		if(!strcmp(argv[1], "-c") && argv[2] != NULL && argv[3] != NULL)
-			__change_color(*argv[2] - '0',*argv[3] - '0');
-
-		if(!strcmp(argv[1], "-s") && argv[2] != NULL)
-			__switch_terminal(*argv[2] - '0');
-
-		if(!strcmp(argv[1], "-n"))
-			__switch_next_terminal();
-
-		if(!strcmp(argv[1], "-l"))
-			__switch_last_terminal();
-
-		if(!strcmp(argv[1], "-ss") && argv[2] != NULL)
-			__changeSystemSymbol(argv[2]);
-
-
-
-		return 0;
-	}
-
-	printf("Invalid arguments.\n");
-	return 1;
-}
-
 void shell(){
-
+	__QTY_PROGRAMS = 0;
 	// Register of various functions
 	__register_program("echo", echo);
 	__register_program("clear", clear);
@@ -278,6 +55,7 @@ void shell(){
 	__register_program("arnold", arnold);
 	__register_program("mkexc", mkexc);
 	__register_program("cpuid", cpuid);
+	__register_program("bingo", bingo);
 
 	__register_man_page("echo","Prints the string received.");
 	__register_man_page("clear", "Clears the screen.");
@@ -293,8 +71,9 @@ void shell(){
 				" \t [-c foreground background] | Changes terminal _color.");
 	__register_man_page("time","Prints hour, minutes and seconds.");
 	__register_man_page("arnold","Date un baño de vapor, Bennet!");
-	__register_man_page("mkexc","Generates the exception corresponding to the second argument.\
-				     Valid values are numbers between 0 and 31.");
+	__register_man_page("mkexc","Generates the exception corresponding to the second argument." \
+				     "Valid values are numbers between 0 and 31.");
+	__register_man_page("bingo","Bingo para dos jugadores");
 	
 
 	// Data for user input

@@ -33,6 +33,7 @@ void printregs(int eax, int ebx, int ecx, int edx);
 
 #define cpuid(in, a, b, c, d) __asm__("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "a" (in));
 
+
 /* Simply call this function detect_cpu(); */
 int detect_cpu(void) { /* or main() if your trying to port this as an independant application */
 	unsigned long ebx, unused;
