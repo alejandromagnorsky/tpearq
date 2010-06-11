@@ -75,6 +75,11 @@ int man(int argc, char * argv[]){
 	return 1;
 }
 
+int cpuid(int argc, char * argv[]){
+
+	detect_cpu();
+}
+
 int gcc(int argc, char * argv[]){
 	printf("It's a joke! No gcc here. \n");
 }
@@ -221,7 +226,6 @@ int tty(int argc, char * argv[]){
 	return 1;
 }
 
-
 void shell(){
 
 	// Register of various functions
@@ -234,6 +238,7 @@ void shell(){
 	__register_program("time", time);
 	__register_program("arnold", arnold);
 	__register_program("mkexc", mkexc);
+	__register_program("cpuid", cpuid);
 
 	__register_man_page("echo","Prints the string received.");
 	__register_man_page("clear", "Clears the screen.");
@@ -276,7 +281,7 @@ void shell(){
 		arg_data[argc++][tmp] = NULL;	// Last argument
 
 		// Convert data to pointer
-		char * argv[MAX_ARGUMENTS];
+		char * argv[MAX_ARGUMENTS] = {0 };
 		for(i=0;i<argc;i++)
 			argv[i] = arg_data[i];
 
