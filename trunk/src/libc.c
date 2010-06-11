@@ -59,12 +59,12 @@ void getString(char * ans){
 */
 
 int scanf(const char * str, ...){
-        int i, j, k, acum, strLen, strTrueLen, strInLen, flagNegative;  // TYPE O NEGATVE CAMBIAR PARA LA ENTREGA POSTA
+        int i, j, k, acum, strLen, strTrueLen, strInLen, flagNegative;
         /*      strLen:         'str' length. Scanf's string.
         **      strTrueLen:     final 'str' length, once every %x in 'str' has been replaced with values.
-        **      strInLen:       'strIn' length, user-introduced string. 
+        **      strInLen:       'strIn' length, user-entered string. 
         */
-        char strIn[MAX_STRLEN+1];	/* Last position is reserved for '\0'; the user can effectively introduce MAX_STRLEN chars */
+        char strIn[MAX_STRLEN+1];	/* Last position is reserved for '\0'; user can effectively enter MAX_STRLEN chars */
         void ** argv = (void **)(&str);
        
         getString(strIn); /* User enters a string */
@@ -106,8 +106,8 @@ int scanf(const char * str, ...){
                                         break;
 
 				/* NOTE:
-				** 	'default' case works this way to keep analogy to 'printf' function. If it detects a '%' and next character
-				** is neither 'd' nor 'c' nor 's', then it skips both characters ('%' and that char). 
+				** 	'default' case works this way to keep analogy with 'printf' function. If it detects a '%' and next character
+				** is neither 'd' nor 'c' nor 's', then it skips both characters ('%' and the next one). 
 				*/
                                 default:
                                         j--;
@@ -240,11 +240,22 @@ int rand(){
         _outport(0x70, 4);
         int hours = _inport(0x71);
 
-        long num1;
-        num1 = pow(2, hours) * pow(3, minutes) * pow(5, seconds);
-        return num1;
+        return hours + minutes + seconds;
 }
 
+void wait(int seconds){
+	int i, lastSec = -1;
+	_outport(0x70, 0);
+	int actSec = _inport(0x71);
+
+	for (i=0; i <= seconds; i++){
+		lastSec = actSec;
+		_outport(0x70, 0);
+		actSec = _inport(0x71);
+		if (lastSec == actSec)
+			i--;
+	}
+}
 
 /***************************************************************
 *setup_IDT_entry
