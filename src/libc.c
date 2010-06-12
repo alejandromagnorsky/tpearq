@@ -1,5 +1,8 @@
 #include "../include/kernel.h"
+#include "../include/shell.h"
 #include "../include/kc.h"
+
+#define MAX_USER_LENGTH MAX_ARGUMENTS*MAX_ARGUMENT_LENGTH
 
 int getchar(){
         return getc(stdin);
@@ -42,7 +45,7 @@ void getString(char * ans){
                 if(c == '\b'){
                         if (i)          
                                 ans[--i] = '\0';
-                } else if (i<MAX_STRLEN){
+                } else if (i<MAX_USER_LENGTH){
                         ans[i] = c;
                         i++;
                 }
@@ -53,9 +56,9 @@ void getString(char * ans){
 
 /*
 ** NOTE:
-**	As we can't make use of 'malloc' function, we decided to set MAX_STRLEN constant with the
-** max quantity of characters the user can enter. Then, 'scanf' reserves MAX_STRLEN+1 bytes for
-** vector strIn (strIn[MAX_STRLEN] = '\0').
+**	As we can't make use of 'malloc' function, we decided to set MAX_USER_LENGTH constant with the
+** max quantity of characters the user can enter. Then, 'scanf' reserves MAX_USER_LENGTH+1 bytes for
+** vector strIn (strIn[MAX_USER_LENGTH] = '\0').
 */
 
 int scanf(const char * str, ...){
@@ -64,16 +67,15 @@ int scanf(const char * str, ...){
         **      strTrueLen:     final 'str' length, once every %x in 'str' has been replaced with values.
         **      strInLen:       'strIn' length, user-entered string. 
         */
-        char strIn[MAX_STRLEN+1];	/* Last position is reserved for '\0'; user can effectively enter MAX_STRLEN chars */
+        char strIn[MAX_USER_LENGTH+1];	/* Last position is reserved for '\0'; user can effectively enter MAX_USER_LENGTH chars */
         void ** argv = (void **)(&str);
-       
         getString(strIn); /* User enters a string */
         strLen = strlen(str);
         strTrueLen = strLen;    /* At start, boths lengths are equals, because no %x has been replaced */
         strInLen = strlen(strIn);
 
         for (i=0, j=0 ; i<strLen && j<strInLen; i++, j++){
-                if ( str[i] == '%' )
+                if ( i+1 != strLen && str[i] == '%' )
                         switch(str[++i]){
                                 case 'd':
                                         for(k=0, acum = 0, flagNegative = 0; ( strIn[j] == '-' && !k ) || isDigit(strIn[j])  ; k++, j++){
@@ -95,13 +97,18 @@ int scanf(const char * str, ...){
                                         *(*((char **)++argv)) = strIn[j];
                                         strTrueLen--;
                                         break;
-                                case 's':                       /* FIJARME BIEN COMO REACCIONAR CON STRINGS */
+                                case 's':
                                         argv++;
-                                        for (k=0; strIn[j] != str[i+1]; k++, j++){
-                                                ((char *)(*((char **) argv)))[k] = strIn[j];
+					/*
+					** NOTE: i+1 can be equal to strLen as 'str' is a null-terminated const char *.
+					** So, str[strLen] = '\0';
+					*/
+					if ( i+1 <= strLen){
+                                   	     for (k=0; k<MAX_USER_LENGTH && strIn[j] != str[i+1] ; k++, j++)
+                                  	              ((char *)(*((char **) argv)))[k] = strIn[j];
+                                    	    ((char *)(*((char **) argv)))[k] = '\0';
                                         }
-                                        ((char *)(*((char **) argv)))[k] = '\0';
-                                        j--;
+					j--;
                                         strTrueLen = strTrueLen -2 + k;
                                         break;
 
@@ -115,7 +122,7 @@ int scanf(const char * str, ...){
                                         break;
                         }
                 else
-                        if (str[i] != strIn[j])
+                      if (str[i] != strIn[j])
                                 return -1;
         }
         if (strInLen != strTrueLen)

@@ -77,14 +77,14 @@ void shell(){
 	
 
 	// Data for user input
-	char user_input[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS];
+	char user_input[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1];
 	int i;
 	// Main loop
 	while(1){
 
 		user_input[0] = NULL;
 		scanf("%s", user_input);
-
+		
 		char arg_data[MAX_ARGUMENTS][MAX_ARGUMENT_LENGTH];
 		char argc = 0;
 		int tmp = 0;
@@ -99,7 +99,7 @@ void shell(){
 		arg_data[argc++][tmp] = NULL;	// Last argument
 
 		// Convert data to pointer
-		char * argv[MAX_ARGUMENTS] = {0 };
+		char * argv[MAX_ARGUMENTS] = { 0 };
 		for(i=0;i<argc;i++)
 			argv[i] = arg_data[i];
 

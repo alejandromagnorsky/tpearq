@@ -46,7 +46,7 @@ int extendedMakeCodes[83] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 int getAscii(int scanCode){
 	int asciiCode = -1;
 	scanCode = scanCode & 0xFF;
-	
+
 	//For scanCodes with more than 1 byte
 	if(__EXTENDED_ != 0){
 		__EXTENDED_ = 0;
@@ -90,8 +90,7 @@ int getAscii(int scanCode){
                 }else if( (__L_SHIFT_ || __R_SHIFT_ || __NUMLOCK_) && isNumber(scanCode))
                         asciiCode = numpadMakeCodes[scanCode-71];
                 else if(__L_SHIFT_ || __R_SHIFT_)
-                        asciiCode = shiftMakeCodes[scanCode-1];
-                
+                        asciiCode = shiftMakeCodes[scanCode-1];              
                 else
                         asciiCode = makeCodes[scanCode-1];
         }
