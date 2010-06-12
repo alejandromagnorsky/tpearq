@@ -4,7 +4,7 @@
 #include "kc.h"
 
 #define MAX_PROGRAMS 32
-#define MAX_ARGUMENT_LENGTH 16
+#define MAX_ARGUMENT_LENGTH 32
 #define MAX_ARGUMENTS 8
 
 typedef struct{
