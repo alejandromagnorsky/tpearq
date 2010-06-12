@@ -90,26 +90,29 @@ void shell(){
 		int tmp = 0;
 
 		// Get arguments, separated by ' '
-		for(i=0;user_input[i] != NULL;i++){
+		for(i=0;user_input[i] != NULL && argc < MAX_ARGUMENTS && tmp < MAX_ARGUMENT_LENGTH;i++){
 			if(user_input[i] == ' '){
 				arg_data[argc++][tmp] = NULL;
 				tmp = 0;
 			} else 	arg_data[argc][tmp++] = user_input[i];
 		}
 		arg_data[argc++][tmp] = NULL;	// Last argument
-
-		// Convert data to pointer
-		char * argv[MAX_ARGUMENTS] = { 0 };
-		for(i=0;i<argc;i++)
-			argv[i] = arg_data[i];
-
-		__executable * exec = getExecutableByDescriptor(argv[0]);
-		if(exec != NULL)
-			exec->execute(argc, argv);
-		else if(user_input[0] != NULL)
-			printf("Error: invalid command. \n");
-		else printf("\n");
-
+		
+		if (user_input[i] != NULL)
+			printf("Error: argument too long or too much arguments.\n");
+		else {
+			// Convert data to pointer
+			char * argv[MAX_ARGUMENTS] = { 0 };
+			for(i=0;i<argc;i++)
+				argv[i] = arg_data[i];
+	
+			__executable * exec = getExecutableByDescriptor(argv[0]);
+			if(exec != NULL)
+				exec->execute(argc, argv);
+			else if(user_input[0] != NULL)
+				printf("Error: invalid command. \n");
+			else printf("\n");
+		}
 		__printSystemSymbol();
 
 	}

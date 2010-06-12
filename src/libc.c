@@ -99,8 +99,8 @@ int scanf(const char * str, ...){
                                         break;
                                 case 's':
                                         argv++;
-					/*
-					** NOTE: i+1 can be equal to strLen as 'str' is a null-terminated const char *.
+					/* NOTE:
+					** 	i+1 can be equal to strLen as 'str' is a null-terminated const char *.
 					** So, str[strLen] = '\0';
 					*/
 					if ( i+1 <= strLen){
