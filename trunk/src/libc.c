@@ -242,12 +242,24 @@ int strcmp(const char * str1, const char * str2){
 int rand(){
         _outport(0x70, 0);
         int seconds = _inport(0x71);
-        _outport(0x70, 2);
-        int minutes = _inport(0x71);
-        _outport(0x70, 4);
-        int hours = _inport(0x71);
+	int acum1, acum2;
 
-        return hours + minutes + seconds;
+	/* NOTE 1:
+	**	- Max value an integer can handle is 2^32. So 'seconds%32' makes sure pow's return value fits an integer
+	**	- '(int)(seconds/32)' is added to avoid cases like:
+	**			pow(2,59) = pow(2,27)		--> acum1 would be the same for seconds=n and seconds=n-32
+	**		Thanks to the addition:
+	**			pow(2,59) + 1 != pow(2,27) + 0	--> acum1 can be assigned 60 different values
+	*/
+	acum1 = pow(2, seconds%32) + (int)(seconds/32);
+
+	/* NOTE 2:
+	**	- Max value an integer can handle is 2^32. But 3^20 < 2^32 < 3^21. So 'seconds%20' makes sure pow's return value fits an integer.
+	**	- '(int)(seconds/20)' is added to avoid cases similar to the ones in *NOTE 1*
+	*/
+	acum2 = pow(3, seconds%20) + (int)(seconds/20);
+
+        return acum2%acum1;
 }
 
 void wait(int seconds){
