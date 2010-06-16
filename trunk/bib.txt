@@ -24,3 +24,4 @@ http://wiki.osdev.org/PS2_Keyboard#Keyboard_LEDs
 ********************
 RESET KEYBOARD (haciendo que el teclado pulse CPU reset pin)
 http://www.arl.wustl.edu/~lockwood/class/cs306/books/artofasm/Chapter_20/CH20-2.html
+http://wiki.osdev.org/Reboot
