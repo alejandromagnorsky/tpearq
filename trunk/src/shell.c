@@ -56,6 +56,7 @@ void shell(){
 	__register_program("mkexc", mkexc);
 	__register_program("cpuid", cpuid);
 	__register_program("bingo", bingo);
+	__register_program("reboot", reboot);
 
 	__register_man_page("echo","Prints the string received.");
 	__register_man_page("clear", "Clears the screen.");
@@ -70,10 +71,11 @@ void shell(){
 				" \t [-ss string] | Changes the _system _symbol to string \n"
 				" \t [-c foreground background] | Changes terminal _color.");
 	__register_man_page("time","Prints hour, minutes and seconds.");
-	__register_man_page("arnold","Date un baño de vapor, Bennet!");
+	__register_man_page("arnold","Arnold Alois Schwarzenegger, as John Matrix in Commando(1985)");
 	__register_man_page("mkexc","Generates the exception corresponding to the second argument." \
 				     "Valid values are numbers between 0 and 31.");
 	__register_man_page("bingo","Bingo para dos jugadores");
+	__register_man_page("reboot","Reinicia el sistema");
 	
 
 	// Data for user input

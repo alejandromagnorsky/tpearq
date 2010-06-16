@@ -16,6 +16,7 @@ int mkexc(int argc, char * argv[]);
 int time(int argc, char * argv[]);
 int tty(int argc, char * argv[]);
 int bingo(int argc, char * argv[]);
+int reboot(int argc, char * argv[]);
 
 #endif
 
