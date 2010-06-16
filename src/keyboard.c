@@ -138,7 +138,7 @@ char getTildeVocal(int scanCode){
 }
 
 void keyboardLeds(int leds){
-	/* Read until buffer if empty (bit 1 in port 64h must be zero) */
+	/* Read until keyboard buffer if empty (bit 1 in port 64h must be zero). */
         while ( (_inport(0x64) & 2) != 0);
         _outport(0x60, 0xED);   /* Send commando code: 0xED -> Next byte sent to port 60h will change LEDs status */
 

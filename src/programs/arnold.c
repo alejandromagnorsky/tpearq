@@ -36,7 +36,7 @@ int arnold(int argc, char * argv[]){
 			printf("Matrix: I let him go. \n\n");
 			break;
 		case 8:
-			printf("Cindy: You steal my car, you rip the seat out, you kidnap me, you ask me to help you find your daughter which I very kindly do, and then you get me involved in a shoot out where people are dying and there's blood spurting all over the place, and then I watch you rip a phone booth out of a wall, swing from the ceiling like Tarzan, and then there's a cop that's going to shoot you and I save you and they start chasing me. Are you going to tell me what's going on or what?\n");
+			printf("Cindy: You steal my car, you rip the seat out, you kidnap me, you ask me to\nhelp you find your daughter which I very kindly do, and then you get me involvedin a shoot out where people are dying and there's blood spurting all over the\nplace, and then I watch you rip a phone booth out of a wall, swing from the\nceiling like Tarzan, and then there's a cop that's going to shoot you and I saveyou and they start chasing me. Are you going to tell me what's going on or what?");
 			printf("Matrix: No. \n\n");
 			break;
 		case 9:
