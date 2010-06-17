@@ -1,0 +1,52 @@
+\documentclass[12pt, a4paper, spanish]{report}
+\usepackage[spanish]{babel}
+\usepackage[latin5]{inputenc}
+
+\begin{document}
+\begin{center}
+\textbf{\LARGE{Arquitecturas de Computadoras}}\\
+\large{TP Especial}\par \noindent \newline \newline
+\large{Mini Sistema operativo}
+\end{center}
+\par \noindent \newline \newline \newline \newline \newline \newline \newline \newline \newline \newline \newline
+\newline \newline \newline \newline \newline
+\large{\textbf{Integrantes}}\\
+\indent \small{MAGNORSKY, Alejandro}\\
+\indent \small{MATA SU\'AREZ, Andr\'es}\\
+\indent \small{MERCHANTE, Mariano}\newline
+\par \noindent
+\large{\textbf{C\'atedra}}\\
+\indent \small{VALL\'ES, Santiago Ra\'ul}\\
+\indent \small{EL NOMBRE DEL NUEVO NO ME LO SE NI LO DICE IOL}\newline
+\par \noindent
+\large{\textbf{Fecha de entrega}}\\
+\indent \small{Viernes 18 de junio de 2010}
+
+\tableofcontents
+
+\chapter*{Inconvenientes surgidos - FALTA BOCHA************************************************}
+\indent Dada la inexistencia de las librer\'ias de C oficiales, en varias situaciones en la construcci\'on del sistema nos vimos
+obligados a ajustar el dise\~no de acuerdo a la implementaci\'on de nuestra propia libreria de C. Tales percances y sus resoluciones
+son expuestos a continuaci\'on.\\
+
+\textbf{Alocaci\'on en memoria}\\
+\indent Durante la implementaci\'on de la funci\'on 'scanf', se present\'o el problema de la cantidad de caracteres que un usuario
+del sistema operativo pueda introducir en consola. En otras circunstancias, esta cuesti\'on se hubiera resuelto no muy dif\'icilmente
+con el uso de la funci\'on 'malloc' de C,\par
+\indent Sin embargo, al no tener las bases necesarias para poder realizar una implementaci\'on de dicha funci\'on en nuestra
+librer\'ia, optamos por fijar 2 valores: la cantidad m\'axima de argumentos que un usuario puede introducir (contando el nombre
+del comando), y la cantidad m\'axima de caracteres que pueden tener dichos argumentos.\\
+\indent Tales valores se encuentra definidos en 'sell.h', en la carpeta src:\\
+\indent  \indent define MAX\_ARGUMENT\_LENGTH 32\\
+\indent  \indent define MAX\_ARGUMENTS 8
+
+
+%\section*{Cantidad de argumentos en l\'inea de comandos}
+Dada la inexistencia de las librer\'ias de C correspondientes necesarias para el manejo de memoria din\'amica, en varias
+ocasiones nos vimos forzados a tomar decisiones de dise\~no con respecto a c\'omo tratar la alocaci\'on de espacio en memoria.\\
+\chapter*{Bibliograf\'ia consultada}
+\par
+\chapter*{C\'odigo impreso}
+\par
+
+\end{document}
