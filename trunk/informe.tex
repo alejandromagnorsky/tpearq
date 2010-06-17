@@ -1,6 +1,40 @@
 \documentclass[12pt, a4paper, spanish]{report}
+\usepackage[T1]{fontenc}
+\usepackage{times}
 \usepackage[spanish]{babel}
 \usepackage[latin5]{inputenc}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{gray97}{gray}{.97}
+\definecolor{gray75}{gray}{.75}
+\definecolor{gray45}{gray}{.45}
+\lstset{
+     frame=Ltb,
+     framerule=0pt,
+     aboveskip=0.5cm,
+     framextopmargin=1pt,
+     framexbottommargin=3pt,
+     framexleftmargin=0.4cm,
+     framesep=0pt,
+     rulesep=.4pt,
+     backgroundcolor=\color{gray97},
+     rulesepcolor=\color{black},
+     stringstyle=\ttfamily,
+     showstringspaces = false,
+     basicstyle=\small\ttfamily,
+     commentstyle=\color{gray45},
+     keywordstyle=\bfseries,
+     numbers=left,
+     numbersep=15pt,
+     numberstyle=\tiny,
+     numberfirstline = false,
+     breaklines=true,
+   }
+\lstnewenvironment{listing}[1][]
+   {\lstset{#1}\pagebreak[0]}{\pagebreak[0]}
+\lstdefinestyle{C}{language=C}
+
 
 \begin{document}
 \begin{center}
@@ -24,29 +58,76 @@
 
 \tableofcontents
 
-\chapter*{Inconvenientes surgidos - FALTA BOCHA************************************************}
-\indent Dada la inexistencia de las librer\'ias de C oficiales, en varias situaciones en la construcci\'on del sistema nos vimos
-obligados a ajustar el dise\~no de acuerdo a la implementaci\'on de nuestra propia libreria de C. Tales percances y sus resoluciones
-son expuestos a continuaci\'on.\\
+\chapter*{Inconvenientes surgidos - FALTA BOCHA**********}
+\indent Dada la imposibilidad de uso de las librer\'ias de C oficiales, en determinadas situaciones nos vimos obligados a
+ajustar el dise\~no de nuestro sistema de acuerdo con la implementaci\'on de nuestra propia libreria de C. Tales percances
+y sus resoluciones son expuestos a continuaci\'on:\\
 
-\textbf{Alocaci\'on en memoria}\\
-\indent Durante la implementaci\'on de la funci\'on 'scanf', se present\'o el problema de la cantidad de caracteres que un usuario
-del sistema operativo pueda introducir en consola. En otras circunstancias, esta cuesti\'on se hubiera resuelto no muy dif\'icilmente
-con el uso de la funci\'on 'malloc' de C,\par
-\indent Sin embargo, al no tener las bases necesarias para poder realizar una implementaci\'on de dicha funci\'on en nuestra
-librer\'ia, optamos por fijar 2 valores: la cantidad m\'axima de argumentos que un usuario puede introducir (contando el nombre
-del comando), y la cantidad m\'axima de caracteres que pueden tener dichos argumentos.\\
-\indent Tales valores se encuentra definidos en 'sell.h', en la carpeta src:\\
-\indent  \indent define MAX\_ARGUMENT\_LENGTH 32\\
-\indent  \indent define MAX\_ARGUMENTS 8
+\textbf{\large{Alocaci\'on en memoria}}\\
+\indent Quiz\'as este fue el problema con el que m\'as frecuentemente tuvimos que lidiar. En otras circunstancias, el uso de la
+funci\'on de reserva de espacio en memoria \texttt{malloc} de C nos hubiera permitido no muy dificilmente solucionar la cuesti\'on.
+Sin embargo, al no tener la bases suficientes como para implementar una funci\'on similar a la mencionada en nuestra librer\'ia,
+en los casos que as\'i lo dispusieron optamos por reservar cierta cantidad fija en memoria y sacrificar la
+manipulaci\'on din\'amica de ese espacio, mediante la declaraci\'on de vectores.\par \noindent \newline
+\indent \textbf{M\'axima cantidad de caracteres ingresados por el usuario}\par
+La funci\'on \texttt{scanf} de \texttt{lib.c}, en un principio, solicita al usuario ingrese una string, invocando a la funci\'on
+\texttt{getString} de la misma librer\'ia. Esta \'ultima funci\'on recibe un par\'ametro de tipo \texttt{char *} donde se guardar\'a
+cada caracter le\'ido con \texttt{getchar}, dejando un \'ultimo lugar para el caracter nulo (\texttt{\textquotesingle \textbackslash0\textquotesingle}). No devuelve nada; el par\'ametro
+recibido es tambi\'en de retorno.\par \noindent \newline
+\indent Ahora bien, es tarea de la funci\'on invocadora (en este caso, \texttt{scanf}) pasarle a \texttt{getString} un \texttt{char *} con suficiente
+espacio reservado para que la funci\'on se encargue de rellenarlo. Si el par\'ametro no tiene suficiente espacio para guardar
+todo lo introducido por el usuario, se producir\'a un error de segmentaci\'on en memor\'ia y el sistema se reiniciar\'a.
+\par \noindent \newline
+\indent Y es aqu\'i donde se toma la decisi\'on. Con las constantes globales, \texttt{MAX\_ARGUMENTS} y \texttt{MAX\_ARGUMENT\_LENGTH}, 
+se limita la cantidad de argumentos y caracteres por argumento que puede introducir el usuario, respectivamente:\par \noindent
+\newline \newline \underline{en \texttt{shell.h}:}
+\begin{lstlisting}[style=C]
+. . .
+#define MAX_ARGUMENT_LENGTH 32
+#define MAX_ARGUMENTS 8
+. . .
+\end{lstlisting}
+\par Dicho esto, dentro de \texttt{scanf} y antes de la llamada a \texttt{getString}, se declara la variable que posteriormente ser\'a utilizada
+como el par\'ametro de retorno que esta \'ultima funci\'on requiere de la siguiente manera:\par \noindent \newline
+\underline{en \texttt{libc.c}:}
+\begin{lstlisting}[style=C]
+. . .
+#define MAX_USER_LENGTH MAX_ARGUMENTS*MAX_ARGUMENT_LENGTH
+. . .
+int scanf(const char * str, ...){
+    . . .
+    char strIn[MAX_USER_LENGTH+1];
+    . . .
+}
+\end{lstlisting}
+\par As\'i, se reserva el suficiente espacio para que el usuario pueda meter \texttt{MAX\_USER\_LENGTH} caracteres, m\'as uno para hacer
+la string \texttt{null-terminated}.\par \noindent \newline
 
-
-%\section*{Cantidad de argumentos en l\'inea de comandos}
-Dada la inexistencia de las librer\'ias de C correspondientes necesarias para el manejo de memoria din\'amica, en varias
-ocasiones nos vimos forzados a tomar decisiones de dise\~no con respecto a c\'omo tratar la alocaci\'on de espacio en memoria.\\
 \chapter*{Bibliograf\'ia consultada}
-\par
-\chapter*{C\'odigo impreso}
-\par
+\begin{itemize}
+ \item \textbf{OSDev.org}\\
+	\textcolor{blue}{\underline{http://wiki.osdev.org/Main\_Page}}\\
+ \item \textbf{Programaci\'on del PIC}\\
+	\textbf{}  \textcolor{blue}{\underline{http://www.beyondlogic.org/interrupts/interupt.htm\#6}}\\
+	\textbf{}  \textcolor{blue}{\underline{http://www.osdever.net/tutorials/pdf/pic.pdf}}\\
+ \item \textbf{ASCIIs y ScanCodes}\\
+	\textbf{}  \textcolor{blue}{\underline{http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html}}\\
+	\textbf{}  \textcolor{blue}{\underline{http://www.cdrummond.qc.ca/cegep/informat/Professeurs/Alain/files/ascii.htm}}\\
+	\textbf{}  \textcolor{blue}{\underline{http://www.ee.bgu.ac.il/~microlab/MicroLab/Labs/ScanCodes.htm}}\\
+ \item \textbf{Manejo de excepciones}\\
+	\textbf{}  \textcolor{blue}{\underline{http://pdos.csail.mit.edu/6.828/2008/readings/i386/s09\_08.htm}}\\
+ \item \textbf{Command bytes del teclado}\\
+	\textbf{Command bytes}\\
+	\textcolor{blue}{\underline{http://www.arl.wustl.edu/~lockwood/class/cs306/books/artofasm/Chapter\_20/CH20-2.html}}\\
+	\textbf{LEDs}  \textcolor{blue}{\underline{http://wiki.osdev.org/PS2\_Keyboard\#Keyboard\_LEDs}}\\
+	\textbf{Reboot}  \textcolor{blue}{\underline{http://wiki.osdev.org/Reboot}}\\
+\end{itemize}
+
+\chapter*{C\'odigo fuente}
+\clearpage
+\section*{Directorio src}
+\large{\underline{\textbf{libc.c:}}}\\
+\lstset{style=C}
+\lstinputlisting{src/libc.c}
 
 \end{document}
