@@ -244,8 +244,7 @@ int strcmp(const char * str1, const char * str2){
 }
 
 int rand(){
-        _outport(0x70, 0);
-        int seconds = _inport(0x71);
+        int seconds = getSeconds();
 	int acum1, acum2;
 
 	/* NOTE 1:
@@ -268,13 +267,11 @@ int rand(){
 
 void wait(int seconds){
 	int i, lastSec = -1;
-	_outport(0x70, 0);
-	int actSec = _inport(0x71);
+	int actSec = getSeconds();
 
 	for (i=0; i <= seconds; i++){
 		lastSec = actSec;
-		_outport(0x70, 0);
-		actSec = _inport(0x71);
+		actSec = getSeconds();
 		if (lastSec == actSec)
 			i--;
 	}
@@ -298,5 +295,24 @@ void setup_IDT_entry (DESCR_INT *item, byte selector, dword offset, byte access,
   item->offset_h = offset >> 16;
   item->access = access;
   item->cero = cero;
+}
+
+
+int sysinfo(){
+	printf("\n                                                                     2 0 1 0  \n");   
+	printf("\n  __    __   ______   __               ______    ______    ______    ______  \n");
+	printf("  |  \\  |  \\ /      \\ |  \\             /      \\  /      \\  /      \\  /      \\ \n");
+	printf("  | $$  | $$|  $$$$$$\\| $$            |  $$$$$$\\|  $$$$$$\\|  $$$$$$\\|  $$$$$$\n");
+	printf("  | $$__| $$| $$__| $$| $$            | $$__/ $$| $$$\\| $$| $$$\\| $$| $$$\\| $$\n");
+	printf("  | $$    $$| $$    $$| $$             \\$$    $$| $$$$\\ $$| $$$$\\ $$| $$$$\\ $$\n");
+	printf("  | $$$$$$$$| $$$$$$$$| $$             _\\$$$$$$$| $$\\$$\\$$| $$\\$$\\$$| $$\\$$\\$$\n");
+	printf("  | $$  | $$| $$  | $$| $$_____       |  \\__/ $$| $$_\\$$$$| $$_\\$$$$| $$_\\$$$$\n");
+	printf("  | $$  | $$| $$  | $$| $$     \\       \\$$    $$ \\$$  \\$$$ \\$$  \\$$$ \\$$  \\$$$\n");
+	printf("   \\$$   \\$$ \\$$   \\$$ \\$$$$$$$$        \\$$$$$$   \\$$$$$$   \\$$$$$$   \\$$$$$$ \n");
+	printf("  ____________________________________________________________________________\n");
+	printf("     Time                                                       Hello, Dave\n   ");
+	time(1, -1);
+	printf("\n                        'help' para mas informacion \n");
+	printf("\n ============================================================================\n");
 }
 

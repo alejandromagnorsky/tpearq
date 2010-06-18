@@ -41,6 +41,10 @@ void initializePics()
 
 }
 
+int getSeconds(){
+	_outport(0x70, 0);
+	return _inport(0x71);
+}
 
 size_t __read(int fd, void* buffer, size_t count){
 	int i;
@@ -77,6 +81,7 @@ kmain()
 	__INIT_TTY();
 
 	_turn_cursor_on();
+	sysinfo();
 	__printSystemSymbol();
 
 
@@ -174,7 +179,7 @@ kmain()
 
 	_Sti();
 
-	fireWorks();	
+	//fireWorks();
 	shell();
 }
 
