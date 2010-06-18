@@ -4,9 +4,9 @@
 #include "kc.h"
 
 #define MAX_PROGRAMS 32
-#define MAX_ARGUMENT_LENGTH 32
-#define MAX_ARGUMENTS 8
-#define MAX_HISTORY 10
+#define MAX_ARGUMENT_LENGTH 16
+#define MAX_ARGUMENTS 6
+#define MAX_HISTORY 20
 
 typedef struct{
 	char * descriptor;				// The name
@@ -14,19 +14,31 @@ typedef struct{
 	char * man;				// The manual page 
 } __executable;
 
+typedef struct{
+	char * ptr;
+	int index;
+} __history_ptr;
+
 __executable __executable_programs[MAX_PROGRAMS];
-char history[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1][MAX_HISTORY];
 int __QTY_PROGRAMS;
-int __QTY_HISTORY_STATES;
-int __ACTUAL_HISTORY_STATE;
+
+// The history data
+char __history[MAX_HISTORY][MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1];
+
+// History index, used when shifting history states
+int __HISTORY_INDEX;
+
+/* The history pointer stack, for pushing and iterating 
+ * through history states (less time complexity than using data)
+*/
+__history_ptr __history_stack[MAX_HISTORY];
+
 
 int __register_program(char * descriptor, int (*program)(int argc, char * argv[]));
 
 __executable * getExecutableByDescriptor(char * descriptor);
 
 int __register_man_page(char * descriptor, char * man);
-
-int __shift_history(int direction);
 
 void shell();
 
