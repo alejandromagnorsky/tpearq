@@ -31,7 +31,12 @@ int do_intel(void);
 int do_amd(void);
 void printregs(int eax, int ebx, int ecx, int edx);
 
+int call_cpuid(int argc, char * argv[]){
+	detect_cpu();
+}
+
 #define cpuid(in, a, b, c, d) __asm__("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "a" (in));
+
 
 
 /* Simply call this function detect_cpu(); */

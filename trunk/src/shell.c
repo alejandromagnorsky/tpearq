@@ -28,7 +28,6 @@ __executable * getExecutableByDescriptor(char * descriptor){
 }
 
 int __register_man_page(char * descriptor, char * man){
-
 	__executable * tmp = getExecutableByDescriptor(descriptor);
 	if( tmp == NULL )
 		return 1;
@@ -36,22 +35,67 @@ int __register_man_page(char * descriptor, char * man){
 	return 0;
 }
 
-int __shift_history(int direction){
 
+void __shift_history(int direction, char * src){
+	int i;
+
+	for(i=0;i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS;i++)
+		src[i] = __history_stack[__HISTORY_INDEX].ptr[i];
+
+	if(direction >= 0)
+		if(__HISTORY_INDEX+direction<MAX_HISTORY)
+			__HISTORY_INDEX+=direction;
+	if(direction < 0 )
+		 if(__HISTORY_INDEX+direction>=0)
+			__HISTORY_INDEX+=direction;
 }
 
-int cpuid(int argc, char * argv[]){
-	detect_cpu();
+void __init_history(){
+	int i,j;
+	for(i=0;i<MAX_HISTORY;i++){
+		__history_stack[i].ptr = __history[i];
+		__history_stack[i].index = i;
+		for(j=0;j<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS;j++)
+			__history[i][j] = '\0';
+	}
+	__HISTORY_INDEX = 0;
 }
 
+void __print_history(){
+	int i;
+	for(i=1;i<MAX_HISTORY;i++)
+		if(__history_stack[i].ptr[0] != NULL)
+			printf("\t%d %s\n", i, __history_stack[i].ptr);
+}
 
-int moveCursorToStart(int i){
+void __push_history_state(char * state){
+	int i, new;
+
+	// Restart index
+	__HISTORY_INDEX = 0;
+	
+	// First, get index of history to delete
+	new = __history_stack[MAX_HISTORY-1].index;
+
+	// Before pushing, the stack must be shifted
+	for(i=MAX_HISTORY-2;i>=0;i--){
+		__history_stack[i+1].ptr = __history_stack[i].ptr;
+		__history_stack[i+1].index = __history_stack[i].index;	
+	}
+
+	// Push state 
+	for(i=0; i < MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS;i++ )
+		__history[new][i] = state[i];
+	__history_stack[0].ptr = __history[new];
+	__history_stack[0].index = new;
+}
+
+int __moveCursorToStart(int i){
 	__shift_terminal_cursor(-1,i);
 	return 0;
 }
 
-
-int moveCursorToEnd(char * ans, int i){
+int __moveCursorToEnd(char * ans, int i){
 	int j = 0;	
 	int tmp = i;
 	while(ans[tmp] != '\0'){ j++;tmp++;}
@@ -62,8 +106,9 @@ int moveCursorToEnd(char * ans, int i){
 /* This is a more restricted version of scanf,
  * oriented towards shell commands, history, etc.
 */
-void getShellArguments(char * ans){
+void __getShellArguments(char * ans){
         int i = 0;
+	int j;
         char c;
 
 	// Initialize ans
@@ -78,28 +123,42 @@ void getShellArguments(char * ans){
 	                        	ans[--i] = ' ';
 				printf("%c",c);
 				break;
-			case  (char) 204:// RIGHT ARROW
-				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1){
-
+			case  (char) 204:	// RIGHT ARROW
+				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1)
 					if(ans[i] != '\0'){					
 						++i;
 						__shift_terminal_cursor(1,1);
 					}
-				} 
 				break;
 			
-			case  (char) 185:// LEFT ARROW
+			case (char) 202:	// UP ARROW
+				for(j=0;ans[j]!='\0';j++)
+					putchar('\b');
+
+				__shift_history(1,ans);	
+				printf("%s", ans);
+				i = strlen(ans);
+				break;
+			case (char) 203:	// DOWN ARROW
+				for(j=0;ans[j]!='\0';j++)
+					putchar('\b');
+
+				__shift_history(-1,ans);	
+				printf("%s", ans);
+				i = strlen(ans);
+				break;
+			case  (char) 185:	// LEFT ARROW
 				if(i){
 					--i;
 					__shift_terminal_cursor(-1,1);
 				}
 				break;
 			// Note: -78 and -77 are hardcoded asciis for these keys
-			case  (char) -78:// START 
-				i = moveCursorToStart(i);
+			case  (char) -78:	// START 
+				i = __moveCursorToStart(i);
 				break;
-			case  (char) -77:// END
-				i = moveCursorToEnd(ans,i);
+			case  (char) -77:	// END
+				i = __moveCursorToEnd(ans,i);
 				break;
 			default:
 				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1)
@@ -108,7 +167,7 @@ void getShellArguments(char * ans){
 				break;
 		}
         }
-	i = moveCursorToEnd(ans,i);
+	i = __moveCursorToEnd(ans,i);
 	printf("\n",ans);
 }
 
@@ -116,8 +175,7 @@ void getShellArguments(char * ans){
 void shell(){
 
 	__QTY_PROGRAMS = 0;
-	__QTY_HISTORY_STATES = 0;
-	__ACTUAL_HISTORY_STATE = 0;
+	__init_history();
 
 	// Register of various functions
 	__register_program("echo", echo);
@@ -129,9 +187,10 @@ void shell(){
 	__register_program("time", time);
 	__register_program("arnold", arnold);
 	__register_program("mkexc", mkexc);
-	__register_program("cpuid", cpuid);
+	__register_program("cpuid", call_cpuid);
 	__register_program("bingo", bingo);
 	__register_program("reboot", reboot);
+	__register_program("history", history);
 
 	__register_man_page("echo","Prints the string received.");
 	__register_man_page("clear", "Clears the screen.");
@@ -149,8 +208,9 @@ void shell(){
 	__register_man_page("arnold","Arnold Alois Schwarzenegger, as John Matrix in Commando(1985)");
 	__register_man_page("mkexc","Generates the exception corresponding to the second argument." \
 				     "Valid values are numbers between 0 and 31.");
-	__register_man_page("bingo","Bingo para dos jugadores");
-	__register_man_page("reboot","Reinicia el sistema");
+	__register_man_page("bingo","Bingo for two players.");
+	__register_man_page("reboot","Reboots the system.");
+	__register_man_page("history","Shows the shell history.");
 	
 
 	// Data for user input
@@ -160,7 +220,9 @@ void shell(){
 	while(1){
 
 
-		getShellArguments(user_input);
+		__getShellArguments(user_input);
+		if(user_input[0] != NULL)
+			__push_history_state(user_input);
 
 		char arg_data[MAX_ARGUMENTS][MAX_ARGUMENT_LENGTH];
 		char argc = 0;
@@ -177,7 +239,7 @@ void shell(){
 		arg_data[argc++][tmp] = NULL;	// Last argument
 		
 		if (user_input[i] != NULL)
-			printf("Error: argument too long or too much arguments: %d.\n", argc);
+			printf("Error: argument too long or too much arguments.\n");
 		else {
 			// Convert data to pointer
 			char * argv[MAX_ARGUMENTS] = { 0 };
