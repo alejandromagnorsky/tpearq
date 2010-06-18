@@ -47,6 +47,9 @@ int __TTY_INDEX = 0;
 char __SYSTEM_SYMBOL[__MAX_SS] = "tty";
 
 
+void __shift_terminal_cursor(int direction);
+
+void __write_char(char c);
 
 void __scroll_terminal();
 
