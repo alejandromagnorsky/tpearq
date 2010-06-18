@@ -119,10 +119,28 @@ void __getShellArguments(char * ans){
 	while( (c = getchar()) != '\n' ){
 		switch( c ){
 			case '\b':
-				if (i)     
-	                        	ans[--i] = ' ';
+				if (i){
+					if(ans[i] == '\0') 
+						ans[--i] = '\0';
+					else 
+						ans[--i] = ' ';
+				}
 				printf("%c",c);
 				break;
+			
+
+			// Terminal switch by F's
+			case (char) -41: __switch_terminal(0);  printf("\n"); return;
+			case (char) -42: __switch_terminal(1);	printf("\n"); return;
+			case (char) -43: __switch_terminal(2);	printf("\n"); return;
+			case (char) -44: __switch_terminal(3);	printf("\n"); return;
+			case (char) -45: __switch_terminal(4); 	printf("\n"); return;
+			case (char) -46: __switch_terminal(5); 	printf("\n"); return;
+			case (char) -47: __switch_terminal(6);	printf("\n"); return;
+			case (char) -48: __switch_terminal(7);	printf("\n"); return;
+			case (char) -49: __switch_terminal(8);	printf("\n"); return;
+			case (char) -50: printf("There is no terminal over here ;) \n"); return;
+
 			case  (char) 204:	// RIGHT ARROW
 				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1)
 					if(ans[i] != '\0'){					
@@ -130,7 +148,6 @@ void __getShellArguments(char * ans){
 						__shift_terminal_cursor(1,1);
 					}
 				break;
-			
 			case (char) 202:	// UP ARROW
 				for(j=0;ans[j]!='\0';j++)
 					putchar('\b');
@@ -153,6 +170,7 @@ void __getShellArguments(char * ans){
 					__shift_terminal_cursor(-1,1);
 				}
 				break;
+
 			// Note: -78 and -77 are hardcoded asciis for these keys
 			case  (char) -78:	// START 
 				i = __moveCursorToStart(i);
@@ -169,7 +187,7 @@ void __getShellArguments(char * ans){
 		}
         }
 	i = __moveCursorToEnd(ans,i);
-	printf("\n",ans);
+	printf("\n");
 }
 
 
@@ -223,7 +241,7 @@ void shell(){
 
 		__getShellArguments(user_input);
 		if(user_input[0] != NULL)
-			__push_history_state(user_input);
+		    __push_history_state(user_input);
 
 		char arg_data[MAX_ARGUMENTS][MAX_ARGUMENT_LENGTH];
 		char argc = 0;
@@ -231,28 +249,28 @@ void shell(){
 
 		// Get arguments, separated by ' '
 		for(i=0;user_input[i] != NULL && argc < MAX_ARGUMENTS && tmp < MAX_ARGUMENT_LENGTH;i++){
-			if(user_input[i] == ' '){           
-				if(tmp) // This way a string "     " is not considered as 6 arguments
-					arg_data[argc++][tmp] = NULL;
-				tmp = 0;
-			} else 	arg_data[argc][tmp++] = user_input[i];
+		    if(user_input[i] == ' '){          
+		        if(tmp) // This way a string "     " is not considered as 6 arguments
+		            arg_data[argc++][tmp] = NULL;
+		        tmp = 0;
+		    } else     arg_data[argc][tmp++] = user_input[i];
 		}
-		arg_data[argc++][tmp] = NULL;	// Last argument
-		
+		arg_data[argc++][tmp] = NULL;    // Last argument
+	       
 		if (user_input[i] != NULL)
-			printf("Error: argument too long or too much arguments.\n");
+		    printf("Error: argument too long or too much arguments.\n");
 		else {
-			// Convert data to pointer
-			char * argv[MAX_ARGUMENTS] = { 0 };
-			for(i=0;i<argc;i++)
-				argv[i] = arg_data[i];
-	
-			__executable * exec = getExecutableByDescriptor(argv[0]);
-			if(exec != NULL)
-				exec->execute(argc, argv);
-			else if(user_input[0] != NULL)
-				printf("Error: invalid command. \n");
+		    // Convert data to pointer
+		    char * argv[MAX_ARGUMENTS] = { 0 };
+		    for(i=0;i<argc;i++)
+		        argv[i] = arg_data[i];
+	   
+		    __executable * exec = getExecutableByDescriptor(argv[0]);
+		    if(exec != NULL)
+		        exec->execute(argc, argv);
+		    else if(user_input[0] != NULL)
+		        printf("Error: invalid command. \n");
 		}
 		__printSystemSymbol();
-	}
+    	}
 }
