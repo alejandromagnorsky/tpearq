@@ -161,9 +161,10 @@ void __getShellArguments(char * ans){
 				i = __moveCursorToEnd(ans,i);
 				break;
 			default:
-				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1)
+				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1){
 			                ans[i++] = c;
-		                putchar(c);
+			                putchar(c);	
+				}
 				break;
 		}
         }
@@ -219,7 +220,6 @@ void shell(){
 	// Main loop
 	while(1){
 
-
 		__getShellArguments(user_input);
 		if(user_input[0] != NULL)
 			__push_history_state(user_input);
@@ -230,7 +230,7 @@ void shell(){
 
 		// Get arguments, separated by ' '
 		for(i=0;user_input[i] != NULL && argc < MAX_ARGUMENTS && tmp < MAX_ARGUMENT_LENGTH;i++){
-			if(user_input[i] == ' '){
+			if(user_input[i] == ' '){           
 				if(tmp) // This way a string "     " is not considered as 6 arguments
 					arg_data[argc++][tmp] = NULL;
 				tmp = 0;
