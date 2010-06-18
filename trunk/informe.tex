@@ -11,64 +11,97 @@
 \usepackage{amssymb}
 \usepackage{fancybox}
 \usepackage{color}
+\usepackage{times}
+\usepackage{textcomp}
+\usepackage{verbatim}
+\usepackage{listings}
+\definecolor{gray97}{gray}{.97}
+\definecolor{gray75}{gray}{.75}
+\definecolor{gray45}{gray}{.45}
+\lstset{
+	frame=Ltb,
+	framerule=0pt,
+	aboveskip=0.5cm,
+	framextopmargin=3pt,
+	framexbottommargin=3pt,
+	framexleftmargin=0.4cm,
+	framesep=0pt,
+	rulesep=.4pt,
+	backgroundcolor=\color{gray97},
+	rulesepcolor=\color{black},
+	stringstyle=\ttfamily,
+	showstringspaces = false,
+	basicstyle=\small\ttfamily,
+	commentstyle=\color{blue},
+	keywordstyle=\bfseries,
+	numbers=left,
+	numbersep=15pt,
+	numberstyle=\tiny,
+	numberfirstline = false,
+	breaklines=true,
+}
+%lstnewenvironment{listing}[1][]{
+%	\lstset{#1}\pagebreak[0]
+%}{\pagebreak[0]}
+\lstdefinestyle{C}{language=C}
 
 
 \begin{document}
 \begin{center}
 \textbf{\LARGE{Arquitecturas de Computadoras}}\\
-\large{TP Especial}\par \noindent \newline \newline
+\large{TP Especial}\par  \bigskip
 \large{Mini Sistema operativo}
 \end{center}
-\par \noindent \newline \newline \newline \newline \newline \newline \newline
-\newline \newline \newline \newline \newline
+\par  \bigskip \bigskip \bigskip \bigskip
 \large{\textbf{Integrantes}}\\
-\indent \small{MAGNORSKY, Alejandro}\\
-\indent \small{MATA SUÁREZ, Andrés}\\
-\indent \small{MERCHANTE, Mariano}\newline
-\par \noindent
+ \small{MAGNORSKY, Alejandro}\\
+ \small{MATA SUÁREZ, Andrés}\\
+ \small{MERCHANTE, Mariano} \bigskip
+\par 
 \large{\textbf{Cátedra}}\\
-\indent \small{VALLÉS, Santiago Raúl}\\
-\indent \small{EL NOMBRE DEL NUEVO NO ME LO SE NI LO DICE IOL}\newline
-\par \noindent
+ \small{VALLÉS, Santiago Raúl}\\
+ \small{PUNCI, Román} \bigskip
+\par 
 \large{\textbf{Fecha de entrega}}\\
-\indent \small{Viernes 18 de junio de 2010}
+ \small{Viernes 18 de junio de 2010}
 \clearpage
 \tableofcontents
 \clearpage
 \section{Inconvenientes surgidos - FALTA BOCHA**********}
-\indent Dada la imposibilidad de uso de las librerías de C oficiales, en determinadas situaciones nos vimos obligados a
+ Dada la imposibilidad del uso de las librerías de C oficiales, en determinadas situaciones nos vimos obligados a
 ajustar el diseño de nuestro sistema de acuerdo con la implementación de nuestra propia libreria de C. Tales percances
 y sus resoluciones son expuestos a continuación:\\
 
 \textbf{\large{Alocación en memoria}}\\
-\indent Quizás este fue el problema con el que más frecuentemente tuvimos que lidiar. En otras circunstancias, el uso de la
+ Quizás este fue el problema con el que más frecuentemente tuvimos que lidiar. En otras circunstancias, el uso de la
 función de reserva de espacio en memoria \texttt{malloc} de C nos hubiera permitido no muy dificilmente solucionar la cuestión.
-Sin embargo, al no tener la bases suficientes como para implementar una función similar a la mencionada en nuestra librería,
+Sin embargo, al no tener lal bases suficientes como para implementar una función similar a la mencionada en nuestra librería,
 en los casos que así lo dispusieron optamos por reservar cierta cantidad fija en memoria y sacrificar la
-manipulación dinámica de ese espacio, mediante la declaración de vectores.\par \noindent \newline
-\indent \textbf{Máxima cantidad de caracteres ingresados por el usuario}\par
+manipulación dinámica de ese espacio, mediante la declaración de vectores.\par  \bigskip
+ \textbf{Máxima cantidad de caracteres ingresados por el usuario}\par
 La función \texttt{scanf} de \texttt{lib.c}, en un principio, solicita al usuario ingrese una string, invocando a la función
 \texttt{getString} de la misma librería. Esta última función recibe un parámetro de tipo \texttt{char *} donde se guardará
-cada caracter leído con \texttt{getchar}, dejando un último lugar para el caracter nulo \texttt{$\backslash$ 0)}. 
+cada caracter leído con \texttt{getchar}, dejando un último lugar para el caracter nulo (\texttt{\textquotesingle \textbackslash 0\textquotesingle }). 
 No devuelve nada; el parámetro
-recibido es también de retorno.\par \noindent \newline
-\indent Ahora bien, es tarea de la función invocadora (en este caso, \texttt{scanf}) pasarle a \texttt{getString} un \texttt{char *} con suficiente
+recibido es también de retorno.\par  \bigskip
+ Ahora bien, es tarea de la función invocadora (en este caso, \texttt{scanf}) pasarle a \texttt{getString} un \texttt{char *} con suficiente
 espacio reservado para que la función se encargue de rellenarlo. Si el parámetro no tiene suficiente espacio para guardar
-todo lo introducido por el usuario, se producirá un error de segmentación en memoría y el sistema se reiniciará.
-\par \noindent \newline
-\indent Y es aquí donde se toma la decisión. Con las constantes globales, \texttt{MAX\_ARGUMENTS} y \texttt{MAX\_ARGUMENT\_LENGTH},
-se limita la cantidad de argumentos y caracteres por argumento que puede introducir el usuario, respectivamente:\par \noindent
-\newline \newline \underline{en \texttt{shell.h}:}
-\begin{verbatim}
+todo lo introducido por el usuario, se producirá un error de segmentación en memori�a y el sistema se reiniciará.
+\par  \bigskip
+ Y es aquí donde se toma la decisión. Con las constantes globales, \texttt{MAX\_ARGUMENTS} y \texttt{MAX\_ARGU MENT\_LENGTH},
+se limita la cantidad de argumentos y caracteres por argumento que puede introducir el usuario, respectivamente:\par 
+\underline{en \texttt{shell.h}:}
+\begin{lstlisting}[style=C]
 . . .
-#define MAX_ARGUMENT_LENGTH 32
-#define MAX_ARGUMENTS 8
+#define MAX_ARGUMENT_LENGTH 64
+#define MAX_ARGUMENTS 10
 . . .
-\end{verbatim}
+\end{lstlisting}
 \par Dicho esto, dentro de \texttt{scanf} y antes de la llamada a \texttt{getString}, se declara la variable que posteriormente será utilizada
-como el parámetro de retorno que esta última función  requiere de la siguiente manera:\par \noindent \newline
+como el parámetro de retorno que esta última función  requiere de la siguiente manera:\par  \bigskip \bigskip
+\bigskip \bigskip \bigskip \bigskip \bigskip
 \underline{en \texttt{libc.c}:}
-\begin{verbatim}
+\begin{lstlisting}[style=C]
 . . .
 #define MAX_USER_LENGTH MAX_ARGUMENTS*MAX_ARGUMENT_LENGTH
 . . .
@@ -77,9 +110,31 @@ int scanf(const char * str, ...){
     char strIn[MAX_USER_LENGTH+1];
     . . .
 }
-\end{verbatim}
+. . .
+\end{lstlisting}
 \par Así, se reserva el suficiente espacio para que el usuario pueda meter \texttt{MAX\_USER\_LENGTH} caracteres, más uno para hacer
-la string \texttt{null-terminated}.\par \noindent \newline
+la string \texttt{null-terminated}.
+
+
+\textbf{M\'axima cantidad de comandos en el historial} \par
+De la misma manera que ocurre con el \'item anterior, se vuelve necesario definir una constante que limite la cantidad m\'axima de argumentos
+que se van a tener en cuenta en el historial. La constante \texttt{MAX\_HISTORY} en \texttt{shell.h} se encarga de esta definici\'on. \par
+ \underline{en \texttt{shell.h}:}
+\begin{lstlisting}[style=C]
+. . .
+#define MAX_HISTORY 20
+. . .
+\end{lstlisting}
+\par  \bigskip
+\textbf{\large{Scancodes}}
+\par 
+\textbf{Teclas \textquotesingle \texttt{Pausa|Inter}\textquotesingle , \textquotesingle F11\textquotesingle  y \textquotesingle F12\textquotesingle }
+\par
+El scancode de la tecla \texttt{Pausa|Inter}\textquotesingle comprende 4 bytes de \texttt{make code} y 4 de \texttt{break code}. Debido a eso, se hacía muy engorroso extender 
+la condición para levantarla en \texttt{getAscii}, de la librería de teclado \texttt{keyboard.c}, ya que uno de sus \texttt{make codes} 
+coincide con el de \texttt{bloqNum}, entonces ambas teclas activarán el \texttt{numPad}. 
+A su vez, las teclas F11 y F12 tienen un scancode que no fue considerado y preferimos hacer algo m\'as productivo.
+
 \clearpage
 \section{Bibliografía consultada}
 \begin{itemize}

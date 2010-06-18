@@ -24,6 +24,7 @@ typedef struct{
 __keyboard_buffer kbuffer;
 
 int (*player)(void);
+int getSeconds();
 
 typedef int size_t;
 typedef short int ssize_t;

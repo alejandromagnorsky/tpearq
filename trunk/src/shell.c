@@ -175,6 +175,7 @@ void __getShellArguments(char * ans){
 
 void shell(){
 
+	
 	__QTY_PROGRAMS = 0;
 	__init_history();
 
