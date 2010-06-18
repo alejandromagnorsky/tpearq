@@ -1,0 +1,100 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fancybox}
+\usepackage{float}
+\usepackage{fancyvrb}
+\usepackage{color}
+
+%opening
+\title{Manual de usuario}
+\author{}
+
+\begin{document}
+\maketitle
+\begin{center}
+\bigskip\bigskip\bigskip\bigskip
+\Large Mini Sistema Operativo \\
+\Large HAL 9000
+\end{center}
+
+\clearpage
+
+\section{Comandos}
+\par
+\subsection{Help}
+\par
+Se utiliza para desplegar en pantalla la lista de comandos disponibles.\\
+\includegraphics[scale=0.7]{ejemplo1.jpg}
+\\
+\subsection{Man}
+\par
+Recibe como argumento el nombre de otro programa y muestra la forma de usarlo y sus parámetros.\\
+\includegraphics[scale=0.7]{ejemplo2.jpg}
+\\
+\subsection{Clear}
+\par
+Limpia la pantalla. Antes de usarlo: \\
+\includegraphics[scale=0.7]{ejemplo3a.jpg}
+Presionando la tecla 'Enter':\\
+\includegraphics[scale=0.7]{ejemplo3b.jpg}
+\\
+\subsection{TTY}
+\par
+Usado con el parámetro '-s N' donde N es un número entre 0 y 9, cambia a la terminal indicada por $N$ (también se pueden usar las teclas F1 a F9)\\
+\includegraphics[scale=0.7]{ejemplo4a.jpg} \\
+Presionando la tecla 'Enter':\\
+\includegraphics[scale=0.7]{ejemplo4b.jpg}
+\par
+Con el parámetro '-l' cambia a la siguiente terminal y con el parámetro '-n' cambia a la anterior.\\
+Usando '-ss A' cambia el símbolo de sistema por el texto A que no puede tener más de 15 caracteres. \\
+\includegraphics[scale=0.7]{ejemplo4c.jpg} \\
+Por último, con el parámetro '-c F B', cambia el color de la $font$ por F y el del $background$ por B. Los valores válidos para F y B 
+van del 0 al 9.
+\includegraphics[scale=0.7]{ejemplo4d.jpg}\\
+\subsection{Echo}
+\par
+Imprime en pantalla los argumentos que recibe a continuación de su invocación.\\
+\includegraphics[scale=0.7]{ejemplo5.jpg} \\
+\subsection{Time}
+\par
+Imprime la hora, los minutos y los segundos.\\
+\includegraphics[scale=0.7]{ejemplo6.jpg}
+\\
+\subsection{MKExc}
+\par
+Genera una de las 32 posibles excepciones (algunas de las cuales están reservadas). Recibe como argumento el número de excepción, que puede ir 
+de 0 a 31. \\
+\includegraphics[scale=0.7]{ejemplo7.jpg}
+\\
+\subsection{Arnold}
+\par 
+Devuelve en pantalla frases aleatorias de las prosas de Arnold Alois Schwarzenegger, héroe contemporáneo.\\
+\includegraphics[scale=0.7]{ejemplo8.jpg}
+\\
+\subsection{CPUID}
+\par
+Imprime las caraceterísticas del procesador.\\
+\includegraphics[scale=0.7]{ejemplo9.jpg}
+\\
+\subsection{Bingo}
+\par
+Juego de bingo para dos personas.\\
+\includegraphics[scale=0.7]{ejemplo10.jpg}
+\\
+\subsection{Reboot}
+\par
+Reinicia el sistema.\\
+\subsection{History}
+\par
+Imprime el historial de comandos.\\
+\includegraphics[scale=0.7]{ejemplo11.jpg}
+\\
+\end{document}
+
