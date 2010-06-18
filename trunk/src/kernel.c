@@ -179,7 +179,6 @@ kmain()
 
 	_Sti();
 
-	//fireWorks();
 	shell();
 }
 

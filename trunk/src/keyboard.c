@@ -1,14 +1,6 @@
 #include "../include/keyboard.h"
 #include "../include/kasm.h"
 
-/*      PROBLEMAS
-**      AVERIGUAR EL SCAN CODE DE
-**              La tecla de al lado de la Ñ
-**              Shift+| y |
-**              < y >
-**              }
-*/
-
 /* LED variables */
 int __CURRENT_LEDS = 0;
 int __SCROLL_LED = 1;
@@ -146,34 +138,3 @@ void keyboardLeds(int leds){
         while ( (_inport(0x64) & 2) != 0);
         _outport(0x60, leds);	/* Send LEDs status byte */
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* BORRAR SEGURAMENTE, ANDUVO COMO EL ORTO EN UNA PC REAL
-** TODAVIA NO LA BORRO POR LAS DUDAS
-*/
-void fireWorks(){
-      	keyboardLeds(__CAPS_LED + __NUM_LED + __SCROLL_LED);
-//	wait(1);
-      	keyboardLeds(0);
-//	wait(1);
-      	keyboardLeds(__CAPS_LED);
-//	wait(1);
-      	keyboardLeds(__NUM_LED + __SCROLL_LED);
-//	wait(1);
-      	keyboardLeds(__CAPS_LED);
-//	wait(1);
-      	keyboardLeds(__CAPS_LED + __NUM_LED + __SCROLL_LED);
-//	wait(1);
-      	keyboardLeds(0);
-//	wait(1);
-      	keyboardLeds(__CAPS_LED);
-//	wait(1);
-      	keyboardLeds(0);
-//	wait(1);
-      	keyboardLeds(__CAPS_LED + __NUM_LED + __SCROLL_LED);
-//	wait(1);
-      	keyboardLeds(0);
-}
-
