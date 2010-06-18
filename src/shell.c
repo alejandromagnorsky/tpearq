@@ -87,16 +87,18 @@ void getShellArguments(char * ans){
 					}
 				} 
 				break;
+			
 			case  (char) 185:// LEFT ARROW
 				if(i){
 					--i;
 					__shift_terminal_cursor(-1,1);
 				}
 				break;
-			case  (char) 202:// UP ARROW
+			// Note: -78 and -77 are hardcoded asciis for these keys
+			case  (char) -78:// START 
 				i = moveCursorToStart(i);
 				break;
-			case  (char) 203:// DOWN ARROW
+			case  (char) -77:// END
 				i = moveCursorToEnd(ans,i);
 				break;
 			default:
