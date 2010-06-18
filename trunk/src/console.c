@@ -74,7 +74,7 @@ void __changeSystemSymbol(char * str){
 }
 
 void __printSystemSymbol(){
-	printf("%s/%d/:%c", __SYSTEM_SYMBOL, __TTY_INDEX, __BLOCK_ASCII);
+	printf("%s/%d/:%c", __SYSTEM_SYMBOL, __TTY_INDEX+1, __BLOCK_ASCII);
 }
 
 void __enter(){
@@ -84,7 +84,7 @@ void __enter(){
 	int append = 0;
 
 	// Maybe last character was last in row
-	if( abs(80*row - act_tty->ptr)  <= 1 ) 
+	if( 80*(row+1) - act_tty->ptr  <= 1 ) 
 		return;
 
 	// Fill with special ascii's 
@@ -242,7 +242,6 @@ void __switch_last_terminal(){
 }
 
 int __switch_terminal(int index){
-
 	if(index >= __MAX_TERMINALS )
 		return -1;
 	else {

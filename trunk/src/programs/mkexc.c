@@ -1,6 +1,6 @@
 #include "../../include/interrupts.h"
 int mkexc(int argc, char * argv[]){
-	if(argc != 2){
+	if(argc < 2 ){
 		printf("Invalid quantity of arguments.\n");
 		return 1;
 	}
