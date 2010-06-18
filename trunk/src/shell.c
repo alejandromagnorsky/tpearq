@@ -36,14 +36,69 @@ int __register_man_page(char * descriptor, char * man){
 	return 0;
 }
 
+int __shift_history(int direction){
 
+}
 
 int cpuid(int argc, char * argv[]){
 	detect_cpu();
 }
 
+
+/* This is a more restricted version of scanf,
+ * oriented towards shell commands, history, etc.
+*/
+void getShellArguments(char * ans){
+        int i, j;
+        char c;
+
+        for (i=0; i < MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS ; i++)
+		ans[i] = '\0';
+
+        for (i=0, j=0; (c = getchar()) != '\n' ; j++){
+		switch( c ){
+			case '\b':
+				if (i)          
+	                        	ans[--i] = '\0';
+				printf("%c",c);
+				break;
+			case  (char) 204:// RIGHT ARROW
+				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1)
+					++i;
+				__shift_terminal_cursor(1); 
+				break;
+			case  (char) 185:// LEFT ARROW
+				if(i)
+					--i;
+				__shift_terminal_cursor(-1);
+				break;
+			case  (char) 202:// UP ARROW
+				__shift_history(1);
+				break;
+			case  (char) 203:// DOWN ARROW
+				__shift_history(-1);
+				break;
+			default:
+				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1){
+			                ans[i] = c;
+	        	                i++;
+        		        }
+		                printf("%c", c);
+				break;
+		}
+        }
+        ans[i] = '\0';
+	printf("\n %s", ans);
+	printf("\n");
+}
+
+
 void shell(){
+
 	__QTY_PROGRAMS = 0;
+	__QTY_HISTORY_STATES = 0;
+	__ACTUAL_HISTORY_STATE = 0;
+
 	// Register of various functions
 	__register_program("echo", echo);
 	__register_program("clear", clear);
@@ -79,14 +134,16 @@ void shell(){
 	
 
 	// Data for user input
+	char history[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1][MAX_HISTORY];
 	char user_input[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1];
 	int i;
 	// Main loop
 	while(1){
 
+
 		user_input[0] = NULL;
-		scanf("%s", user_input);
-		
+		getShellArguments(user_input);
+
 		char arg_data[MAX_ARGUMENTS][MAX_ARGUMENT_LENGTH];
 		char argc = 0;
 		int tmp = 0;
@@ -116,6 +173,5 @@ void shell(){
 			else printf("\n");
 		}
 		__printSystemSymbol();
-
 	}
 }

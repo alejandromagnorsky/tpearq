@@ -1,4 +1,5 @@
 #include "../include/console.h"
+#include "../include/shell.h"
 
 void __INIT_TTY(){
 
@@ -125,6 +126,33 @@ void __backspace(){
 	return;
 }
 
+void __shift_terminal_cursor(int direction){
+
+	__terminal * act_tty = __tty + __TTY_INDEX;
+	char c = act_tty->buf[act_tty->ptr+direction];
+	switch(c){
+	case __BLOCK_ASCII:
+		break;
+	default:
+		act_tty->ptr += direction;		
+	}
+
+	__flush_screen(act_tty->buf,act_tty->ptr, act_tty->ptr+direction, act_tty->attr);
+	return;
+}
+
+void __write_char(char c){
+	__terminal * act_tty = __tty + __TTY_INDEX;
+	act_tty->buf[act_tty->ptr++] = c;	
+
+	// Always put a block ascii after this character,
+	// except if there is already another character afterwards
+	if(act_tty->buf[act_tty->ptr+1] == ' ')
+		act_tty->buf[act_tty->ptr+1] = __BLOCK_ASCII;
+	if(act_tty->ptr == 80*25 )
+		__scroll_terminal();
+}
+
 int __write_terminal( const char* buffer, int count){
 
 	int i = 0;
@@ -141,20 +169,21 @@ int __write_terminal( const char* buffer, int count){
 		if(act_tty->ptr >= 80*25 || act_tty->ptr < 0)
 			act_tty->ptr = 0;
 
-		switch( buffer[i] ){
+		char c = buffer[i];
+
+		// This behavior is the same for the shell and for scanf
+		switch( c ){
 			case '\n':
-				__enter();
+				__enter();	// ENTER
 				break;
 			case '\t':
-				__tab();
+				__tab();	// TAB
 				break;
 			case '\b':
-				__backspace();
+				__backspace();	// BACKSPACE
 				break;
 			default:
-				act_tty->buf[act_tty->ptr++] = buffer[i];	
-				if(act_tty->ptr == 80*25 )
-					__scroll_terminal();
+				__write_char(c);
 				break;
 		}
 		i++;
