@@ -45,51 +45,69 @@ int cpuid(int argc, char * argv[]){
 }
 
 
+int moveCursorToStart(int i){
+	__shift_terminal_cursor(-1,i);
+	return 0;
+}
+
+
+int moveCursorToEnd(char * ans, int i){
+	int j = 0;	
+	int tmp = i;
+	while(ans[tmp] != '\0'){ j++;tmp++;}
+	__shift_terminal_cursor(1,j);
+	return tmp;
+}
+
 /* This is a more restricted version of scanf,
  * oriented towards shell commands, history, etc.
 */
 void getShellArguments(char * ans){
-        int i, j;
+        int i = 0;
         char c;
 
+	// Initialize ans
         for (i=0; i < MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS ; i++)
 		ans[i] = '\0';
 
-        for (i=0, j=0; (c = getchar()) != '\n' ; j++){
+	i = 0;
+	while( (c = getchar()) != '\n' ){
 		switch( c ){
 			case '\b':
-				if (i)          
-	                        	ans[--i] = '\0';
+				if (i)     
+	                        	ans[--i] = ' ';
 				printf("%c",c);
 				break;
 			case  (char) 204:// RIGHT ARROW
-				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1)
-					++i;
-				__shift_terminal_cursor(1); 
+				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1){
+
+					if(ans[i] != '\0'){					
+						++i;
+						__shift_terminal_cursor(1,1);
+					}
+				} 
 				break;
 			case  (char) 185:// LEFT ARROW
-				if(i)
+				if(i){
 					--i;
-				__shift_terminal_cursor(-1);
+					__shift_terminal_cursor(-1,1);
+				}
 				break;
 			case  (char) 202:// UP ARROW
-				__shift_history(1);
+				i = moveCursorToStart(i);
 				break;
 			case  (char) 203:// DOWN ARROW
-				__shift_history(-1);
+				i = moveCursorToEnd(ans,i);
 				break;
 			default:
-				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1){
-			                ans[i] = c;
-	        	                i++;
-        		        }
-		                printf("%c", c);
+				 if (i<MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1)
+			                ans[i++] = c;
+		                putchar(c);
 				break;
 		}
         }
-        ans[i] = '\0';
-	printf("\n %s", ans);
-	printf("\n");
+	i = moveCursorToEnd(ans,i);
+	printf("\n",ans);
 }
 
 
@@ -134,14 +152,12 @@ void shell(){
 	
 
 	// Data for user input
-	char history[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1][MAX_HISTORY];
 	char user_input[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1];
 	int i;
 	// Main loop
 	while(1){
 
 
-		user_input[0] = NULL;
 		getShellArguments(user_input);
 
 		char arg_data[MAX_ARGUMENTS][MAX_ARGUMENT_LENGTH];
@@ -151,14 +167,15 @@ void shell(){
 		// Get arguments, separated by ' '
 		for(i=0;user_input[i] != NULL && argc < MAX_ARGUMENTS && tmp < MAX_ARGUMENT_LENGTH;i++){
 			if(user_input[i] == ' '){
-				arg_data[argc++][tmp] = NULL;
+				if(tmp) // This way a string "     " is not considered as 6 arguments
+					arg_data[argc++][tmp] = NULL;
 				tmp = 0;
 			} else 	arg_data[argc][tmp++] = user_input[i];
 		}
 		arg_data[argc++][tmp] = NULL;	// Last argument
 		
 		if (user_input[i] != NULL)
-			printf("Error: argument too long or too much arguments.\n");
+			printf("Error: argument too long or too much arguments: %d.\n", argc);
 		else {
 			// Convert data to pointer
 			char * argv[MAX_ARGUMENTS] = { 0 };
@@ -170,7 +187,6 @@ void shell(){
 				exec->execute(argc, argv);
 			else if(user_input[0] != NULL)
 				printf("Error: invalid command. \n");
-			else printf("\n");
 		}
 		__printSystemSymbol();
 	}
