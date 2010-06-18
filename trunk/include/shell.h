@@ -15,8 +15,8 @@ typedef struct{
 } __executable;
 
 __executable __executable_programs[MAX_PROGRAMS];
+char history[MAX_ARGUMENT_LENGTH*MAX_ARGUMENTS + 1][MAX_HISTORY];
 int __QTY_PROGRAMS;
-
 int __QTY_HISTORY_STATES;
 int __ACTUAL_HISTORY_STATE;
 

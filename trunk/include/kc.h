@@ -9,6 +9,8 @@
 
 #define NULL 0
 
+int abs(int x);
+
 /* Muestra la imagen de inicio */
 void showSplashScreen();
 

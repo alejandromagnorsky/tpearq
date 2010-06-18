@@ -38,6 +38,7 @@ void initializePics()
 	*/
 	_outport(0x21, 1);
 	_outport(0xA1, 1);
+
 }
 
 

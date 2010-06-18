@@ -79,14 +79,21 @@ void __printSystemSymbol(){
 
 void __enter(){
 	__terminal * act_tty = __tty + __TTY_INDEX;
+	act_tty->ptr++; // Start on the next character
 	int row = (act_tty->ptr/80) % 25;
 	int append = 0;
 
+	// Maybe last character was last in row
+	if( abs(80*row - act_tty->ptr)  <= 1 ) 
+		return;
+
+	// Fill with special ascii's 
 	while(act_tty->ptr<80*(row+1)){
 		act_tty->buf[act_tty->ptr++] = __ENTER_ASCII;
 		append++;
 	}
 
+	// Check if scroll needed, and flush
 	if(row == 24 )
 		__scroll_terminal();
 	__flush_screen(act_tty->buf,act_tty->ptr-append, act_tty->ptr, act_tty->attr);
@@ -126,18 +133,27 @@ void __backspace(){
 	return;
 }
 
-void __shift_terminal_cursor(int direction){
-
+void __shift_terminal_cursor(int direction, int qty){
 	__terminal * act_tty = __tty + __TTY_INDEX;
-	char c = act_tty->buf[act_tty->ptr+direction];
-	switch(c){
-	case __BLOCK_ASCII:
-		break;
-	default:
-		act_tty->ptr += direction;		
+	int i = 0;
+	if(qty == 0 || direction == 0 ) return;
+
+	while(abs(i) != qty ){
+		char c = act_tty->buf[act_tty->ptr+direction]; // get next character
+		switch(c){
+			case __BLOCK_ASCII:
+				// If blocked, just flush to set cursor and return
+				__flush_screen(act_tty->buf,act_tty->ptr, act_tty->ptr, act_tty->attr);
+				return;
+				break;
+			default:
+				act_tty->ptr += direction;		
+		}
+		i+=direction;
 	}
 
-	__flush_screen(act_tty->buf,act_tty->ptr, act_tty->ptr+direction, act_tty->attr);
+	// Null flush, just to move cursor over there
+	__flush_screen(act_tty->buf,act_tty->ptr, act_tty->ptr, act_tty->attr);
 	return;
 }
 
@@ -145,10 +161,6 @@ void __write_char(char c){
 	__terminal * act_tty = __tty + __TTY_INDEX;
 	act_tty->buf[act_tty->ptr++] = c;	
 
-	// Always put a block ascii after this character,
-	// except if there is already another character afterwards
-	if(act_tty->buf[act_tty->ptr+1] == ' ')
-		act_tty->buf[act_tty->ptr+1] = __BLOCK_ASCII;
 	if(act_tty->ptr == 80*25 )
 		__scroll_terminal();
 }

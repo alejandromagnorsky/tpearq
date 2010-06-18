@@ -16,6 +16,10 @@ int getc(int fd){
        
 }
 
+int abs(int x){
+	return x < 0 ? -x : x;
+}
+
 
 int atoi(const char *str){
         int i, acum, flagNegative = 0;
